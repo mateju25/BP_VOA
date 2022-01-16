@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="239.0" prefWidth="885.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
+   <children>
+      <TextField fx:id="textTime" layoutX="30.0" layoutY="88.0" promptText="COSI" />
+   </children>
+</AnchorPane>
