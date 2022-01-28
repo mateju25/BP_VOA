@@ -1,0 +1,72 @@
+* {
+    -fx-light-blue: #c4dcee;
+    -fx-dark-blue: #6d72bb;
+    -fx-white: #F7EDE2;
+    -fx-black: #020300;
+    -fx-orange: #F42C04;
+}
+.body {
+    -fx-font-color: -fx-black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Verdana';
+}
+
+.top-bar {
+    -fx-background-color: -fx-light-blue;
+    -fx-background-radius: 0 0 5px 5px;
+}
+
+#menu1:hover, #menu2:hover {
+    -fx-background-color: -fx-black;
+    -fx-cursor: hand;
+}
+#menu1, #menu2 {
+    -fx-padding: 7px;
+}
+
+
+.main {
+    -fx-background-color: -fx-white;
+}
+
+.divider {
+    -fx-stroke: -fx-orange;
+}
+
+.choice-box {
+    -fx-background-color: -fx-dark-blue;
+    -fx-border-color: -fx-black;
+    -fx-border-radius: 2px;
+}
+.choice-box:hover {
+    -fx-cursor: hand;
+}
+
+.button-black {
+    -fx-background-color: -fx-dark-blue;
+    -fx-background-radius: 2px;
+    -fx-text-fill:  -fx-white;
+    -fx-border-color: -fx-black;
+    -fx-border-radius: 2px;
+}
+
+.button-black:hover {
+    -fx-background-color: -fx-black;
+    -fx-cursor: hand;
+}
+
+.pane-around {
+    -fx-background-color: -fx-light-blue;
+    -fx-background-radius: 2px;
+}
+
+.label-underline {
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-padding: 0 0 2px 0;
+    -fx-border-color: -fx-orange;
+}
+
+.label-small-text {
+    -fx-font-size: 12px;
+}

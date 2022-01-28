@@ -1,5 +1,6 @@
 package controllers.startup;
 
+import controllers.base.BaseController;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ public class StartController extends Application {
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/mainPage.fxml")));
         stage.setScene(new Scene(root));
+        BaseController.mainStage = stage;
         stage.show();
     }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane fx:id="algoPane" prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane layoutX="56.0" layoutY="25.0" prefHeight="133.0" prefWidth="790.0" styleClass="pane-around">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm" />
+            <Label layoutX="197.0" layoutY="54.0" styleClass="label-small-text" text="Number of individuals:" />
+            <TextField layoutX="374.0" layoutY="48.0" prefHeight="28.0" prefWidth="189.0" />
+            <Label layoutX="197.0" layoutY="90.0" styleClass="label-small-text" text="Number of generations:" />
+            <TextField layoutX="374.0" layoutY="84.0" prefHeight="28.0" prefWidth="189.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="55.0" layoutY="188.0" prefHeight="275.0" prefWidth="790.0" styleClass="pane-around">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Selection of new individuals:" />
+            <Label layoutX="40.0" layoutY="56.0" styleClass="label-small-text" text="Percentage - roulete:" />
+            <TextField layoutX="206.0" layoutY="50.0" prefHeight="28.0" prefWidth="189.0" />
+            <Label layoutX="38.0" layoutY="118.0" styleClass="label-small-text" text="Percentage - tournament:" />
+            <TextField layoutX="201.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" />
+            <Label layoutX="43.0" layoutY="191.0" styleClass="label-small-text" text="Size of tournament:" />
+            <TextField layoutX="206.0" layoutY="185.0" prefHeight="28.0" prefWidth="189.0" />
+            <Label layoutX="420.0" layoutY="56.0" styleClass="label-small-text" text="Percentage - elitism:" />
+            <TextField layoutX="569.0" layoutY="51.0" prefHeight="28.0" prefWidth="189.0" />
+            <Label layoutX="418.0" layoutY="122.0" styleClass="label-small-text" text="Type of crossover:" />
+            <Label layoutX="421.0" layoutY="191.0" styleClass="label-small-text" text="Type of mutation:" />
+            <ChoiceBox layoutX="569.0" layoutY="184.0" prefHeight="30.0" prefWidth="189.0" />
+            <ChoiceBox layoutX="564.0" layoutY="116.0" prefHeight="30.0" prefWidth="189.0" />
+         </children>
+      </Pane>
+   </children>
+</Pane>

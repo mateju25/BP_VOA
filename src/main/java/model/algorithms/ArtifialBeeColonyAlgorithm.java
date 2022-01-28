@@ -8,6 +8,8 @@ public class ArtifialBeeColonyAlgorithm implements Algorithm{
 
     @Override
     public String[] nameOfFxmlFiles() {
-        return new String[0];
+        var arr = new String[1];
+        arr[0] = "ABCPage.fxml";
+        return arr;
     }
 }

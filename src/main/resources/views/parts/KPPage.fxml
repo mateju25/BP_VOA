@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
+   <children>
+      <Label layoutX="40.0" layoutY="20.0" styleClass="label-small-text" text="Number of items:" />
+      <Label layoutX="40.0" layoutY="118.0" styleClass="label-small-text" text="Backpack capacity:" />
+      <TextField layoutX="186.0" layoutY="14.0" prefHeight="28.0" prefWidth="189.0" />
+      <TextField layoutX="186.0" layoutY="112.0" prefHeight="28.0" prefWidth="189.0" />
+      <Label layoutX="40.0" layoutY="61.0" prefHeight="39.0" prefWidth="126.0" styleClass="label-small-text" text="Average weight of item:" wrapText="true" />
+      <TextField layoutX="186.0" layoutY="66.0" prefHeight="28.0" prefWidth="189.0" />
+   </children>
+</AnchorPane>
