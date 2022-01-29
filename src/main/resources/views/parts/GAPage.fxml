@@ -5,7 +5,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-
 <Pane fx:id="algoPane" prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane layoutX="56.0" layoutY="25.0" prefHeight="133.0" prefWidth="790.0" styleClass="pane-around">
@@ -29,9 +28,9 @@
             <Label layoutX="420.0" layoutY="56.0" styleClass="label-small-text" text="Percentage - elitism:" />
             <TextField layoutX="569.0" layoutY="51.0" prefHeight="28.0" prefWidth="189.0" />
             <Label layoutX="418.0" layoutY="122.0" styleClass="label-small-text" text="Type of crossover:" />
-            <Label layoutX="421.0" layoutY="191.0" styleClass="label-small-text" text="Type of mutation:" />
-            <ChoiceBox layoutX="569.0" layoutY="184.0" prefHeight="30.0" prefWidth="189.0" />
             <ChoiceBox layoutX="564.0" layoutY="116.0" prefHeight="30.0" prefWidth="189.0" />
+            <Label layoutX="418.0" layoutY="190.0" styleClass="label-small-text" text="Percentage - mutation:" />
+            <TextField layoutX="567.0" layoutY="185.0" prefHeight="28.0" prefWidth="189.0" />
          </children>
       </Pane>
    </children>
