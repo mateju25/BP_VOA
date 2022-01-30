@@ -14,14 +14,17 @@ public class AlgorithmResults {
     private Double worstFitnessInGen;
     private List<Integer> bestIndividual;
     private Double bestFitness;
+    private Integer actualGeneration;
 
-    public AlgorithmResults(Problem problem, List<Integer> bestIndividualInGen, Double averageFitnessInGen, Double worstFitnessInGen, List<Integer> bestIndividual) {
+
+    public AlgorithmResults(Problem problem, List<Integer> bestIndividualInGen, Double averageFitnessInGen, Double worstFitnessInGen, List<Integer> bestIndividual, Integer actualGeneration) {
         this.bestIndividualInGen = bestIndividualInGen;
         this.bestFitnessInGen = problem.fitness(bestIndividualInGen);
         this.averageFitnessInGen = averageFitnessInGen;
         this.worstFitnessInGen = worstFitnessInGen;
         this.bestIndividual = bestIndividual;
         this.bestFitness = problem.fitness(bestIndividual);
+        this.actualGeneration = actualGeneration;
     }
 
     public String toString(Problem problem) {

@@ -1,5 +1,6 @@
 package model.algorithms;
 
+import controllers.base.BaseController;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class GeneticAlgorithm implements Algorithm {
     private List<List<Integer>> generation = new ArrayList<>();
     private List<Integer> bestIndividual = new ArrayList<>();
+    private Problem problem;
     private Integer actualGeneration = 0;
     private Integer numOfIndividuals;
     private Integer numOfGenerations;
@@ -32,30 +34,53 @@ public class GeneticAlgorithm implements Algorithm {
         this.sizeTournament = sizeTournament;
         this.percentageElitism = percentageElitism;
         this.percentageMutation = percentageMutation;
+        resetAlgorithm();
     }
 
-    public void initFirstGeneration(Problem problem) {
+    public void resetAlgorithm() {
+        this.actualGeneration = 0;
+        this.generation = new ArrayList<>();
+        this.bestIndividual = new ArrayList<>();
+    }
+
+    public void initFirstGeneration() {
         for (int i = 0; i < this.numOfIndividuals; i++) {
             generation.add(problem.makeOneIndividual());
         }
     }
 
-    public List<List<Integer>> rouletteSelection(Problem problem)
-    {
-        var rndm = new Random();
+    private List<List<Integer>> makeChildrenWithCrossover(List<List<Integer>> parents) {
+        var children = new ArrayList<List<Integer>>(2);
+        var resCrossover = problem.simpleCrossover(parents.get(0), parents.get(1));
+        children.add(resCrossover.getKey());
+        children.add(resCrossover.getValue());
+        return children;
+    }
+
+    public List<List<Integer>> tournamentSelection() {
+        var tournamentMembers = new ArrayList<List<Integer>>();
+        BaseController.rndm.ints(0, generation.size()).limit(sizeTournament).forEach(index -> {
+            tournamentMembers.add(generation.get(index));
+        });
+
+        var parents = tournamentMembers.stream().sorted(Comparator.comparing(problem::fitness)).limit(2).collect(Collectors.toList());
+
+        return makeChildrenWithCrossover(parents);
+    }
+
+    public List<List<Integer>> rouletteSelection() {
         double[] cumulativeFitnesses = new double[generation.size()];
         cumulativeFitnesses[0] = problem.fitness(generation.get(0));
         for (int i = 1; i < generation.size(); i++)
         {
-            double fitness =  problem.fitness(generation.get(i));
-            cumulativeFitnesses[i] = cumulativeFitnesses[i - 1] + fitness;
+            cumulativeFitnesses[i] = cumulativeFitnesses[i - 1] + problem.fitness(generation.get(i));
         }
 
         // this code was inspired by https://github.com/dwdyer/watchmaker/blob/master/framework/src/java/main/org/uncommons/watchmaker/framework/selection/RouletteWheelSelection.java
         var parents = new ArrayList<List<Integer>>(2);
         for (int i = 0; i < 2; i++)
         {
-            double randomFitness = rndm.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
+            double randomFitness = BaseController.rndm.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
             int index = Arrays.binarySearch(cumulativeFitnesses, randomFitness);
             if (index < 0)
             {
@@ -63,37 +88,35 @@ public class GeneticAlgorithm implements Algorithm {
             }
             parents.add(generation.get(index));
         }
-        var children = new ArrayList<List<Integer>>(2);
-        var resCrossover = problem.simpleCrossover(children.get(0), children.get(1));
-        children.add(resCrossover.getKey());
-        children.add(resCrossover.getValue());
-        return children;
+        return makeChildrenWithCrossover(parents);
     }
 
-    public AlgorithmResults nextGeneration(Problem problem) {
+    public AlgorithmResults nextGeneration() {
         if (actualGeneration < numOfGenerations) {
             generation = generation.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
             List<List<Integer>> newGeneration = new ArrayList<>();
             for (int i = 0; i < numOfIndividuals * percentageElitism; i++) {
                 newGeneration.add(generation.get(i));
             }
-            // todo: mozno tu nastane chyba bo sa bude pridatavat po dvojiciach
             for (int i = 0; i < numOfIndividuals * percentageRoulette; i++) {
-                newGeneration.addAll(rouletteSelection(problem));
+                newGeneration.add(rouletteSelection().get(0));
+            }
+            for (int i = 0; i < numOfIndividuals * percentageTournament; i++) {
+                newGeneration.add(tournamentSelection().get(0));
             }
             while (newGeneration.size() < generation.size()) {
                 newGeneration.add(problem.makeOneIndividual());
             }
-            var rndm = new Random();
             for (int i = 0; i < newGeneration.size(); i++) {
-                if (rndm.nextDouble() < this.percentageMutation)
+                if (BaseController.rndm.nextDouble() < this.percentageMutation)
                     newGeneration.set(i, problem.mutate(newGeneration.get(i)));
             }
             if (problem.fitness(newGeneration.get(0)) < problem.fitness(bestIndividual))
                 bestIndividual = newGeneration.get(0);
             this.generation = newGeneration;
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();
-            return new AlgorithmResults(problem, generation.get(0), avgFitness, problem.fitness(generation.get(generation.size()-1)), bestIndividual);
+            actualGeneration++;
+            return new AlgorithmResults(problem, generation.get(0), avgFitness, problem.fitness(generation.get(generation.size()-1)), bestIndividual, actualGeneration);
         } else
             return null;
     }

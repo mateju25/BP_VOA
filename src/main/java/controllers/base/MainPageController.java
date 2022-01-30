@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainPageController {
+    private Boolean controllerLoaded = false;
+
     @FXML
     public ChoiceBox<Algorithm> algChoiceBox;
     @FXML
@@ -36,6 +38,9 @@ public class MainPageController {
     public Pane probPane;
 
     public void initialize() {
+        if (controllerLoaded)
+            return;
+        controllerLoaded = true;
         var algorithms = new ArrayList<Algorithm>();
         algorithms.add(new AntColonySystemAlgorithm());
         algorithms.add(new ArtifialBeeColonyAlgorithm());
@@ -101,7 +106,9 @@ public class MainPageController {
     private void loadSpecificFxmlPart(String part) {
         Parent newPane = null;
         try {
-            newPane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/parts/" + part)));
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + part)));
+            loader.setController(this);
+            newPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,7 +117,7 @@ public class MainPageController {
 
     public void proceed(ActionEvent actionEvent) throws IOException {
         if (BaseController.chosedProblem != null && BaseController.chosedAlgorithm != null) {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();
         }

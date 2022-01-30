@@ -4,7 +4,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
+<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="40.0" layoutY="20.0" styleClass="label-small-text" text="Number of items:" />
       <Label layoutX="40.0" layoutY="118.0" styleClass="label-small-text" text="Backpack capacity:" />

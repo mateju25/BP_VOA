@@ -2,6 +2,10 @@ package model.algorithms;
 
 public class ArtifialBeeColonyAlgorithm implements Algorithm{
     @Override
+    public void resetAlgorithm() {
+
+    }
+    @Override
     public String nameForFaces() {
         return "Artificial Bee Colony Algorithm";
     }

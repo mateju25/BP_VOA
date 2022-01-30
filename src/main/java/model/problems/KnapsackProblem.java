@@ -1,5 +1,6 @@
 package model.problems;
 
+import controllers.base.BaseController;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,8 @@ public class KnapsackProblem implements Problem {
     public void populateProblem(Integer numOfItems, Integer averageWeightOfItem, Integer weightOfBackpack) {
         this.weightOfBackpack = weightOfBackpack;
         this.itemWeight = new ArrayList<>();
-        var rndm = new Random();
         for (int i = 0; i < numOfItems; i++) {
-            var item = rndm.nextInt(2*averageWeightOfItem) + 1;
+            var item = BaseController.rndm.nextInt(2*averageWeightOfItem) + 1;
             this.itemWeight.add(item);
         }
     }
@@ -35,11 +35,10 @@ public class KnapsackProblem implements Problem {
 
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
-        var rndm = new Random();
         do {
             individual = new ArrayList<>();
             for (int i = 0; i < itemWeight.size(); i++) {
-                individual.add(rndm.nextInt(2));
+                individual.add(BaseController.rndm.nextInt(2));
             }
         } while (sumOfItems(individual) > weightOfBackpack);
         return individual;
@@ -51,30 +50,32 @@ public class KnapsackProblem implements Problem {
 
     public List<Integer> mutate(List<Integer> individual) {
         var tmpIndividual = new ArrayList<>(individual);
-        var rndm = new Random();
         do {
             individual = new ArrayList<>(tmpIndividual);
-            var index = rndm.nextInt(this.itemWeight.size());
+            var index = BaseController.rndm.nextInt(this.itemWeight.size());
             individual.set(index, ((individual.get(index)) + 1) % 2);
         } while (sumOfItems(individual) > weightOfBackpack);
         return individual;
     }
 
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
-        var rndm = new Random();
-        var index = rndm.nextInt() % itemWeight.size();
         var child1 = new ArrayList<Integer>();
         var child2 = new ArrayList<Integer>();
-        for (int i = 0; i < itemWeight.size(); i++) {
-            if (i < index) {
-                child1.add(parent1.get(i));
-                child2.add(parent2.get(i));
-            } else {
-                child2.add(parent1.get(i));
-                child1.add(parent2.get(i));
+        do {
+            var index = BaseController.rndm.nextInt(itemWeight.size());
+            child1 = new ArrayList<>();
+            child2 = new ArrayList<>();
+            for (int i = 0; i < itemWeight.size(); i++) {
+                if (i < index) {
+                    child1.add(parent1.get(i));
+                    child2.add(parent2.get(i));
+                } else {
+                    child2.add(parent1.get(i));
+                    child1.add(parent2.get(i));
+                }
             }
-        }
-        return new Pair<>(child1, child2);
+        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack));
+       return new Pair<>(child1, child2);
     }
 
     @Override

@@ -2,6 +2,11 @@ package model.algorithms;
 
 public class AntColonySystemAlgorithm implements Algorithm {
     @Override
+    public void resetAlgorithm() {
+
+    }
+
+    @Override
     public String nameForFaces() {
         return "Ant Colony System Algorithm";
     }
