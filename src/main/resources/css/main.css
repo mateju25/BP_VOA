@@ -70,3 +70,15 @@
 .label-small-text {
     -fx-font-size: 12px;
 }
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}
+.chart-line-symbol {
+    -fx-background-radius: 3px;
+    -fx-padding: 3px;
+}
+.default-color0.chart-line-symbol { -fx-background-color: #d08b6e; }
+.default-color1.chart-line-symbol { -fx-background-color: #d9d081; }
+.default-color2.chart-line-symbol { -fx-background-color: #c18ec1; }

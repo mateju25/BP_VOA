@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -26,19 +27,22 @@
             <Button fx:id="btnPause" layoutX="527.0" layoutY="60.0" mnemonicParsing="false" onAction="#pauseSim" prefHeight="34.0" prefWidth="102.0" styleClass="button-black" text="Pause" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
             <Button layoutX="664.0" layoutY="60.0" mnemonicParsing="false" onAction="#restartSim" prefHeight="34.0" prefWidth="102.0" styleClass="button-black" text="Restart" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
             <Line endX="44.0" endY="383.0" layoutX="29.0" layoutY="-264.0" startX="1036.0" startY="383.0" styleClass="divider" />
-            <Pane fx:id="algoPane" layoutX="127.0" layoutY="151.0" prefHeight="495.0" prefWidth="886.0">
+            <Pane fx:id="algoPane" layoutX="72.0" layoutY="119.0" prefHeight="527.0" prefWidth="993.0">
                <children>
-                  <LineChart fx:id="chart" prefHeight="507.0" prefWidth="900.0">
+                  <LineChart fx:id="chart" prefHeight="527.0" prefWidth="993.0" stylesheets="@../css/main.css">
                      <xAxis>
                         <NumberAxis label="Generations" side="BOTTOM" />
                      </xAxis>
                      <yAxis>
-                        <NumberAxis label="Fitness" side="LEFT" />
+                        <NumberAxis label="Fitness" lowerBound="1.0" minorTickCount="8" side="LEFT" tickUnit="0.1" upperBound="1.0" />
                      </yAxis>
                   </LineChart>
                </children></Pane>
             <Button layoutX="22.0" layoutY="60.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="187.0" styleClass="button-black" text="Switch visualization" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
             <Button layoutX="1005.0" layoutY="60.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="102.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+            <Slider fx:id="speedChanger" blockIncrement="100.0" layoutX="572.0" layoutY="658.0" max="1000.0" min="10.0" prefHeight="17.0" prefWidth="230.0" snapToTicks="true" value="200.0" />
+            <Label layoutX="426.0" layoutY="659.0" styleClass="label-small-text" text="Simulation speed:" />
+            <Label fx:id="lblSpeed" layoutX="808.0" layoutY="659.0" prefHeight="15.0" prefWidth="85.0" styleClass="label-small-text" />
          </children>
     </AnchorPane>
   </children>

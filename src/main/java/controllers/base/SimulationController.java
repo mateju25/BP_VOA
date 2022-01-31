@@ -2,15 +2,20 @@ package controllers.base;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import lombok.SneakyThrows;
 import model.algorithms.GeneticAlgorithm;
@@ -38,16 +43,20 @@ public class SimulationController {
     public Button btnContinue;
     @FXML
     public Button btnPause;
+    public Slider speedChanger;
+    public Label lblSpeed;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
     private Boolean simulationRunning = true;
     private Boolean simulationRestart = false;
+    private Integer simulationSpeed = 200;
 
 
     public void initialize() {
         btnContinue.setDisable(true);
-        BaseController.rndm = new Random(1);
+
+        lblSpeed.setText(simulationSpeed + " ms");
         heading.setText(BaseController.chosedAlgorithm.nameForFaces() + " solves " + BaseController.chosedProblem.nameForFaces());
 
         XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
@@ -57,6 +66,7 @@ public class SimulationController {
 
         ConcurrentLinkedQueue<AlgorithmResults> dataQ = new ConcurrentLinkedQueue<>();
 
+        chart.getYAxis().setAutoRanging(false);
         chart.setAnimated(false);
         chart.getData().add(seriesBest);
         chart.getData().add(seriesAverage);
@@ -64,7 +74,7 @@ public class SimulationController {
         GeneticAlgorithm ga = (GeneticAlgorithm) BaseController.chosedAlgorithm;
         KnapsackProblem kp = (KnapsackProblem) BaseController.chosedProblem;
         ga.setProblem(kp);
-        kp.populateProblem(100, 4, 500);
+//        kp.populateProblem(100, 4, 500);
 //        ga.setAlgorithm(100, 100, 0.2, 0.1, 10, 0.5, 0.5);
         ga.initFirstGeneration();
 
@@ -84,8 +94,8 @@ public class SimulationController {
 
                     if (res != null) {
                         dataQ.add(res);
-                        Thread.sleep(200);
-                        while(!simulationRunning) {
+                        Thread.sleep(simulationSpeed);
+                        while (!simulationRunning) {
                             Thread.sleep(50);
                         }
                         if (!simulationRestart)
@@ -104,12 +114,32 @@ public class SimulationController {
             public void handle(long now) {
                 if (dataQ.isEmpty()) return;
                 var data = dataQ.remove();
-                seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration()-1, data.getBestFitness()));
-                seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration()-1, data.getAverageFitnessInGen()));
+                seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getBestFitness()));
+                seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getAverageFitnessInGen()));
+                var highBound = ((ValueAxis<Double>) chart.getYAxis()).getUpperBound();
+                if (highBound < Math.round(data.getAverageFitnessInGen()) + 0.5) {
+                    ((ValueAxis<Double>) chart.getYAxis()).setUpperBound(Math.round(data.getAverageFitnessInGen()) + 0.5);
+                }
             }
         };
 
         animationTimer.start();
+
+        speedChanger.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue,
+                    Number oldValue,
+                    Number newValue) {
+
+                simulationSpeed = newValue.intValue();
+                lblSpeed.setText(simulationSpeed + " ms");
+
+            }
+
+        });
+
     }
 
     public void goBack(ActionEvent actionEvent) throws IOException {
@@ -139,4 +169,5 @@ public class SimulationController {
         BaseController.chosedAlgorithm.resetAlgorithm();
         initialize();
     }
+
 }

@@ -22,10 +22,12 @@ import model.problems.KnapsackProblem;
 import model.problems.Problem;
 import model.problems.TargetAssignmentProblem;
 import model.problems.VehicleRoutingProblem;
+import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 public class MainPageController {
     private Boolean controllerLoaded = false;
@@ -36,10 +38,14 @@ public class MainPageController {
     public ChoiceBox<Problem> probChoiceBox;
     @FXML
     public Pane probPane;
+    public TextField numberOfItems;
+    public TextField backpackCapacity;
+    public TextField averageWeight;
 
     public void initialize() {
         if (controllerLoaded)
             return;
+        BaseController.rndm = new Random(1);
         controllerLoaded = true;
         var algorithms = new ArrayList<Algorithm>();
         algorithms.add(new AntColonySystemAlgorithm());
@@ -68,6 +74,8 @@ public class MainPageController {
                         }
                     });
             algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosedAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
+            algChoiceBox.getSelectionModel().select(2);
+
         }
         if (probChoiceBox != null) {
             probChoiceBox.getItems().setAll(problems);
@@ -96,11 +104,14 @@ public class MainPageController {
                     Problem selectedProblem = probChoiceBox.getItems().get(newValue.intValue());
                     loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
                     BaseController.chosedProblem = selectedProblem;
+
+                    averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                    backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                    numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
                 }
             });
+            probChoiceBox.getSelectionModel().select(2);
         }
-
-
     }
 
     private void loadSpecificFxmlPart(String part) {
@@ -117,6 +128,10 @@ public class MainPageController {
 
     public void proceed(ActionEvent actionEvent) throws IOException {
         if (BaseController.chosedProblem != null && BaseController.chosedAlgorithm != null) {
+            if (numberOfItems != null) {
+                ((KnapsackProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(numberOfItems.getText()),
+                        Integer.valueOf(averageWeight.getText()), Integer.valueOf(backpackCapacity.getText()));
+            }
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();
