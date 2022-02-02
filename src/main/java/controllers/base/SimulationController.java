@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
@@ -45,16 +46,20 @@ public class SimulationController {
     public Button btnPause;
     public Slider speedChanger;
     public Label lblSpeed;
+    public Canvas canvas;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
     private Boolean simulationRunning = true;
     private Boolean simulationRestart = false;
+    private Boolean simulationChart = true;
     private Integer simulationSpeed = 200;
 
 
     public void initialize() {
+        BaseController.rndm = new Random(1);
         btnContinue.setDisable(true);
+        canvas.setVisible(!simulationChart);
 
         lblSpeed.setText(simulationSpeed + " ms");
         heading.setText(BaseController.chosedAlgorithm.nameForFaces() + " solves " + BaseController.chosedProblem.nameForFaces());
@@ -72,8 +77,7 @@ public class SimulationController {
         chart.getData().add(seriesAverage);
 
         GeneticAlgorithm ga = (GeneticAlgorithm) BaseController.chosedAlgorithm;
-        KnapsackProblem kp = (KnapsackProblem) BaseController.chosedProblem;
-        ga.setProblem(kp);
+        ga.setProblem(BaseController.chosedProblem);
 //        kp.populateProblem(100, 4, 500);
 //        ga.setAlgorithm(100, 100, 0.2, 0.1, 10, 0.5, 0.5);
         ga.initFirstGeneration();
@@ -94,6 +98,7 @@ public class SimulationController {
 
                     if (res != null) {
                         dataQ.add(res);
+
                         Thread.sleep(simulationSpeed);
                         while (!simulationRunning) {
                             Thread.sleep(50);
@@ -120,6 +125,8 @@ public class SimulationController {
                 if (highBound < Math.round(data.getAverageFitnessInGen()) + 0.5) {
                     ((ValueAxis<Double>) chart.getYAxis()).setUpperBound(Math.round(data.getAverageFitnessInGen()) + 0.5);
                 }
+
+                ga.getProblem().visualize(canvas, data);
             }
         };
 
@@ -170,4 +177,9 @@ public class SimulationController {
         initialize();
     }
 
+    public void switchVisualization(ActionEvent actionEvent) {
+        simulationChart = !simulationChart;
+        canvas.setVisible(!simulationChart);
+        chart.setVisible(simulationChart);
+    }
 }

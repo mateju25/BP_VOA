@@ -38,9 +38,14 @@ public class MainPageController {
     public ChoiceBox<Problem> probChoiceBox;
     @FXML
     public Pane probPane;
+    //knapsack
     public TextField numberOfItems;
     public TextField backpackCapacity;
     public TextField averageWeight;
+    //vrp
+    public TextField sizeOfProblem;
+    public TextField vehicleCapacity;
+    public TextField averageDemand;
 
     public void initialize() {
         if (controllerLoaded)
@@ -105,12 +110,19 @@ public class MainPageController {
                     loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
                     BaseController.chosedProblem = selectedProblem;
 
-                    averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                    backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                    numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                    if (averageWeight != null) {
+                        averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                        backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                        numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                    }
+                    if (sizeOfProblem != null) {
+                        sizeOfProblem.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                        vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                        averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                    }
                 }
             });
-            probChoiceBox.getSelectionModel().select(2);
+            probChoiceBox.getSelectionModel().select(0);
         }
     }
 
@@ -128,9 +140,13 @@ public class MainPageController {
 
     public void proceed(ActionEvent actionEvent) throws IOException {
         if (BaseController.chosedProblem != null && BaseController.chosedAlgorithm != null) {
-            if (numberOfItems != null) {
+            if (BaseController.chosedProblem instanceof  KnapsackProblem) {
                 ((KnapsackProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(numberOfItems.getText()),
                         Integer.valueOf(averageWeight.getText()), Integer.valueOf(backpackCapacity.getText()));
+            }
+            if (BaseController.chosedProblem instanceof  VehicleRoutingProblem) {
+                ((VehicleRoutingProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(sizeOfProblem.getText()),
+                        Integer.valueOf(vehicleCapacity.getText()), Integer.valueOf(averageDemand.getText()));
             }
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));

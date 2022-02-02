@@ -1,10 +1,10 @@
 package model.problems;
 
+import javafx.scene.canvas.Canvas;
 import javafx.util.Pair;
+import model.utils.AlgorithmResults;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class TargetAssignmentProblem implements Problem{
     public List<Integer> makeOneIndividual() {
@@ -36,5 +36,10 @@ public class TargetAssignmentProblem implements Problem{
         var arr = new String[1];
         arr[0] = "TAPPage.fxml";
         return arr;
+    }
+
+    @Override
+    public void visualize(Canvas canvas, AlgorithmResults data) {
+
     }
 }

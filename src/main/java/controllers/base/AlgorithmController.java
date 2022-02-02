@@ -14,6 +14,7 @@ import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Random;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -32,6 +33,7 @@ public class AlgorithmController {
     public Pane algoPane;
 
     public void initialize() throws IOException {
+        BaseController.rndm = new Random(1);
         if (percentageRoulette != null) {
             percentageRoulette.setTextFormatter(TextFormattersFactory.makeDoubleFormatter());
             percentageTournament.setTextFormatter(TextFormattersFactory.makeDoubleFormatter());

@@ -15,7 +15,7 @@ public class TextFormattersFactory {
     }
 
     public static TextFormatter makeDoubleFormatter() {
-        Pattern patternDouble = Pattern.compile("\\d*|\\d+\\,\\d*");
+        Pattern patternDouble = Pattern.compile("\\d*|\\d+[,.]\\d*");
         return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
             return patternDouble.matcher(change.getControlNewText()).matches() ? change : null;
         });

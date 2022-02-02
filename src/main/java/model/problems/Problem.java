@@ -1,6 +1,8 @@
 package model.problems;
 
+import javafx.scene.canvas.Canvas;
 import javafx.util.Pair;
+import model.utils.AlgorithmResults;
 
 import java.util.List;
 
@@ -12,4 +14,6 @@ public interface Problem {
 
     String nameForFaces();
     String[] nameOfFxmlFiles();
+
+    void visualize(Canvas canvas, AlgorithmResults data);
 }

@@ -111,12 +111,13 @@ public class GeneticAlgorithm implements Algorithm {
                 if (BaseController.rndm.nextDouble() < this.percentageMutation)
                     newGeneration.set(i, problem.mutate(newGeneration.get(i)));
             }
+            newGeneration = newGeneration.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
             if (problem.fitness(newGeneration.get(0)) < problem.fitness(bestIndividual))
-                bestIndividual = newGeneration.get(0);
+                bestIndividual = new ArrayList<>(newGeneration.get(0));
             this.generation = newGeneration;
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();
             actualGeneration++;
-            return new AlgorithmResults(problem, generation.get(0), avgFitness, problem.fitness(generation.get(generation.size()-1)), bestIndividual, actualGeneration);
+            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, problem.fitness(newGeneration.get(newGeneration.size()-1)), bestIndividual, actualGeneration);
         } else
             return null;
     }
