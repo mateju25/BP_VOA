@@ -1,7 +1,6 @@
 package controllers.base;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -16,12 +15,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import lombok.SneakyThrows;
 import model.algorithms.GeneticAlgorithm;
-import model.problems.KnapsackProblem;
-import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
 import java.io.IOException;
@@ -31,7 +26,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
-import java.util.function.BinaryOperator;
 
 public class SimulationController {
     @FXML
@@ -78,8 +72,6 @@ public class SimulationController {
 
         GeneticAlgorithm ga = (GeneticAlgorithm) BaseController.chosedAlgorithm;
         ga.setProblem(BaseController.chosedProblem);
-//        kp.populateProblem(100, 4, 500);
-//        ga.setAlgorithm(100, 100, 0.2, 0.1, 10, 0.5, 0.5);
         ga.initFirstGeneration();
 
         executorService = Executors.newCachedThreadPool(new ThreadFactory() {
@@ -124,6 +116,10 @@ public class SimulationController {
                 var highBound = ((ValueAxis<Double>) chart.getYAxis()).getUpperBound();
                 if (highBound < Math.round(data.getAverageFitnessInGen()) + 0.5) {
                     ((ValueAxis<Double>) chart.getYAxis()).setUpperBound(Math.round(data.getAverageFitnessInGen()) + 0.5);
+                }
+                var lowBound = ((ValueAxis<Double>) chart.getYAxis()).getLowerBound();
+                if (lowBound > Math.round(data.getBestFitness()) - 0.5) {
+                    ((ValueAxis<Double>) chart.getYAxis()).setLowerBound(Math.round(data.getBestFitness()) - 0.5);
                 }
 
                 ga.getProblem().visualize(canvas, data);

@@ -9,15 +9,11 @@ public class TextFormattersFactory {
 
     public static TextFormatter makeIntegerFormatter() {
         Pattern patternInteger = Pattern.compile("\\d*");
-        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
-            return patternInteger.matcher(change.getControlNewText()).matches() ? change : null;
-        });
+        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> patternInteger.matcher(change.getControlNewText()).matches() ? change : null);
     }
 
     public static TextFormatter makeDoubleFormatter() {
         Pattern patternDouble = Pattern.compile("\\d*|\\d+[,.]\\d*");
-        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
-            return patternDouble.matcher(change.getControlNewText()).matches() ? change : null;
-        });
+        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> patternDouble.matcher(change.getControlNewText()).matches() ? change : null);
     }
 }

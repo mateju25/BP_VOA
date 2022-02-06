@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import lombok.Getter;
 import model.utils.AlgorithmResults;
+import model.utils.DistinctColors;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class VehicleRoutingProblem implements Problem {
     @Getter
-    private class Point {
+    private static class Point {
         private final Integer xCor;
         private final Integer yCor;
         private final Integer demand;
@@ -29,17 +30,24 @@ public class VehicleRoutingProblem implements Problem {
     private List<Point> points;
     private List<List<Double>> matrixOfDistances;
     private Integer vehicleCapacity;
-    private Integer fitnessCoef;
+    private Double fitnessCoef;
+    private List<Color> colorsOfItems;
+
 
     public void populateProblem(Integer sizeOfTheProblem, Integer vehicleCapacity, Integer averageDemand) {
         points = new ArrayList<>();
-        points.add(new Point(100, 100, 0));
+        colorsOfItems = new ArrayList<>();
+        points.add(new Point(250, 250, 0));
         for (int i = 0; i < sizeOfTheProblem - 1; i++) {
             var demand = BaseController.rndm.nextInt(2*averageDemand - 2) + 1;
             while (demand > vehicleCapacity)
                 demand = BaseController.rndm.nextInt(2*averageDemand - 2) + 1;
-            var tmp = new Point(BaseController.rndm.nextInt(200), BaseController.rndm.nextInt(200), demand);
+            var tmp = new Point(BaseController.rndm.nextInt(500), BaseController.rndm.nextInt(500), demand);
             points.add(tmp);
+        }
+        for (int i = 0; i < sizeOfTheProblem; i++) {
+            var item = Color.web(DistinctColors.colors[BaseController.rndm.nextInt(DistinctColors.colors.length)]);
+            this.colorsOfItems.add(item);
         }
         matrixOfDistances = new ArrayList<>(points.size());
         for (int i = 0; i < points.size(); i++) {
@@ -58,10 +66,11 @@ public class VehicleRoutingProblem implements Problem {
         this.vehicleCapacity = vehicleCapacity;
 
         var tmpIndividual = makeOneIndividual();
-        fitnessCoef = 1;
+        fitnessCoef = 1.0;
         var fitness = fitness(tmpIndividual);
-        while (fitness * fitnessCoef < 1)
-            fitnessCoef *= 10;
+        while (fitness * fitnessCoef > 1)
+            fitnessCoef *= 0.1;
+        fitnessCoef *= 10;
     }
 
     private List<Integer> checkAnAddBaseTownToIndividual(List<Integer> individual) {
@@ -77,12 +86,11 @@ public class VehicleRoutingProblem implements Problem {
             }
             if (currDemand + points.get(individual.get(i)).demand <= vehicleCapacity) {
                 currDemand += points.get(individual.get(i)).demand;
-                i++;
             } else {
                 individual.add(i, 0);
                 currDemand = 0;
-                i++;
             }
+            i++;
         }
         if (individual.get(individual.size() - 1) != 0)
             individual.add(0);
@@ -116,7 +124,7 @@ public class VehicleRoutingProblem implements Problem {
             currentFitness += matrixOfDistances.get(individual.get(i)).get(individual.get(i + 1));
         }
 
-        return (1/currentFitness * fitnessCoef) ;
+        return (currentFitness) * fitnessCoef ;
     }
 
     @Override
@@ -157,27 +165,32 @@ public class VehicleRoutingProblem implements Problem {
             gc.fillRect(-5, -5, canvas.getWidth() + 5, canvas.getHeight() + 5);
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(5);
-            var HEIGHT_OF_CONTAINER = 445;
+            var LEFT_OFFSET = 260;
+            var UP_OFFSET = 5;
             var best = data.getBestIndividual();
-            var level = 0;
+            var usedColors = new ArrayList<>();
 
             for (int i = 0; i < best.size() - 1; i++) {
-                if (points.get(best.get(i)).demand == 0)
-                    gc.setStroke(new Color(BaseController.rndm.nextFloat(), BaseController.rndm.nextFloat(), BaseController.rndm.nextFloat(), 1));
-                gc.setLineWidth(1);
-                gc.strokeLine(points.get(best.get(i)).xCor  + 400 + 3,
-                        points.get(best.get(i)).yCor + 112 + 3,
-                        points.get(best.get(i+1)).xCor  + 400 + 3,
-                        points.get(best.get(i+1)).yCor + 112 + 3);
+                if (points.get(best.get(i)).demand == 0) {
+                        gc.setStroke(colorsOfItems.get(best.get(i+1)));
+                        usedColors.add(colorsOfItems.get(best.get(i+1)));
+
+                }
+                gc.setLineWidth(2);
+                gc.strokeLine(points.get(best.get(i)).xCor  + LEFT_OFFSET + 3,
+                        points.get(best.get(i)).yCor + UP_OFFSET + 3,
+                        points.get(best.get(i+1)).xCor  + LEFT_OFFSET + 3,
+                        points.get(best.get(i+1)).yCor + UP_OFFSET + 3);
             }
             for (int i = 0; i < points.size(); i++) {
                 if (i == 0) {
                     gc.setFill(Color.RED);
-                    gc.fillRect(points.get(i).xCor + 400, points.get(i).yCor + 112, 6, 6);
+                    gc.fillRect(points.get(i).xCor + LEFT_OFFSET, points.get(i).yCor + UP_OFFSET, 6, 6);
                     continue;
                 }
                 gc.setFill(Color.BLACK);
-                gc.fillRect(points.get(i).xCor + 400, points.get(i).yCor + 112, 6, 6);
+                gc.fillRect(points.get(i).xCor + LEFT_OFFSET, points.get(i).yCor + UP_OFFSET, 6, 6);
+                gc.fillText(i+"", points.get(i).xCor + LEFT_OFFSET - 1, points.get(i).yCor + UP_OFFSET - 1);
             }
         }
     }

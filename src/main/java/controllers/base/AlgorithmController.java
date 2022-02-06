@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import model.algorithms.GeneticAlgorithm;
 import model.utils.TextFormattersFactory;
@@ -15,8 +14,6 @@ import model.utils.TextFormattersFactory;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 public class AlgorithmController {
     private Boolean controllerLoaded = false;

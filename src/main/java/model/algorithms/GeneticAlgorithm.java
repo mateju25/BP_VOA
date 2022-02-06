@@ -1,10 +1,8 @@
 package model.algorithms;
 
 import controllers.base.BaseController;
-import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
-import model.problems.KnapsackProblem;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
@@ -112,7 +110,7 @@ public class GeneticAlgorithm implements Algorithm {
                     newGeneration.set(i, problem.mutate(newGeneration.get(i)));
             }
             newGeneration = newGeneration.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
-            if (problem.fitness(newGeneration.get(0)) < problem.fitness(bestIndividual))
+            if (problem.fitness(newGeneration.get(0)) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
                 bestIndividual = new ArrayList<>(newGeneration.get(0));
             this.generation = newGeneration;
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();

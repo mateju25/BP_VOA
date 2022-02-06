@@ -3,11 +3,11 @@ package model.problems;
 import controllers.base.BaseController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import model.utils.AlgorithmResults;
+import model.utils.DistinctColors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class KnapsackProblem implements Problem {
             this.itemWeight.add(item);
         }
         for (int i = 0; i < numOfItems; i++) {
-            var item = new Color(BaseController.rndm.nextFloat(), BaseController.rndm.nextFloat(), BaseController.rndm.nextFloat(), 1);
+            var item = Color.web(DistinctColors.colors[BaseController.rndm.nextInt(DistinctColors.colors.length)]);
             this.colorsOfItems.add(item);
         }
     }
