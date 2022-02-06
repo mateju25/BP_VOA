@@ -44,6 +44,10 @@ public class MainPageController {
     public TextField sizeOfProblem;
     public TextField vehicleCapacity;
     public TextField averageDemand;
+    //tap
+    public TextField numberOfWeapons;
+    public TextField numberOfTargets;
+    public TextField maxAssignedTargets;
 
     public void initialize() {
         if (controllerLoaded)
@@ -118,9 +122,14 @@ public class MainPageController {
                         vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
                         averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
                     }
+                    if (numberOfWeapons != null) {
+                        numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                        numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                        maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+                    }
                 }
             });
-            probChoiceBox.getSelectionModel().select(0);
+            probChoiceBox.getSelectionModel().select(1);
         }
     }
 
@@ -145,6 +154,10 @@ public class MainPageController {
             if (BaseController.chosedProblem instanceof  VehicleRoutingProblem) {
                 ((VehicleRoutingProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(sizeOfProblem.getText()),
                         Integer.valueOf(vehicleCapacity.getText()), Integer.valueOf(averageDemand.getText()));
+            }
+            if (BaseController.chosedProblem instanceof  TargetAssignmentProblem) {
+                ((TargetAssignmentProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(numberOfTargets.getText()),
+                        Integer.valueOf(numberOfWeapons.getText()), Integer.valueOf(maxAssignedTargets.getText()));
             }
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
