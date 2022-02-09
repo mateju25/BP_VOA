@@ -39,6 +39,7 @@ public class GeneticAlgorithm implements Algorithm {
         this.actualGeneration = 0;
         this.generation = new ArrayList<>();
         this.bestIndividual = new ArrayList<>();
+        BaseController.rndm = new Random(1);
     }
 
     public void initFirstGeneration() {
@@ -92,6 +93,10 @@ public class GeneticAlgorithm implements Algorithm {
     public AlgorithmResults nextGeneration() {
         if (actualGeneration < numOfGenerations) {
             generation = generation.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
+//            if (actualGeneration == 0) {
+//                generation.forEach(e -> System.out.println(problem.fitness(e)));
+//                System.out.println(" ---------------------------------------------------------------- ");
+//            }
             List<List<Integer>> newGeneration = new ArrayList<>();
             for (int i = 0; i < numOfIndividuals * percentageElitism; i++) {
                 newGeneration.add(generation.get(i));

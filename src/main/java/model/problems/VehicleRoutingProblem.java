@@ -28,7 +28,7 @@ public class VehicleRoutingProblem implements Problem {
     }
 
     private List<Point> points;
-    private List<List<Double>> matrixOfDistances;
+    private List<List<Integer>> matrixOfDistances;
     private Integer vehicleCapacity;
     private Double fitnessCoef;
     private List<Color> colorsOfItems;
@@ -53,14 +53,14 @@ public class VehicleRoutingProblem implements Problem {
         for (int i = 0; i < points.size(); i++) {
             matrixOfDistances.add(new ArrayList<>(points.size()));
             for (int j = 0; j < points.size(); j++) {
-                matrixOfDistances.get(i).add(j, 0.0);
+                matrixOfDistances.get(i).add(j, 0);
             }
         }
         for (int i = 0; i < points.size(); i++) {
             for (int j = i + 1; j < points.size(); j++) {
                 var distance = Math.sqrt(Math.pow(Math.abs(points.get(i).xCor - points.get(j).xCor), 2) + Math.pow(Math.abs(points.get(i).yCor - points.get(j).yCor), 2));
-                matrixOfDistances.get(i).set(j, distance);
-                matrixOfDistances.get(j).set(i, distance);
+                matrixOfDistances.get(i).set(j, (int) Math.round(distance));
+                matrixOfDistances.get(j).set(i, (int) Math.round(distance));
             }
         }
         this.vehicleCapacity = vehicleCapacity;
@@ -100,11 +100,17 @@ public class VehicleRoutingProblem implements Problem {
     @Override
     public List<Integer> makeOneIndividual() {
         var newIndividual = new ArrayList<Integer>();
+        var shuffledIndividual = new ArrayList<Integer>();
         for (int i = 1; i < points.size(); i++)
             newIndividual.add(i);
-        Collections.shuffle(newIndividual);
+        var length = newIndividual.size();
+        for (int i = 0; i < length; i++) {
+            var item = newIndividual.get(BaseController.rndm.nextInt(newIndividual.size()));
+            shuffledIndividual.add(item);
+            newIndividual.remove(item);
+        }
 
-        return checkAnAddBaseTownToIndividual(newIndividual);
+        return checkAnAddBaseTownToIndividual(shuffledIndividual);
     }
 
     @Override
@@ -174,7 +180,6 @@ public class VehicleRoutingProblem implements Problem {
                 if (points.get(best.get(i)).demand == 0) {
                         gc.setStroke(colorsOfItems.get(best.get(i+1)));
                         usedColors.add(colorsOfItems.get(best.get(i+1)));
-
                 }
                 gc.setLineWidth(2);
                 gc.strokeLine(points.get(best.get(i)).xCor  + LEFT_OFFSET + 3,
