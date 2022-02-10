@@ -52,20 +52,27 @@ public class MainPageController {
     public void initialize() {
         if (controllerLoaded)
             return;
+
+
         BaseController.rndm = new Random(1);
         controllerLoaded = true;
-        var algorithms = new ArrayList<Algorithm>();
-        algorithms.add(new AntColonySystemAlgorithm());
-        algorithms.add(new ArtifialBeeColonyAlgorithm());
-        algorithms.add(new GeneticAlgorithm());
-        var problems = new ArrayList<Problem>();
-        problems.add(new VehicleRoutingProblem());
-        problems.add(new TargetAssignmentProblem());
-        problems.add(new KnapsackProblem());
+        if (BaseController.algorithms == null) {
+            BaseController.algorithms = new ArrayList<>();
+            BaseController.algorithms.add(new AntColonySystemAlgorithm());
+            BaseController.algorithms.add(new ArtifialBeeColonyAlgorithm());
+            BaseController.algorithms.add(new GeneticAlgorithm());
+        }
+        if (BaseController.problems == null) {
+            BaseController.problems = new ArrayList<>();
+            BaseController.problems.add(new VehicleRoutingProblem());
+            BaseController.problems.add(new TargetAssignmentProblem());
+            BaseController.problems.add(new KnapsackProblem());
+        }
+
         if (algChoiceBox != null) {
-            algChoiceBox.getItems().setAll(algorithms);
+            algChoiceBox.getItems().setAll(BaseController.algorithms);
             if (BaseController.chosedAlgorithm != null) {
-                var index = algorithms.indexOf(algorithms.stream().filter(e -> e.getClass().getName().equals(BaseController.chosedAlgorithm.getClass().getName())).findFirst().get());
+                var index = BaseController.algorithms.indexOf(BaseController.chosedAlgorithm);
                 algChoiceBox.getSelectionModel().clearAndSelect(index);
             }
             algChoiceBox.setConverter(
@@ -85,9 +92,9 @@ public class MainPageController {
 
         }
         if (probChoiceBox != null) {
-            probChoiceBox.getItems().setAll(problems);
+            probChoiceBox.getItems().setAll(BaseController.problems);
             if (BaseController.chosedProblem != null) {
-                var index = problems.indexOf(problems.stream().filter(e -> e.getClass().getName().equals(BaseController.chosedProblem.getClass().getName())).findFirst().get());
+                var index = BaseController.problems.indexOf(BaseController.chosedProblem);
                 probChoiceBox.getSelectionModel().clearAndSelect(index);
                 Problem selectedProblem = probChoiceBox.getItems().get(index);
                 loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
@@ -111,25 +118,12 @@ public class MainPageController {
                     Problem selectedProblem = probChoiceBox.getItems().get(newValue.intValue());
                     loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
                     BaseController.chosedProblem = selectedProblem;
-
-                    if (averageWeight != null) {
-                        averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                        backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                        numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                    }
-                    if (sizeOfProblem != null) {
-                        sizeOfProblem.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                        vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                        averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                    }
-                    if (numberOfWeapons != null) {
-                        numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                        numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                        maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-                    }
                 }
             });
-            probChoiceBox.getSelectionModel().select(1);
+            if (BaseController.chosedProblem != null)
+                probChoiceBox.getSelectionModel().select(BaseController.problems.indexOf(BaseController.chosedProblem));
+            else
+                probChoiceBox.getSelectionModel().select(1);
         }
     }
 
@@ -143,6 +137,22 @@ public class MainPageController {
             e.printStackTrace();
         }
         probPane.getChildren().add(newPane);
+
+        if (averageWeight != null) {
+            averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(445));
+        }
+        if (sizeOfProblem != null) {
+            sizeOfProblem.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+        }
+        if (numberOfWeapons != null) {
+            numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
+            numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
+            maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
+        }
     }
 
     public void proceed(ActionEvent actionEvent) throws IOException {

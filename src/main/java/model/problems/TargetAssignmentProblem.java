@@ -58,7 +58,7 @@ public class TargetAssignmentProblem implements Problem{
     public Double fitness(List<Integer> individual) {
         var actualDes = new ArrayList<>(targetValues);
         for (int i = 0; i < individual.size() - 1; i+=2) {
-            actualDes.set(individual.get(i+1), (actualDes.get(individual.get(i)) * matrixOfProbabilities.get(individual.get(i)).get(individual.get(i + 1))));
+            actualDes.set(individual.get(i+1), (actualDes.get(individual.get(i+1)) * matrixOfProbabilities.get(individual.get(i)).get(individual.get(i + 1))));
         }
 
         return (actualDes.stream().reduce(0.0, Double::sum));
@@ -75,7 +75,6 @@ public class TargetAssignmentProblem implements Problem{
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
-        var newparent2 = new ArrayList<Integer>(parent2);
         var index = BaseController.rndm.nextInt(numOfWeapons - 2) + 1;
         for (int i = 0; i < parent1.size()-1; i+=2) {
             if (parent1.get(i) < index) {
@@ -112,29 +111,34 @@ public class TargetAssignmentProblem implements Problem{
             var gc = canvas.getGraphicsContext2D();
             gc.setFill(Color.web("#F7EDE2"));
             gc.fillRect(-5, -5, canvas.getWidth() + 5, canvas.getHeight() + 5);
-            gc.setStroke(Color.BLACK);
-            gc.setFill(Color.BLACK);
-            gc.setLineWidth(2);
+
 
             var SIZE = 20;
-            var offsetT = canvas.getWidth() / (numOfTargets + 2);
-            for (int i = 1; i < numOfTargets+1; i++) {
-                gc.strokeOval(offsetT*i, 120, SIZE, SIZE);
-                gc.fillText(i+"", offsetT*i + SIZE/3, 120 + 3*SIZE/4);
-            }
-
             var offsetW = canvas.getWidth() / (numOfWeapons + 2);
-            for (int i = 1; i < numOfWeapons+1; i++) {
-                gc.strokeOval(offsetW*i, 240, SIZE, SIZE);
-                gc.fillText(i+"", offsetW*i + SIZE/3, 240 + 3*SIZE/4);
-            }
+            var offsetT = canvas.getWidth() / (numOfTargets + 2);
 
             var best = data.getBestIndividual();
 
             for (int i = 0; i < best.size(); i+=2) {
                 gc.setStroke(colorsOfItems.get(best.get(i)));
-                gc.strokeLine(offsetW*(best.get(i) + 1) + SIZE/3, 240, offsetT*(best.get(i+1)+1) + SIZE/3, 120);
+                gc.setLineWidth(matrixOfProbabilities.get(best.get(i)).get(best.get(i + 1))*6 + 1);
+                gc.strokeLine(offsetW*(best.get(i) + 1) + SIZE/2, 360, offsetT*(best.get(i+1)+1) + SIZE/2, 100 + SIZE/2);
             }
+
+            gc.setLineWidth(2);
+            gc.setStroke(Color.BLACK);
+            gc.setFill(Color.BLACK);
+
+            for (int i = 1; i < numOfTargets+1; i++) {
+                gc.fillOval(offsetT*i, 100, SIZE, SIZE);
+                gc.fillText(targetValues.get(i-1).intValue()+"", offsetT*i + SIZE/3, 100 - SIZE/2);
+            }
+
+            for (int i = 1; i < numOfWeapons+1; i++) {
+                gc.fillOval(offsetW*i, 360, SIZE, SIZE);
+                gc.fillText(i+"", offsetW*i + SIZE/3, 360 + 2 * SIZE);
+            }
+
         }
     }
 }

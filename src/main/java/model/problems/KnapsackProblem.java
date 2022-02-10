@@ -47,7 +47,7 @@ public class KnapsackProblem implements Problem {
         do {
             individual = new ArrayList<>();
             for (int i = 0; i < itemWeight.size(); i++) {
-                individual.add(BaseController.rndm.nextInt(3)%2);
+                individual.add(BaseController.rndm.nextInt(3) % 2);
             }
         } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
         return individual;
@@ -118,7 +118,7 @@ public class KnapsackProblem implements Problem {
                     continue;
                 var weight = itemWeight.get(i);
                 gc.setFill(colorsOfItems.get(i));
-                gc.fillRect(350, 500 - level - Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER), 300, Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER) );
+                gc.fillRect(350, 500 - level - Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER), 300, Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER));
                 level += Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER);
             }
         }

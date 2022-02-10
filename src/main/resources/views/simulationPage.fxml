@@ -33,10 +33,10 @@
                   <Canvas fx:id="canvas" height="525.0" layoutY="-3.0" width="1000.0" />
                   <LineChart fx:id="chart" prefHeight="527.0" prefWidth="993.0" stylesheets="@../css/main.css">
                      <xAxis>
-                        <NumberAxis label="Generations" side="BOTTOM" />
+                        <NumberAxis label="Generations" side="BOTTOM" fx:id="xAxis"/>
                      </xAxis>
                      <yAxis>
-                        <NumberAxis label="Fitness" lowerBound="1.0" minorTickCount="8" side="LEFT" tickUnit="0.1" upperBound="1.0" />
+                        <NumberAxis label="Fitness" lowerBound="1000.0" minorTickCount="8" side="LEFT" tickUnit="0.1" upperBound="1.0" fx:id="yAxis"/>
                      </yAxis>
                   </LineChart>
                </children></Pane>

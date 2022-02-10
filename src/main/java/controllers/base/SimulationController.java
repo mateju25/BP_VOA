@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -41,6 +42,7 @@ public class SimulationController {
     public Slider speedChanger;
     public Label lblSpeed;
     public Canvas canvas;
+    public NumberAxis yAxis;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
@@ -65,7 +67,7 @@ public class SimulationController {
 
         ConcurrentLinkedQueue<AlgorithmResults> dataQ = new ConcurrentLinkedQueue<>();
 
-        chart.getYAxis().setAutoRanging(false);
+        yAxis.setAutoRanging(false);
         chart.setAnimated(false);
         chart.getData().add(seriesBest);
         chart.getData().add(seriesAverage);
@@ -113,15 +115,15 @@ public class SimulationController {
                 var data = dataQ.remove();
                 seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getBestFitness()));
                 seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getAverageFitnessInGen()));
-                var highBound = ((ValueAxis<Double>) chart.getYAxis()).getUpperBound();
+                var highBound = yAxis.getUpperBound();
                 if (highBound < Math.round(data.getAverageFitnessInGen()) + 0.5) {
-                    ((ValueAxis<Double>) chart.getYAxis()).setUpperBound(Math.round(data.getAverageFitnessInGen()) + 0.5);
+                    yAxis.setUpperBound(Math.round(data.getAverageFitnessInGen()) + 0.5);
                 }
-                var lowBound = ((ValueAxis<Double>) chart.getYAxis()).getLowerBound();
+                var lowBound = yAxis.getLowerBound();
                 if (lowBound > Math.round(data.getBestFitness()) - 0.5) {
-                    ((ValueAxis<Double>) chart.getYAxis()).setLowerBound(Math.round(data.getBestFitness()) - 0.5);
+                    yAxis.setLowerBound(Math.round(data.getBestFitness()) - 0.5);
                 }
-
+                yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
                 ga.getProblem().visualize(canvas, data);
             }
         };
