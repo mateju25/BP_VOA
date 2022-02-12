@@ -8,11 +8,13 @@ import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class TargetAssignmentProblem implements Problem{
+public class TargetAssignmentProblem implements Problem {
     private List<List<Double>> matrixOfProbabilities;
     private List<Double> targetValues;
     private Integer maximumAssignedTargets;
@@ -27,7 +29,7 @@ public class TargetAssignmentProblem implements Problem{
         for (int i = 0; i < numOfWeapons; i++) {
             matrixOfProbabilities.add(new ArrayList<>(numOfTargets));
             for (int j = 0; j < numOfTargets; j++) {
-                matrixOfProbabilities.get(i).add(j, BaseController.rndm.nextInt(8)/10.0);
+                matrixOfProbabilities.get(i).add(j, BaseController.rndm.nextInt(8) / 10.0);
             }
         }
         for (int j = 0; j < numOfTargets; j++) {
@@ -42,13 +44,18 @@ public class TargetAssignmentProblem implements Problem{
             this.colorsOfItems.add(item);
         }
     }
-    
+
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
         for (int i = 0; i < numOfWeapons; i++) {
+            var targetIndexes = Arrays.stream(IntStream.range(0, numOfTargets).toArray()).boxed().collect(Collectors.toList());
             for (int j = 0; j < BaseController.rndm.nextInt(maximumAssignedTargets) + 1; j++) {
+                if (targetIndexes.size() == 0)
+                    break;
                 individual.add(i);
-                individual.add(BaseController.rndm.nextInt(numOfTargets));
+                var index = BaseController.rndm.nextInt(targetIndexes.size());
+                individual.add(targetIndexes.get(index));
+                targetIndexes.remove(index);
             }
         }
         return individual;
@@ -57,8 +64,8 @@ public class TargetAssignmentProblem implements Problem{
     @Override
     public Double fitness(List<Integer> individual) {
         var actualDes = new ArrayList<>(targetValues);
-        for (int i = 0; i < individual.size() - 1; i+=2) {
-            actualDes.set(individual.get(i+1), (actualDes.get(individual.get(i+1)) * matrixOfProbabilities.get(individual.get(i)).get(individual.get(i + 1))));
+        for (int i = 0; i < individual.size() - 1; i += 2) {
+            actualDes.set(individual.get(i + 1), (actualDes.get(individual.get(i + 1)) * matrixOfProbabilities.get(individual.get(i)).get(individual.get(i + 1))));
         }
 
         return (actualDes.stream().reduce(0.0, Double::sum));
@@ -66,7 +73,7 @@ public class TargetAssignmentProblem implements Problem{
 
     @Override
     public List<Integer> mutate(List<Integer> individual) {
-        var index = BaseController.rndm.nextInt((individual.size() - 1) /2) * 2 + 1;
+        var index = BaseController.rndm.nextInt((individual.size() - 1) / 2) * 2 + 1;
         Collections.swap(individual, index, index + 2);
 
         return individual;
@@ -76,15 +83,15 @@ public class TargetAssignmentProblem implements Problem{
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
         var index = BaseController.rndm.nextInt(numOfWeapons - 2) + 1;
-        for (int i = 0; i < parent1.size()-1; i+=2) {
+        for (int i = 0; i < parent1.size() - 1; i += 2) {
             if (parent1.get(i) < index) {
                 child1.add(parent1.get(i));
-                child1.add(parent1.get(i+1));
+                child1.add(parent1.get(i + 1));
             } else {
-                for (int j = 0; j < parent2.size(); j+=2) {
+                for (int j = 0; j < parent2.size(); j += 2) {
                     if (parent2.get(j) >= index) {
                         child1.add(parent2.get(j));
-                        child1.add(parent2.get(j+1));
+                        child1.add(parent2.get(j + 1));
                     }
                 }
                 break;
@@ -119,24 +126,33 @@ public class TargetAssignmentProblem implements Problem{
 
             var best = data.getBestIndividual();
 
-            for (int i = 0; i < best.size(); i+=2) {
+            for (int i = 0; i < best.size(); i += 2) {
                 gc.setStroke(colorsOfItems.get(best.get(i)));
-                gc.setLineWidth(matrixOfProbabilities.get(best.get(i)).get(best.get(i + 1))*6 + 1);
-                gc.strokeLine(offsetW*(best.get(i) + 1) + SIZE/2, 360, offsetT*(best.get(i+1)+1) + SIZE/2, 100 + SIZE/2);
+                gc.setLineWidth(matrixOfProbabilities.get(best.get(i)).get(best.get(i + 1)) * 6 + 1);
+                gc.strokeLine(offsetW * (best.get(i) + 1) + SIZE / 2, 360, offsetT * (best.get(i + 1) + 1) + SIZE / 2, 100 + SIZE / 2);
             }
 
             gc.setLineWidth(2);
             gc.setStroke(Color.BLACK);
             gc.setFill(Color.BLACK);
 
-            for (int i = 1; i < numOfTargets+1; i++) {
-                gc.fillOval(offsetT*i, 100, SIZE, SIZE);
-                gc.fillText(targetValues.get(i-1).intValue()+"", offsetT*i + SIZE/3, 100 - SIZE/2);
+            gc.setLineWidth(1);
+            gc.strokeText("Targets ", 20, 70);
+
+            for (int i = 1; i < numOfTargets + 1; i++) {
+                var scale = 5 - targetValues.get(i - 1).intValue();
+                gc.setFill(Color.rgb((50 * scale), (50 * scale), (50 * scale)));
+                gc.fillOval(offsetT * i, 100, SIZE, SIZE);
+                gc.fillText(targetValues.get(i - 1).intValue() + "", offsetT * i + SIZE / 3, 100 - SIZE / 2);
             }
 
-            for (int i = 1; i < numOfWeapons+1; i++) {
-                gc.fillOval(offsetW*i, 360, SIZE, SIZE);
-                gc.fillText(i+"", offsetW*i + SIZE/3, 360 + 2 * SIZE);
+            gc.setLineWidth(1);
+            gc.strokeText("Weapons ", 20, 400);
+
+            gc.setFill(Color.BLACK);
+
+            for (int i = 1; i < numOfWeapons + 1; i++) {
+                gc.fillOval(offsetW * i, 360, SIZE, SIZE);
             }
 
         }

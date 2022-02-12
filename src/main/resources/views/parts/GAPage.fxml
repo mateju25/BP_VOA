@@ -19,18 +19,18 @@
       <Pane layoutX="55.0" layoutY="188.0" prefHeight="275.0" prefWidth="790.0" styleClass="pane-around">
          <children>
             <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Selection of new individuals:" />
-            <Label layoutX="40.0" layoutY="56.0" styleClass="label-small-text" text="Percentage - roulete:" />
-            <TextField fx:id="percentageRoulette" layoutX="206.0" layoutY="50.0" prefHeight="28.0" prefWidth="189.0" text="0.2" />
-            <Label layoutX="38.0" layoutY="118.0" styleClass="label-small-text" text="Percentage - tournament:" />
-            <TextField fx:id="percentageTournament" layoutX="201.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" text="0.1" />
-            <Label layoutX="43.0" layoutY="191.0" styleClass="label-small-text" text="Size of tournament:" />
-            <TextField fx:id="sizeTournament" layoutX="206.0" layoutY="185.0" prefHeight="28.0" prefWidth="189.0" text="10" />
-            <Label layoutX="420.0" layoutY="56.0" styleClass="label-small-text" text="Percentage - elitism:" />
-            <TextField fx:id="percentageElitism" layoutX="569.0" layoutY="51.0" prefHeight="28.0" prefWidth="189.0" text="0.3" />
-            <Label layoutX="418.0" layoutY="122.0" styleClass="label-small-text" text="Type of crossover:" />
-            <ChoiceBox fx:id="typeCrossover" disable="true" layoutX="564.0" layoutY="116.0" prefHeight="30.0" prefWidth="189.0" />
-            <Label layoutX="418.0" layoutY="190.0" styleClass="label-small-text" text="Percentage - mutation:" />
-            <TextField fx:id="percentageMutation" layoutX="567.0" layoutY="185.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
+            <Label layoutX="25.0" layoutY="72.0" styleClass="label-small-text" text="Percentage roulete:" />
+            <TextField fx:id="percentageRoulette" layoutX="191.0" layoutY="67.0" prefHeight="28.0" prefWidth="189.0" text="0.2" />
+            <Label layoutX="25.0" layoutY="139.0" styleClass="label-small-text" text="Percentage tournament:" />
+            <TextField fx:id="percentageTournament" layoutX="191.0" layoutY="133.0" prefHeight="28.0" prefWidth="189.0" text="0.1" />
+            <Label layoutX="25.0" layoutY="209.0" styleClass="label-small-text" text="Size of tournament:" />
+            <TextField fx:id="sizeTournament" layoutX="191.0" layoutY="202.0" prefHeight="28.0" prefWidth="189.0" text="10" />
+            <Label layoutX="412.0" layoutY="72.0" styleClass="label-small-text" text="Percentage elitism:" />
+            <TextField fx:id="percentageElitism" layoutX="567.0" layoutY="67.0" prefHeight="28.0" prefWidth="189.0" text="0.3" />
+            <Label layoutX="412.0" layoutY="139.0" styleClass="label-small-text" text="Type of crossover:" />
+            <ChoiceBox fx:id="typeCrossover" disable="true" layoutX="567.0" layoutY="132.0" prefHeight="30.0" prefWidth="189.0" />
+            <Label layoutX="412.0" layoutY="208.0" styleClass="label-small-text" text="Percentage mutation:" />
+            <TextField fx:id="percentageMutation" layoutX="567.0" layoutY="203.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
          </children>
       </Pane>
    </children>

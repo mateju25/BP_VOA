@@ -171,10 +171,10 @@ public class VehicleRoutingProblem implements Problem {
             gc.fillRect(-5, -5, canvas.getWidth() + 5, canvas.getHeight() + 5);
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(5);
-            var LEFT_OFFSET = 260;
+            var LEFT_OFFSET = 170;
             var UP_OFFSET = 5;
             var best = data.getBestIndividual();
-            var usedColors = new ArrayList<>();
+            var usedColors = new ArrayList<Color>();
 
             for (int i = 0; i < best.size() - 1; i++) {
                 if (points.get(best.get(i)).demand == 0) {
@@ -187,6 +187,21 @@ public class VehicleRoutingProblem implements Problem {
                         points.get(best.get(i+1)).xCor  + LEFT_OFFSET + 3,
                         points.get(best.get(i+1)).yCor + UP_OFFSET + 3);
             }
+
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.strokeText("Vehicle capacity: " + this.vehicleCapacity, LEFT_OFFSET + 550, 70);
+            gc.strokeText("Trails:", LEFT_OFFSET + 550, 90);
+            for (int i = 0; i < usedColors.size(); i++) {
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(1);
+                gc.strokeText(i+"", LEFT_OFFSET + 560, 110 + i*20);
+                gc.setStroke(usedColors.get(i));
+                gc.setLineWidth(4);
+                gc.strokeLine(LEFT_OFFSET + 575, 105+i*20, LEFT_OFFSET + 595, 105+i*20);
+            }
+
+
             for (int i = 0; i < points.size(); i++) {
                 if (i == 0) {
                     gc.setFill(Color.RED);
@@ -195,7 +210,7 @@ public class VehicleRoutingProblem implements Problem {
                 }
                 gc.setFill(Color.BLACK);
                 gc.fillRect(points.get(i).xCor + LEFT_OFFSET, points.get(i).yCor + UP_OFFSET, 6, 6);
-                gc.fillText(i+"", points.get(i).xCor + LEFT_OFFSET - 1, points.get(i).yCor + UP_OFFSET - 1);
+                gc.fillText(this.points.get(i).demand+"", points.get(i).xCor + LEFT_OFFSET - 1, points.get(i).yCor + UP_OFFSET - 1);
             }
         }
     }

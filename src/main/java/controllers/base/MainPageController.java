@@ -5,11 +5,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import model.algorithms.Algorithm;
@@ -28,6 +34,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class MainPageController {
+    public Label warning;
     private Boolean controllerLoaded = false;
 
     @FXML
@@ -40,14 +47,23 @@ public class MainPageController {
     public TextField numberOfItems;
     public TextField backpackCapacity;
     public TextField averageWeight;
+    public ImageView toolNumberOfItems;
+    public ImageView toolCapacity;
+    public ImageView toolAverage;
     //vrp
     public TextField sizeOfProblem;
     public TextField vehicleCapacity;
     public TextField averageDemand;
+    public ImageView toolSizeProblem;
+    public ImageView toolAverageDemand;
+    public ImageView toolVehicleCapacity;
     //tap
     public TextField numberOfWeapons;
     public TextField numberOfTargets;
     public TextField maxAssignedTargets;
+    public ImageView toolNumberOfWeapons;
+    public ImageView toolMaximum;
+    public ImageView toolNumberOfTargets;
 
     public void initialize() {
         if (controllerLoaded)
@@ -123,7 +139,7 @@ public class MainPageController {
             if (BaseController.chosedProblem != null)
                 probChoiceBox.getSelectionModel().select(BaseController.problems.indexOf(BaseController.chosedProblem));
             else
-                probChoiceBox.getSelectionModel().select(1);
+                probChoiceBox.getSelectionModel().select(0);
         }
     }
 
@@ -140,18 +156,27 @@ public class MainPageController {
 
         if (averageWeight != null) {
             averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(445));
+            backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(800));
+            numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            makeTooltip(toolNumberOfItems,"Number of items that can be put into backpack (each will have a random generated size)");
+            makeTooltip(toolCapacity,"Maximum load that can be put into backpack");
+            makeTooltip(toolAverage,"Average size of item that will be put into backpack");
         }
         if (sizeOfProblem != null) {
             sizeOfProblem.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            makeTooltip(toolSizeProblem,"Number of cities that will be generated (each will have a random value of demand)");
+            makeTooltip(toolAverageDemand,"Average demand for cities");
+            makeTooltip(toolVehicleCapacity,"Maximum capacity of vehicle (sum of city demands of one trip must not exceed the vehicle capacity)");
         }
         if (numberOfWeapons != null) {
             numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
+            makeTooltip(toolNumberOfWeapons,"Number of weapons that will be generated (each will have a random probability to destroy each target)");
+            makeTooltip(toolMaximum,"Maximum number of assigned targets to one weapon");
+            makeTooltip(toolNumberOfTargets,"Number of targets that will be generated (each will have a destruction level 1 - 5)");
         }
     }
 
@@ -162,6 +187,10 @@ public class MainPageController {
                         Integer.valueOf(averageWeight.getText()), Integer.valueOf(backpackCapacity.getText()));
             }
             if (BaseController.chosedProblem instanceof  VehicleRoutingProblem) {
+                if (Integer.parseInt(averageDemand.getText()) > Integer.parseInt(vehicleCapacity.getText())) {
+                    warning.setText("Average demand should not be higher than vehicle capacity!");
+                    return;
+                }
                 ((VehicleRoutingProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(sizeOfProblem.getText()),
                         Integer.valueOf(vehicleCapacity.getText()), Integer.valueOf(averageDemand.getText()));
             }
@@ -173,5 +202,15 @@ public class MainPageController {
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();
         }
+    }
+
+    public void removeWarning(MouseEvent mouseEvent) {
+        warning.setText("");
+    }
+
+    private void makeTooltip(Node component, String message) {
+        var t = new Tooltip(message);
+        t.setShowDelay(Duration.seconds(0.5));
+        Tooltip.install(component, t);
     }
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +19,13 @@ public class KnapsackProblem implements Problem {
     private List<Integer> itemWeight;
     private Integer weightOfBackpack;
     private List<Color> colorsOfItems;
+    private Integer averageWeightOfItem;
 
     public void populateProblem(Integer numOfItems, Integer averageWeightOfItem, Integer weightOfBackpack) {
         this.weightOfBackpack = weightOfBackpack;
         this.itemWeight = new ArrayList<>();
         this.colorsOfItems = new ArrayList<>();
+        this.averageWeightOfItem = averageWeightOfItem;
         for (int i = 0; i < numOfItems; i++) {
             var item = BaseController.rndm.nextInt(2 * averageWeightOfItem) + 1;
             this.itemWeight.add(item);
@@ -44,10 +47,16 @@ public class KnapsackProblem implements Problem {
 
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
+        var treshhold = 0.5;
+        if (this.itemWeight.size() * averageWeightOfItem > weightOfBackpack)
+            treshhold = weightOfBackpack / (this.itemWeight.size() * 1.0 * averageWeightOfItem);
         do {
             individual = new ArrayList<>();
             for (int i = 0; i < itemWeight.size(); i++) {
-                individual.add(BaseController.rndm.nextInt(3) % 2);
+                if (BaseController.rndm.nextDouble() < treshhold * 0.5)
+                    individual.add(1);
+                else
+                    individual.add(0);
             }
         } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
         return individual;
@@ -107,19 +116,26 @@ public class KnapsackProblem implements Problem {
             gc.fillRect(-5, -5, canvas.getWidth() + 5, canvas.getHeight() + 5);
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(5);
-            var HEIGHT_OF_CONTAINER = 445;
-            gc.strokeLine(350, 73, 350, 500);
-            gc.strokeLine(650, 73, 650, 500);
-            gc.strokeLine(350, 500, 650, 500);
+            var HEIGHT_OF_CONTAINER = 450;
+            var WIDTH_OF_CONTAINER = 800;
+            gc.strokeLine(100, 20, 100 + WIDTH_OF_CONTAINER, 20);
+            gc.strokeLine(100, HEIGHT_OF_CONTAINER + 20, 100 + WIDTH_OF_CONTAINER, HEIGHT_OF_CONTAINER + 20);
+            gc.strokeLine(100, 20, 100, HEIGHT_OF_CONTAINER + 20);
+            gc.strokeLine(100 + WIDTH_OF_CONTAINER, 20, 100 + WIDTH_OF_CONTAINER, HEIGHT_OF_CONTAINER + 20);
+
             var best = data.getBestIndividual();
+
+            gc.setLineWidth(1);
+            gc.strokeText((int)(1/data.getBestFitness()*100) + "%", 80 + WIDTH_OF_CONTAINER/2, HEIGHT_OF_CONTAINER + 40);
+
             var level = 0;
             for (int i = 0; i < best.size(); i++) {
                 if (best.get(i) == 0)
                     continue;
                 var weight = itemWeight.get(i);
                 gc.setFill(colorsOfItems.get(i));
-                gc.fillRect(350, 500 - level - Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER), 300, Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER));
-                level += Math.round(((weight * 1.0) / weightOfBackpack) * HEIGHT_OF_CONTAINER);
+                gc.fillRect(100 + level , 20, Math.round(((weight * 1.0) / weightOfBackpack) * WIDTH_OF_CONTAINER), HEIGHT_OF_CONTAINER);
+                level += Math.round(((weight * 1.0) / weightOfBackpack) * WIDTH_OF_CONTAINER);
             }
         }
     }
