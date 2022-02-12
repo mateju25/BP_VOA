@@ -5,22 +5,19 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import model.algorithms.Algorithm;
 import model.algorithms.AntColonySystemAlgorithm;
-import model.algorithms.ArtifialBeeColonyAlgorithm;
+import model.algorithms.ArtificialBeeColonyAlgorithm;
 import model.algorithms.GeneticAlgorithm;
 import model.problems.KnapsackProblem;
 import model.problems.Problem;
@@ -75,7 +72,7 @@ public class MainPageController {
         if (BaseController.algorithms == null) {
             BaseController.algorithms = new ArrayList<>();
             BaseController.algorithms.add(new AntColonySystemAlgorithm());
-            BaseController.algorithms.add(new ArtifialBeeColonyAlgorithm());
+            BaseController.algorithms.add(new ArtificialBeeColonyAlgorithm());
             BaseController.algorithms.add(new GeneticAlgorithm());
         }
         if (BaseController.problems == null) {
@@ -104,7 +101,7 @@ public class MainPageController {
                         }
                     });
             algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosedAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
-            algChoiceBox.getSelectionModel().select(2);
+            algChoiceBox.getSelectionModel().select(1);
 
         }
         if (probChoiceBox != null) {
@@ -158,25 +155,25 @@ public class MainPageController {
             averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(800));
             numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            makeTooltip(toolNumberOfItems,"Number of items that can be put into backpack (each will have a random generated size)");
-            makeTooltip(toolCapacity,"Maximum load that can be put into backpack");
-            makeTooltip(toolAverage,"Average size of item that will be put into backpack");
+            BaseController.makeTooltip(toolNumberOfItems,"Number of items that can be put into backpack (each will have a random generated size)");
+            BaseController.makeTooltip(toolCapacity,"Maximum load that can be put into backpack");
+            BaseController.makeTooltip(toolAverage,"Average size of item that will be put into backpack");
         }
         if (sizeOfProblem != null) {
             sizeOfProblem.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            makeTooltip(toolSizeProblem,"Number of cities that will be generated (each will have a random value of demand)");
-            makeTooltip(toolAverageDemand,"Average demand for cities");
-            makeTooltip(toolVehicleCapacity,"Maximum capacity of vehicle (sum of city demands of one trip must not exceed the vehicle capacity)");
+            BaseController.makeTooltip(toolSizeProblem,"Number of cities that will be generated (each will have a random value of demand)");
+            BaseController.makeTooltip(toolAverageDemand,"Average demand for cities");
+            BaseController.makeTooltip(toolVehicleCapacity,"Maximum capacity of vehicle (sum of city demands of one trip must not exceed the vehicle capacity)");
         }
         if (numberOfWeapons != null) {
             numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
-            makeTooltip(toolNumberOfWeapons,"Number of weapons that will be generated (each will have a random probability to destroy each target)");
-            makeTooltip(toolMaximum,"Maximum number of assigned targets to one weapon");
-            makeTooltip(toolNumberOfTargets,"Number of targets that will be generated (each will have a destruction level 1 - 5)");
+            BaseController.makeTooltip(toolNumberOfWeapons,"Number of weapons that will be generated (each will have a random probability to destroy each target)");
+            BaseController.makeTooltip(toolMaximum,"Maximum number of assigned targets to one weapon");
+            BaseController.makeTooltip(toolNumberOfTargets,"Number of targets that will be generated (each will have a destruction level 1 - 5)");
         }
     }
 
@@ -208,9 +205,4 @@ public class MainPageController {
         warning.setText("");
     }
 
-    private void makeTooltip(Node component, String message) {
-        var t = new Tooltip(message);
-        t.setShowDelay(Duration.seconds(0.5));
-        Tooltip.install(component, t);
-    }
 }

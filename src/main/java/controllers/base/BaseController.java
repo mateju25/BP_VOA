@@ -1,6 +1,9 @@
 package controllers.base;
 
+import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.algorithms.Algorithm;
 import model.problems.Problem;
 
@@ -18,4 +21,10 @@ public class BaseController {
     public static Random rndm;
 
     public static Stage mainStage;
+
+    public static void makeTooltip(Node component, String message) {
+        var t = new Tooltip(message);
+        t.setShowDelay(Duration.seconds(0.5));
+        Tooltip.install(component, t);
+    }
 }

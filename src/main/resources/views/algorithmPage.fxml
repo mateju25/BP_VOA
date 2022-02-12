@@ -20,8 +20,9 @@
          <children>
             <Label fx:id="heading" alignment="CENTER" layoutX="379.0" layoutY="55.0" prefHeight="22.0" prefWidth="382.0" styleClass="label-underline" text="Algorithm parame" />
             <Button layoutX="895.0" layoutY="612.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Proceed" />
-            <Pane fx:id="algoPane" layoutX="127.0" layoutY="103.0" prefHeight="495.0" prefWidth="886.0" />
+            <Pane fx:id="algoPane" layoutX="127.0" layoutY="103.0" onMouseEntered="#removeWarning" prefHeight="495.0" prefWidth="886.0" />
              <Button layoutX="1005.0" layoutY="60.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="102.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+            <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="600.0" layoutY="617.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
          </children>
     </AnchorPane>
   </children>

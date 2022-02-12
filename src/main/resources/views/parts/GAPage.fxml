@@ -3,6 +3,8 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
 <Pane prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
@@ -14,6 +16,16 @@
             <TextField fx:id="numberIndividuals" layoutX="374.0" layoutY="48.0" prefHeight="28.0" prefWidth="189.0" text="100" />
             <Label layoutX="197.0" layoutY="90.0" styleClass="label-small-text" text="Number of generations:" />
             <TextField fx:id="numberGenerations" layoutX="374.0" layoutY="84.0" prefHeight="28.0" prefWidth="189.0" text="100" />
+            <ImageView fx:id="toolNumberIndividuals" fitHeight="20.0" fitWidth="20.0" layoutX="565.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="toolNumberGenerations" fitHeight="20.0" fitWidth="20.0" layoutX="565.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane layoutX="55.0" layoutY="188.0" prefHeight="275.0" prefWidth="790.0" styleClass="pane-around">
@@ -31,6 +43,36 @@
             <ChoiceBox fx:id="typeCrossover" disable="true" layoutX="567.0" layoutY="132.0" prefHeight="30.0" prefWidth="189.0" />
             <Label layoutX="412.0" layoutY="208.0" styleClass="label-small-text" text="Percentage mutation:" />
             <TextField fx:id="percentageMutation" layoutX="567.0" layoutY="203.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
+            <ImageView fx:id="toolRoulette" fitHeight="20.0" fitWidth="20.0" layoutX="381.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="toolTournament" fitHeight="20.0" fitWidth="20.0" layoutX="381.0" layoutY="137.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="toolTournamentSize" fitHeight="20.0" fitWidth="20.0" layoutX="380.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="toolElitism" fitHeight="20.0" fitWidth="20.0" layoutX="758.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="toolCrossover" fitHeight="20.0" fitWidth="20.0" layoutX="758.0" layoutY="137.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="toolMutation" fitHeight="20.0" fitWidth="20.0" layoutX="757.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/tooltip.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

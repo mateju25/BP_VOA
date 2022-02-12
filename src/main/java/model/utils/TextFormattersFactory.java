@@ -30,4 +30,9 @@ public class TextFormattersFactory {
         Pattern patternDouble = Pattern.compile("\\d*|\\d+[,.]\\d*");
         return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> patternDouble.matcher(change.getControlNewText()).matches() ? change : null);
     }
+
+    public static TextFormatter makeDoubleFormatterWithRange() {
+        Pattern patternDouble = Pattern.compile("^([0][,.]([0-9]{1,2}))|(1.0)|(0)|(0.)$");
+        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> patternDouble.matcher(change.getControlNewText()).matches() ? change : null);
+    }
 }

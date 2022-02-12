@@ -72,9 +72,8 @@ public class SimulationController {
         chart.getData().add(seriesBest);
         chart.getData().add(seriesAverage);
 
-        GeneticAlgorithm ga = (GeneticAlgorithm) BaseController.chosedAlgorithm;
-        ga.setProblem(BaseController.chosedProblem);
-        ga.initFirstGeneration();
+        BaseController.chosedAlgorithm.setProblem(BaseController.chosedProblem);
+        BaseController.chosedAlgorithm.initFirstGeneration();
 
         executorService = Executors.newCachedThreadPool(new ThreadFactory() {
             @Override
@@ -88,7 +87,7 @@ public class SimulationController {
         class AddToQueue implements Runnable {
             public void run() {
                 try {
-                    AlgorithmResults res = ga.nextGeneration();
+                    AlgorithmResults res = BaseController.chosedAlgorithm.nextGeneration();
 
                     if (res != null) {
                         dataQ.add(res);
@@ -116,15 +115,15 @@ public class SimulationController {
                 seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getBestFitness()));
                 seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getAverageFitnessInGen()));
                 var highBound = yAxis.getUpperBound();
-                if (highBound < Math.round(data.getAverageFitnessInGen()) + 0.5) {
-                    yAxis.setUpperBound(Math.round(data.getAverageFitnessInGen()) + 0.5);
+                if (highBound < data.getAverageFitnessInGen() + 0.5) {
+                    yAxis.setUpperBound(data.getAverageFitnessInGen() + 0.5);
                 }
                 var lowBound = yAxis.getLowerBound();
-                if (lowBound > Math.round(data.getBestFitness()) - 0.5) {
-                    yAxis.setLowerBound(Math.round(data.getBestFitness()) - 0.5);
+                if (lowBound > data.getBestFitness() - 0.5) {
+                    yAxis.setLowerBound(data.getBestFitness() - 0.5);
                 }
                 yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
-                ga.getProblem().visualize(canvas, data);
+                BaseController.chosedAlgorithm.getProblem().visualize(canvas, data);
             }
         };
 

@@ -9,8 +9,7 @@ import model.utils.AlgorithmResults;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
+@Setter @Getter
 public class GeneticAlgorithm implements Algorithm {
     private List<List<Integer>> generation = new ArrayList<>();
     private List<Integer> bestIndividual = new ArrayList<>();
@@ -93,10 +92,6 @@ public class GeneticAlgorithm implements Algorithm {
     public AlgorithmResults nextGeneration() {
         if (actualGeneration < numOfGenerations) {
             generation = generation.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
-//            if (actualGeneration == 0) {
-//                generation.forEach(e -> System.out.println(problem.fitness(e)));
-//                System.out.println(" ---------------------------------------------------------------- ");
-//            }
             List<List<Integer>> newGeneration = new ArrayList<>();
             for (int i = 0; i < numOfIndividuals * percentageElitism; i++) {
                 newGeneration.add(generation.get(i));
@@ -120,7 +115,7 @@ public class GeneticAlgorithm implements Algorithm {
             this.generation = newGeneration;
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();
             actualGeneration++;
-            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, problem.fitness(newGeneration.get(newGeneration.size()-1)), bestIndividual, actualGeneration);
+            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, bestIndividual, actualGeneration);
         } else
             return null;
     }
