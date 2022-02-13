@@ -21,7 +21,7 @@ public class BaseController {
     public static Random rndm;
 
     public static Stage mainStage;
-
+    public static VisualizationController visualizationController;
     public static void makeTooltip(Node component, String message) {
         var t = new Tooltip(message);
         t.setShowDelay(Duration.seconds(0.5));

@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,10 +18,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import lombok.SneakyThrows;
 import model.algorithms.GeneticAlgorithm;
 import model.utils.AlgorithmResults;
+import model.utils.SimulationResults;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -43,6 +50,7 @@ public class SimulationController {
     public Label lblSpeed;
     public Canvas canvas;
     public NumberAxis yAxis;
+    public Button btnSave;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
@@ -50,10 +58,12 @@ public class SimulationController {
     private Boolean simulationRestart = false;
     private Boolean simulationChart = true;
     private Integer simulationSpeed = 200;
+    private SimulationResults results;
 
 
     public void initialize() {
         BaseController.rndm = new Random(1);
+        results = new SimulationResults(BaseController.chosedAlgorithm.nameForFaces() + " solves " + BaseController.chosedProblem.nameForFaces());
         btnContinue.setDisable(true);
         canvas.setVisible(!simulationChart);
 
@@ -91,6 +101,7 @@ public class SimulationController {
 
                     if (res != null) {
                         dataQ.add(res);
+                        results.addData(res.getAverageFitnessInGen(), res.getBestFitness());
 
                         Thread.sleep(simulationSpeed);
                         while (!simulationRunning) {
@@ -144,6 +155,21 @@ public class SimulationController {
 
         });
 
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.csv"));
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
+                fileChooser.setInitialFileName(BaseController.chosedAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
+                try {
+                    results.writeToCsv(fileChooser.showSaveDialog(BaseController.mainStage));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void goBack(ActionEvent actionEvent) throws IOException {

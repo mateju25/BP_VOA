@@ -205,4 +205,9 @@ public class MainPageController {
         warning.setText("");
     }
 
+    public void visualizeData(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/vizualizationPage.fxml")));
+        BaseController.mainStage.setScene(new Scene(root));
+        BaseController.mainStage.show();
+    }
 }
