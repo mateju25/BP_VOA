@@ -6,28 +6,24 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label layoutX="40.0" layoutY="20.0" styleClass="label-small-text" text="Size of the problem:" />
-      <Label layoutX="40.0" layoutY="119.0" styleClass="label-small-text" text="Vehicle capacity:" />
-      <TextField fx:id="sizeOfProblem" layoutX="186.0" layoutY="14.0" prefHeight="28.0" prefWidth="189.0" text="15" />
-      <TextField fx:id="vehicleCapacity" layoutX="186.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" text="10" />
-      <Label layoutX="40.0" layoutY="72.0" styleClass="label-small-text" text="Average demand:" />
-      <TextField fx:id="averageDemand" layoutX="186.0" layoutY="66.0" prefHeight="28.0" prefWidth="189.0" text="2" />
-      <ImageView fx:id="toolSizeProblem" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/tooltip.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="toolAverageDemand" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/tooltip.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="toolVehicleCapacity" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/tooltip.png" />
-         </image>
-      </ImageView>
-   </children>
+<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css"
+            xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+    <Label layoutX="40.0" layoutY="20.0" styleClass="label-small-text" text="Size of the problem:"/>
+    <Label layoutX="40.0" layoutY="119.0" styleClass="label-small-text" text="Vehicle capacity:"/>
+    <TextField fx:id="sizeOfProblem" layoutX="186.0" layoutY="14.0" prefHeight="28.0" prefWidth="189.0" text="15"/>
+    <TextField fx:id="vehicleCapacity" layoutX="186.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" text="10"/>
+    <Label layoutX="40.0" layoutY="72.0" styleClass="label-small-text" text="Average demand:"/>
+    <TextField fx:id="averageDemand" layoutX="186.0" layoutY="66.0" prefHeight="28.0" prefWidth="189.0" text="2"/>
+    <ImageView fx:id="toolSizeProblem" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="17.0"
+               pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../images/tooltip.png"/>
+    </ImageView>
+    <ImageView fx:id="toolAverageDemand" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="71.0"
+               pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../images/tooltip.png"/>
+    </ImageView>
+    <ImageView fx:id="toolVehicleCapacity" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="117.0"
+               pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../images/tooltip.png"/>
+    </ImageView>
 </AnchorPane>

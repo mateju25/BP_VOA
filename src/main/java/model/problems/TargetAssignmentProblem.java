@@ -29,18 +29,18 @@ public class TargetAssignmentProblem implements Problem {
         for (int i = 0; i < numOfWeapons; i++) {
             matrixOfProbabilities.add(new ArrayList<>(numOfTargets));
             for (int j = 0; j < numOfTargets; j++) {
-                matrixOfProbabilities.get(i).add(j, BaseController.rndm.nextInt(8) / 10.0);
+                matrixOfProbabilities.get(i).add(j, BaseController.randomGenerator.nextInt(8) / 10.0);
             }
         }
         for (int j = 0; j < numOfTargets; j++) {
-            targetValues.add((double) (BaseController.rndm.nextInt(5) + 1));
+            targetValues.add((double) (BaseController.randomGenerator.nextInt(5) + 1));
         }
         this.maximumAssignedTargets = maximumAssignedTargets;
         this.numOfWeapons = numOfWeapons;
         this.numOfTargets = numOfTargets;
 
         for (int i = 0; i < numOfWeapons; i++) {
-            var item = Color.web(DistinctColors.colors[BaseController.rndm.nextInt(DistinctColors.colors.length)]);
+            var item = Color.web(DistinctColors.colors[BaseController.randomGenerator.nextInt(DistinctColors.colors.length)]);
             this.colorsOfItems.add(item);
         }
     }
@@ -49,11 +49,11 @@ public class TargetAssignmentProblem implements Problem {
         var individual = new ArrayList<Integer>();
         for (int i = 0; i < numOfWeapons; i++) {
             var targetIndexes = Arrays.stream(IntStream.range(0, numOfTargets).toArray()).boxed().collect(Collectors.toList());
-            for (int j = 0; j < BaseController.rndm.nextInt(maximumAssignedTargets) + 1; j++) {
+            for (int j = 0; j < BaseController.randomGenerator.nextInt(maximumAssignedTargets) + 1; j++) {
                 if (targetIndexes.size() == 0)
                     break;
                 individual.add(i);
-                var index = BaseController.rndm.nextInt(targetIndexes.size());
+                var index = BaseController.randomGenerator.nextInt(targetIndexes.size());
                 individual.add(targetIndexes.get(index));
                 targetIndexes.remove(index);
             }
@@ -73,7 +73,7 @@ public class TargetAssignmentProblem implements Problem {
 
     @Override
     public List<Integer> mutate(List<Integer> individual) {
-        var index = BaseController.rndm.nextInt((individual.size() - 1) / 2) * 2 + 1;
+        var index = BaseController.randomGenerator.nextInt((individual.size() - 1) / 2) * 2 + 1;
         Collections.swap(individual, index, index + 2);
 
         return individual;
@@ -82,7 +82,7 @@ public class TargetAssignmentProblem implements Problem {
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
-        var index = BaseController.rndm.nextInt(numOfWeapons - 2) + 1;
+        var index = BaseController.randomGenerator.nextInt(numOfWeapons - 2) + 1;
         for (int i = 0; i < parent1.size() - 1; i += 2) {
             if (parent1.get(i) < index) {
                 child1.add(parent1.get(i));
@@ -129,7 +129,7 @@ public class TargetAssignmentProblem implements Problem {
             for (int i = 0; i < best.size(); i += 2) {
                 gc.setStroke(colorsOfItems.get(best.get(i)));
                 gc.setLineWidth(matrixOfProbabilities.get(best.get(i)).get(best.get(i + 1)) * 6 + 1);
-                gc.strokeLine(offsetW * (best.get(i) + 1) + SIZE / 2, 360, offsetT * (best.get(i + 1) + 1) + SIZE / 2, 100 + SIZE / 2);
+                gc.strokeLine(offsetW * (best.get(i) + 1) + (int) (SIZE / 2), 360, offsetT * (best.get(i + 1) + 1) + (int) (SIZE / 2), 100 + (int) (SIZE / 2));
             }
 
             gc.setLineWidth(2);
@@ -143,7 +143,7 @@ public class TargetAssignmentProblem implements Problem {
                 var scale = 5 - targetValues.get(i - 1).intValue();
                 gc.setFill(Color.rgb((50 * scale), (50 * scale), (50 * scale)));
                 gc.fillOval(offsetT * i, 100, SIZE, SIZE);
-                gc.fillText(targetValues.get(i - 1).intValue() + "", offsetT * i + SIZE / 3, 100 - SIZE / 2);
+                gc.fillText(targetValues.get(i - 1).intValue() + "", offsetT * i + (int) (SIZE / 3), 100 - (int) (SIZE / 3));
             }
 
             gc.setLineWidth(1);

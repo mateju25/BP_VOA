@@ -3,8 +3,6 @@ package controllers.base;
 import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,28 +10,23 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import lombok.SneakyThrows;
-import model.algorithms.GeneticAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.SimulationResults;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class SimulationController {
     @FXML
@@ -62,13 +55,13 @@ public class SimulationController {
 
 
     public void initialize() {
-        BaseController.rndm = new Random(1);
-        results = new SimulationResults(BaseController.chosedAlgorithm.nameForFaces() + " solves " + BaseController.chosedProblem.nameForFaces());
+        BaseController.randomGenerator = new Random(1);
+        results = new SimulationResults(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
         btnContinue.setDisable(true);
         canvas.setVisible(!simulationChart);
 
         lblSpeed.setText(simulationSpeed + " ms");
-        heading.setText(BaseController.chosedAlgorithm.nameForFaces() + " solves " + BaseController.chosedProblem.nameForFaces());
+        heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
 
         XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
         seriesBest.setName("Best");
@@ -82,22 +75,19 @@ public class SimulationController {
         chart.getData().add(seriesBest);
         chart.getData().add(seriesAverage);
 
-        BaseController.chosedAlgorithm.setProblem(BaseController.chosedProblem);
-        BaseController.chosedAlgorithm.initFirstGeneration();
+        BaseController.chosenAlgorithm.setProblem(BaseController.chosenProblem);
+        BaseController.chosenAlgorithm.initFirstGeneration();
 
-        executorService = Executors.newCachedThreadPool(new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread thread = new Thread(r);
-                thread.setDaemon(true);
-                return thread;
-            }
+        executorService = Executors.newCachedThreadPool(r -> {
+            Thread thread = new Thread(r);
+            thread.setDaemon(true);
+            return thread;
         });
 
         class AddToQueue implements Runnable {
             public void run() {
                 try {
-                    AlgorithmResults res = BaseController.chosedAlgorithm.nextGeneration();
+                    AlgorithmResults res = BaseController.chosenAlgorithm.nextGeneration();
 
                     if (res != null) {
                         dataQ.add(res);
@@ -134,13 +124,13 @@ public class SimulationController {
                     yAxis.setLowerBound(data.getBestFitness() - 0.5);
                 }
                 yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
-                BaseController.chosedAlgorithm.getProblem().visualize(canvas, data);
+                BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
             }
         };
 
         animationTimer.start();
 
-        speedChanger.valueProperty().addListener(new ChangeListener<Number>() {
+        speedChanger.valueProperty().addListener(new ChangeListener<>() {
 
             @Override
             public void changed(
@@ -158,21 +148,19 @@ public class SimulationController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.csv"));
-        btnSave.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
-                fileChooser.setInitialFileName(BaseController.chosedAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
-                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
-                try {
-                    results.writeToCsv(fileChooser.showSaveDialog(BaseController.mainStage));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        btnSave.setOnAction(event -> {
+            var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
+            fileChooser.setInitialFileName(BaseController.chosenAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
+            try {
+                results.writeToCsv(fileChooser.showSaveDialog(BaseController.mainStage));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
     }
 
-    public void goBack(ActionEvent actionEvent) throws IOException {
+    public void goBack() throws IOException {
         simulationRestart = true;
         animationTimer.stop();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
@@ -180,27 +168,27 @@ public class SimulationController {
         BaseController.mainStage.show();
     }
 
-    public void continueSim(ActionEvent actionEvent) {
+    public void continueSim() {
         simulationRunning = true;
         btnContinue.setDisable(true);
         btnPause.setDisable(false);
     }
 
-    public void pauseSim(ActionEvent actionEvent) {
+    public void pauseSim() {
         simulationRunning = false;
         btnContinue.setDisable(false);
         btnPause.setDisable(true);
     }
 
-    public void restartSim(ActionEvent actionEvent) {
+    public void restartSim() {
         simulationRestart = true;
         animationTimer.stop();
         chart.getData().clear();
-        BaseController.chosedAlgorithm.resetAlgorithm();
+        BaseController.chosenAlgorithm.resetAlgorithm();
         initialize();
     }
 
-    public void switchVisualization(ActionEvent actionEvent) {
+    public void switchVisualization() {
         simulationChart = !simulationChart;
         canvas.setVisible(!simulationChart);
         chart.setVisible(simulationChart);

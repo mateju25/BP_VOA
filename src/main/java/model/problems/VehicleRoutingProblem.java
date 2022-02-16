@@ -30,7 +30,7 @@ public class VehicleRoutingProblem implements Problem {
     private List<Point> points;
     private List<List<Integer>> matrixOfDistances;
     private Integer vehicleCapacity;
-    private Double fitnessCoef;
+    private Double fitnessCoefficient;
     private List<Color> colorsOfItems;
 
 
@@ -39,14 +39,14 @@ public class VehicleRoutingProblem implements Problem {
         colorsOfItems = new ArrayList<>();
         points.add(new Point(250, 250, 0));
         for (int i = 0; i < sizeOfTheProblem - 1; i++) {
-            var demand = BaseController.rndm.nextInt(2*averageDemand - 2) + 1;
+            var demand = BaseController.randomGenerator.nextInt(2*averageDemand - 2) + 1;
             while (demand > vehicleCapacity)
-                demand = BaseController.rndm.nextInt(2*averageDemand - 2) + 1;
-            var tmp = new Point(BaseController.rndm.nextInt(500), BaseController.rndm.nextInt(500), demand);
+                demand = BaseController.randomGenerator.nextInt(2*averageDemand - 2) + 1;
+            var tmp = new Point(BaseController.randomGenerator.nextInt(500), BaseController.randomGenerator.nextInt(500), demand);
             points.add(tmp);
         }
         for (int i = 0; i < sizeOfTheProblem; i++) {
-            var item = Color.web(DistinctColors.colors[BaseController.rndm.nextInt(DistinctColors.colors.length)]);
+            var item = Color.web(DistinctColors.colors[BaseController.randomGenerator.nextInt(DistinctColors.colors.length)]);
             this.colorsOfItems.add(item);
         }
         matrixOfDistances = new ArrayList<>(points.size());
@@ -66,11 +66,11 @@ public class VehicleRoutingProblem implements Problem {
         this.vehicleCapacity = vehicleCapacity;
 
         var tmpIndividual = makeOneIndividual();
-        fitnessCoef = 1.0;
+        fitnessCoefficient = 1.0;
         var fitness = fitness(tmpIndividual);
-        while (fitness * fitnessCoef > 1)
-            fitnessCoef *= 0.1;
-        fitnessCoef *= 10;
+        while (fitness * fitnessCoefficient > 1)
+            fitnessCoefficient *= 0.1;
+        fitnessCoefficient *= 10;
     }
 
     private List<Integer> checkAnAddBaseTownToIndividual(List<Integer> individual) {
@@ -105,7 +105,7 @@ public class VehicleRoutingProblem implements Problem {
             newIndividual.add(i);
         var length = newIndividual.size();
         for (int i = 0; i < length; i++) {
-            var item = newIndividual.get(BaseController.rndm.nextInt(newIndividual.size()));
+            var item = newIndividual.get(BaseController.randomGenerator.nextInt(newIndividual.size()));
             shuffledIndividual.add(item);
             newIndividual.remove(item);
         }
@@ -115,12 +115,12 @@ public class VehicleRoutingProblem implements Problem {
 
     @Override
     public List<Integer> mutate(List<Integer> individual) {
-        var newindividual = individual.stream().filter(e -> e != 0).collect(Collectors.toList());
+        var newIndividual = individual.stream().filter(e -> e != 0).collect(Collectors.toList());
 
-        var index = BaseController.rndm.nextInt(newindividual.size() - 2) + 1;
-        Collections.swap(newindividual, index, index + 1);
+        var index = BaseController.randomGenerator.nextInt(newIndividual.size() - 2) + 1;
+        Collections.swap(newIndividual, index, index + 1);
 
-        return checkAnAddBaseTownToIndividual(newindividual);
+        return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
     @Override
@@ -130,21 +130,21 @@ public class VehicleRoutingProblem implements Problem {
             currentFitness += matrixOfDistances.get(individual.get(i)).get(individual.get(i + 1));
         }
 
-        return (currentFitness) * fitnessCoef ;
+        return (currentFitness) * fitnessCoefficient;
     }
 
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
-        var newparent1 = parent1.stream().filter(e -> e != 0).collect(Collectors.toList());
-        var newparent2 = parent2.stream().filter(e -> e != 0).collect(Collectors.toList());
+        var newParent1 = parent1.stream().filter(e -> e != 0).collect(Collectors.toList());
+        var newParent2 = parent2.stream().filter(e -> e != 0).collect(Collectors.toList());
         var child1 = new ArrayList<Integer>();
-        var index = BaseController.rndm.nextInt(newparent1.size() - 2) + 1;
+        var index = BaseController.randomGenerator.nextInt(newParent1.size() - 2) + 1;
         for (int i = 0; i < parent1.size(); i++) {
             if (i < index) {
-                child1.add(newparent1.get(i));
-                newparent2.remove(newparent1.get(i));
+                child1.add(newParent1.get(i));
+                newParent2.remove(newParent1.get(i));
             } else {
-                child1.addAll(newparent2);
+                child1.addAll(newParent2);
                 break;
             }
         }

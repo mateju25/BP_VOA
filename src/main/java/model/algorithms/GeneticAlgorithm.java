@@ -38,7 +38,7 @@ public class GeneticAlgorithm implements Algorithm {
         this.actualGeneration = 0;
         this.generation = new ArrayList<>();
         this.bestIndividual = new ArrayList<>();
-        BaseController.rndm = new Random(1);
+        BaseController.randomGenerator = new Random(1);
     }
 
     public void initFirstGeneration() {
@@ -57,9 +57,7 @@ public class GeneticAlgorithm implements Algorithm {
 
     public List<List<Integer>> tournamentSelection() {
         var tournamentMembers = new ArrayList<List<Integer>>();
-        BaseController.rndm.ints(0, generation.size()).limit(sizeTournament).forEach(index -> {
-            tournamentMembers.add(generation.get(index));
-        });
+        BaseController.randomGenerator.ints(0, generation.size()).limit(sizeTournament).forEach(index -> tournamentMembers.add(generation.get(index)));
 
         var parents = tournamentMembers.stream().sorted(Comparator.comparing(problem::fitness)).limit(2).collect(Collectors.toList());
 
@@ -67,18 +65,12 @@ public class GeneticAlgorithm implements Algorithm {
     }
 
     public List<List<Integer>> rouletteSelection() {
-        double[] cumulativeFitnesses = new double[generation.size()];
-        cumulativeFitnesses[0] = problem.fitness(generation.get(0));
-        for (int i = 1; i < generation.size(); i++)
-        {
-            cumulativeFitnesses[i] = cumulativeFitnesses[i - 1] + problem.fitness(generation.get(i));
-        }
+        double[] cumulativeFitnesses = Algorithm.makeCumulativeFitnesses(problem, generation);
 
-        // this code was inspired by https://github.com/dwdyer/watchmaker/blob/master/framework/src/java/main/org/uncommons/watchmaker/framework/selection/RouletteWheelSelection.java
         var parents = new ArrayList<List<Integer>>(2);
         for (int i = 0; i < 2; i++)
         {
-            double randomFitness = BaseController.rndm.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
+            double randomFitness = BaseController.randomGenerator.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
             int index = Arrays.binarySearch(cumulativeFitnesses, randomFitness);
             if (index < 0)
             {
@@ -106,7 +98,7 @@ public class GeneticAlgorithm implements Algorithm {
                 newGeneration.add(problem.makeOneIndividual());
             }
             for (int i = 0; i < newGeneration.size(); i++) {
-                if (BaseController.rndm.nextDouble() < this.percentageMutation)
+                if (BaseController.randomGenerator.nextDouble() < this.percentageMutation)
                     newGeneration.set(i, problem.mutate(newGeneration.get(i)));
             }
             newGeneration = newGeneration.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());

@@ -1,7 +1,6 @@
 package model.utils;
 
 import lombok.Getter;
-import model.problems.KnapsackProblem;
 import model.problems.Problem;
 
 import java.util.ArrayList;

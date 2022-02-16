@@ -4,27 +4,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="algoPane" prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Pane layoutX="56.0" layoutY="25.0" prefHeight="133.0" prefWidth="790.0" styleClass="pane-around">
-         <children>
-            <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm" />
-            <Label layoutX="197.0" layoutY="54.0" styleClass="label-small-text" text="Number of ants:" />
-            <TextField layoutX="374.0" layoutY="48.0" prefHeight="28.0" prefWidth="189.0" />
-            <Label layoutX="197.0" layoutY="90.0" styleClass="label-small-text" text="Number of generations:" />
-            <TextField layoutX="374.0" layoutY="84.0" prefHeight="28.0" prefWidth="189.0" />
-         </children>
-      </Pane>
-      <Pane layoutX="55.0" layoutY="188.0" prefHeight="275.0" prefWidth="790.0" styleClass="pane-around">
-         <children>
-            <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Selection of new individuals:" />
-            <Label layoutX="219.0" layoutY="70.0" styleClass="label-small-text" text="Feromone level:" />
-            <TextField layoutX="380.0" layoutY="65.0" prefHeight="28.0" prefWidth="189.0" />
-            <Label layoutX="219.0" layoutY="200.0" styleClass="label-small-text" text="Parameter beta:" />
-            <TextField layoutX="380.0" layoutY="194.0" prefHeight="28.0" prefWidth="189.0" />
-            <Label layoutX="221.0" layoutY="133.0" styleClass="label-small-text" text="Parameter alfa:" />
-            <TextField layoutX="380.0" layoutY="127.0" prefHeight="28.0" prefWidth="189.0" />
-         </children>
-      </Pane>
-   </children>
+<Pane fx:id="algoPane" prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css"
+      xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
+    <Pane layoutX="56.0" layoutY="25.0" prefHeight="133.0" prefWidth="790.0" styleClass="pane-around">
+        <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm"/>
+        <Label layoutX="197.0" layoutY="54.0" styleClass="label-small-text" text="Number of ants:"/>
+        <TextField layoutX="374.0" layoutY="48.0" prefHeight="28.0" prefWidth="189.0"/>
+        <Label layoutX="197.0" layoutY="90.0" styleClass="label-small-text" text="Number of generations:"/>
+        <TextField layoutX="374.0" layoutY="84.0" prefHeight="28.0" prefWidth="189.0"/>
+    </Pane>
+    <Pane layoutX="55.0" layoutY="188.0" prefHeight="275.0" prefWidth="790.0" styleClass="pane-around">
+        <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Selection of new individuals:"/>
+        <Label layoutX="219.0" layoutY="70.0" styleClass="label-small-text" text="Pheromone level:"/>
+        <TextField layoutX="380.0" layoutY="65.0" prefHeight="28.0" prefWidth="189.0"/>
+        <Label layoutX="219.0" layoutY="200.0" styleClass="label-small-text" text="Parameter beta:"/>
+        <TextField layoutX="380.0" layoutY="194.0" prefHeight="28.0" prefWidth="189.0"/>
+        <Label layoutX="221.0" layoutY="133.0" styleClass="label-small-text" text="Parameter alfa:"/>
+        <TextField layoutX="380.0" layoutY="127.0" prefHeight="28.0" prefWidth="189.0"/>
+    </Pane>
 </Pane>

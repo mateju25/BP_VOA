@@ -45,15 +45,15 @@ public class DatasetPartController extends ListCell<SimulationResults> {
             controller.lblName.setText(emp.getNameOfDataset());
             controller.btnDelete.setOnAction(event -> {
                 emp.setDeleted(true);
-                BaseController.visualizationController.smthChanged();
+                BaseController.visualizationController.somethingChanged();
             });
             controller.checkAverage.setOnAction(event -> {
                 emp.setShowAverage(controller.checkAverage.isSelected());
-                BaseController.visualizationController.smthChanged();
+                BaseController.visualizationController.somethingChanged();
             });
             controller.checkBest.setOnAction(event -> {
                 emp.setShowBest(controller.checkBest.isSelected());
-                BaseController.visualizationController.smthChanged();
+                BaseController.visualizationController.somethingChanged();
             });
             setText(null);
             setGraphic(controller.pane);

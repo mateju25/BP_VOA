@@ -18,6 +18,7 @@ public class StartController extends Application {
         BaseController.mainStage = stage;
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_blank.png"))));
         stage.setTitle("Visualization of optimization algorithms");
+        stage.setResizable(false);
         stage.show();
     }
 

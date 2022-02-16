@@ -15,7 +15,7 @@ public class TextFormattersFactory {
         } else {
             builder.append("[1-9][0-9]|");
             builder.append("[1-").append(range / 100 - 1).append("][0-").append(range%100/10).append("][0-9]|");
-            builder.append("").append(range / 10).append("[0-").append(range%10).append("])$");
+            builder.append(range / 10).append("[0-").append(range%10).append("])$");
         }
         Pattern patternInteger = Pattern.compile(builder.toString());
         return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> patternInteger.matcher(change.getControlNewText()).matches() ? change : null);

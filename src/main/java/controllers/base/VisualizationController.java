@@ -1,32 +1,26 @@
 package controllers.base;
 
 import controllers.listCells.DatasetPartController;
-import javafx.animation.AnimationTimer;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import lombok.SneakyThrows;
-import model.utils.AlgorithmResults;
 import model.utils.SimulationResults;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,11 +29,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class VisualizationController {
 
@@ -51,6 +40,7 @@ public class VisualizationController {
     public NumberAxis yAxis;
     public Button btnAdd;
     public ListView<SimulationResults> listView;
+    public Button btnExportPic;
 
     public void initialize() {
         BaseController.visualizationController = this;
@@ -62,26 +52,20 @@ public class VisualizationController {
 
         listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener() {
             @Override
-            public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        listView.getSelectionModel().select(-1);
-
-                    }
-                });
-
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                Platform.runLater(() -> listView.getSelectionModel().select(-1));
             }
         });
         listView.setCellFactory(param -> new DatasetPartController());
     }
 
-    public void goBack(ActionEvent actionEvent) throws IOException {
+    public void goBack() throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/mainPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
     }
 
-    public void addDataset(ActionEvent actionEvent) throws FileNotFoundException {
+    public void addDataset() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
@@ -90,7 +74,7 @@ public class VisualizationController {
         if (files == null)
             return;
 
-        for (File file: files) {
+        for (File file : files) {
             var results = new SimulationResults();
             listView.getItems().add(results);
 
@@ -123,7 +107,7 @@ public class VisualizationController {
 
     }
 
-    public void smthChanged() {
+    public void somethingChanged() {
         chart.getData().clear();
         var list = new ArrayList<SimulationResults>();
         for (SimulationResults simRes : listView.getItems()) {
@@ -139,5 +123,19 @@ public class VisualizationController {
             list.add(simRes);
         }
         listView.getItems().setAll(list);
+    }
+
+    public void exportPicture() throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.png"));
+
+        var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
+        fileChooser.setInitialFileName(LocalDateTime.now().format(formatter));
+        var file = fileChooser.showSaveDialog(BaseController.mainStage);
+        if (file != null) {
+            WritableImage image = chart.snapshot(new SnapshotParameters(), null);
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "PNG", file);
+        }
     }
 }

@@ -7,7 +7,6 @@ import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -38,15 +37,9 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     }
 
     public Integer rouletteSelection() {
-        double[] cumulativeFitnesses = new double[generation.size()];
-        cumulativeFitnesses[0] = problem.fitness(generation.get(0));
-        for (int i = 1; i < generation.size(); i++)
-        {
-            cumulativeFitnesses[i] = cumulativeFitnesses[i - 1] + problem.fitness(generation.get(i));
-        }
+        double[] cumulativeFitnesses = Algorithm.makeCumulativeFitnesses(problem, generation);
 
-        // this code was inspired by https://github.com/dwdyer/watchmaker/blob/master/framework/src/java/main/org/uncommons/watchmaker/framework/selection/RouletteWheelSelection.java
-        double randomFitness = BaseController.rndm.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
+        double randomFitness = BaseController.randomGenerator.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
         int index = Arrays.binarySearch(cumulativeFitnesses, randomFitness);
         if (index < 0)
         {
@@ -54,6 +47,19 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
         }
 
         return index;
+    }
+
+    private void takeBetterIndividual(Integer index, Integer oldCountIndex) {
+        var individual = problem.mutate(generation.get(index));
+        if (problem.fitness(individual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
+            bestIndividual = new ArrayList<>(individual);
+
+        if (problem.fitness(generation.get(index)) > problem.fitness(individual)) {
+            generation.set(index, individual);
+            oldCount.set(oldCountIndex, 0);
+        }
+        else
+            oldCount.set(index, oldCount.get(index) + 1);
     }
 
     @Override
@@ -65,33 +71,13 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
 
             //EMPLOYED BEES PHASE
             for (int i = 0; i < generation.size(); i++) {
-                var newPotentialIndividual = problem.mutate(generation.get(i));
-
-                if (problem.fitness(newPotentialIndividual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
-                    bestIndividual = new ArrayList<>(newPotentialIndividual);
-
-                if (problem.fitness(generation.get(i)) > problem.fitness(newPotentialIndividual)) {
-                    generation.set(i, newPotentialIndividual);
-                    oldCount.set(i, 0);
-                }
-                else
-                    oldCount.set(i, oldCount.get(i) + 1);
+                takeBetterIndividual(i, i);
             }
 
             //ONLOOKER BEES PHASE
             for (int i = 0; i < generation.size()*(1-percentageEmployed); i++) {
                 var index = rouletteSelection();
-                var newPotentialIndividual = problem.mutate(generation.get(index));
-
-                if (problem.fitness(newPotentialIndividual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
-                    bestIndividual = new ArrayList<>(newPotentialIndividual);
-
-                if (problem.fitness(generation.get(index)) > problem.fitness(newPotentialIndividual)) {
-                    generation.set(index, newPotentialIndividual);
-                    oldCount.set(i, 0);
-                }
-                else
-                    oldCount.set(index, oldCount.get(index) + 1);
+                takeBetterIndividual(index, i);
             }
 
             //SCOUT BEES PHASE
@@ -118,7 +104,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
         this.generation = new ArrayList<>();
         this.bestIndividual = new ArrayList<>();
         this.oldCount = new ArrayList<>(Collections.nCopies((int) Math.round(sizeBeeHive*percentageEmployed), 0));
-        BaseController.rndm = new Random(1);
+        BaseController.randomGenerator = new Random(1);
     }
 
     @Override

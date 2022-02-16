@@ -1,6 +1,5 @@
 package controllers.base;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,9 +7,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.InputMethodEvent;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import model.algorithms.ArtificialBeeColonyAlgorithm;
 import model.algorithms.GeneticAlgorithm;
@@ -31,7 +27,7 @@ public class AlgorithmController {
     public TextField percentageTournament;
     public TextField sizeTournament;
     public TextField percentageElitism;
-    public ChoiceBox typeCrossover;
+    public ChoiceBox<String> typeCrossover;
     public TextField percentageMutation;
     public ImageView toolRoulette;
     public ImageView toolTournament;
@@ -58,7 +54,7 @@ public class AlgorithmController {
     public Pane algoPane;
 
     public void initialize() throws IOException {
-        BaseController.rndm = new Random(1);
+        BaseController.randomGenerator = new Random(1);
         if (percentageRoulette != null) {
             percentageRoulette.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             percentageTournament.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
@@ -81,9 +77,7 @@ public class AlgorithmController {
             numberOfIterations.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             forgetCount.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             employedBees.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
-            employedBees.textProperty().addListener((observable, oldValue, newValue) -> {
-                onlookerBees.setText((1 - Double.parseDouble(newValue))+ "");
-            });
+            employedBees.textProperty().addListener((observable, oldValue, newValue) -> onlookerBees.setText((1 - Double.parseDouble(newValue))+ ""));
             BaseController.makeTooltip(toolSize,"Size of bee hive (number of exploited solutions to the problem)");
             BaseController.makeTooltip(toolIterations,"Number of iterations of the algorithm");
             BaseController.makeTooltip(toolEmployed,"Percentage of total bees in hive that are employed and assigned to source");
@@ -92,8 +86,8 @@ public class AlgorithmController {
         }
 
         if (!controllerLoaded) {
-            heading.setText(BaseController.chosedAlgorithm.nameForFaces() + " parameters");
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + BaseController.chosedAlgorithm.nameOfFxmlFiles()[0])));
+            heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " parameters");
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + BaseController.chosenAlgorithm.nameOfFxmlFiles()[0])));
             loader.setController(this);
             controllerLoaded = true;
             Parent root = loader.load();
@@ -101,9 +95,9 @@ public class AlgorithmController {
         }
     }
 
-    public void proceed(ActionEvent actionEvent) throws IOException {
-        if (BaseController.chosedProblem != null && BaseController.chosedAlgorithm != null) {
-            if (BaseController.chosedAlgorithm instanceof GeneticAlgorithm) {
+    public void proceed() throws IOException {
+        if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
+            if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm) {
                 if (Integer.parseInt(sizeTournament.getText()) > Integer.parseInt(numberIndividuals.getText())) {
                     warning.setText("Tournament size should not exceed number of individuals!");
                     return;
@@ -112,13 +106,13 @@ public class AlgorithmController {
                     warning.setText("Sum of percentages for roulette, tournament and elitism should not exceed 1");
                     return;
                 }
-                ((GeneticAlgorithm) BaseController.chosedAlgorithm).setAlgorithm(Integer.valueOf(numberIndividuals.getText()),
+                ((GeneticAlgorithm) BaseController.chosenAlgorithm).setAlgorithm(Integer.valueOf(numberIndividuals.getText()),
                         Integer.valueOf(numberGenerations.getText()), Double.valueOf(percentageRoulette.getText()),
                         Double.valueOf(percentageTournament.getText()), Integer.valueOf(sizeTournament.getText()),
                         Double.valueOf(percentageElitism.getText()), Double.valueOf(percentageMutation.getText()));
             }
-            if (BaseController.chosedAlgorithm instanceof ArtificialBeeColonyAlgorithm) {
-                ((ArtificialBeeColonyAlgorithm) BaseController.chosedAlgorithm).setAlgorithm(Integer.valueOf(sizeBeeHive.getText()),
+            if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm) {
+                ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).setAlgorithm(Integer.valueOf(sizeBeeHive.getText()),
                         Integer.valueOf(numberOfIterations.getText()), Integer.valueOf(forgetCount.getText()),
                         Double.valueOf(employedBees.getText()));
             }
@@ -130,14 +124,14 @@ public class AlgorithmController {
 
     }
 
-    public void goBack(ActionEvent actionEvent) throws IOException {
+    public void goBack() throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/mainPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
     }
 
 
-    public void removeWarning(MouseEvent mouseEvent) {
+    public void removeWarning() {
         warning.setText("");
     }
 

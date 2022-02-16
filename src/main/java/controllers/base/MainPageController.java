@@ -2,7 +2,6 @@ package controllers.base;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +10,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
@@ -65,9 +63,7 @@ public class MainPageController {
     public void initialize() {
         if (controllerLoaded)
             return;
-
-
-        BaseController.rndm = new Random(1);
+        BaseController.randomGenerator = new Random(1);
         controllerLoaded = true;
         if (BaseController.algorithms == null) {
             BaseController.algorithms = new ArrayList<>();
@@ -84,8 +80,8 @@ public class MainPageController {
 
         if (algChoiceBox != null) {
             algChoiceBox.getItems().setAll(BaseController.algorithms);
-            if (BaseController.chosedAlgorithm != null) {
-                var index = BaseController.algorithms.indexOf(BaseController.chosedAlgorithm);
+            if (BaseController.chosenAlgorithm != null) {
+                var index = BaseController.algorithms.indexOf(BaseController.chosenAlgorithm);
                 algChoiceBox.getSelectionModel().clearAndSelect(index);
             }
             algChoiceBox.setConverter(
@@ -100,14 +96,14 @@ public class MainPageController {
                             return null;
                         }
                     });
-            algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosedAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
+            algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosenAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
             algChoiceBox.getSelectionModel().select(1);
 
         }
         if (probChoiceBox != null) {
             probChoiceBox.getItems().setAll(BaseController.problems);
-            if (BaseController.chosedProblem != null) {
-                var index = BaseController.problems.indexOf(BaseController.chosedProblem);
+            if (BaseController.chosenProblem != null) {
+                var index = BaseController.problems.indexOf(BaseController.chosenProblem);
                 probChoiceBox.getSelectionModel().clearAndSelect(index);
                 Problem selectedProblem = probChoiceBox.getItems().get(index);
                 loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
@@ -130,11 +126,11 @@ public class MainPageController {
                 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                     Problem selectedProblem = probChoiceBox.getItems().get(newValue.intValue());
                     loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
-                    BaseController.chosedProblem = selectedProblem;
+                    BaseController.chosenProblem = selectedProblem;
                 }
             });
-            if (BaseController.chosedProblem != null)
-                probChoiceBox.getSelectionModel().select(BaseController.problems.indexOf(BaseController.chosedProblem));
+            if (BaseController.chosenProblem != null)
+                probChoiceBox.getSelectionModel().select(BaseController.problems.indexOf(BaseController.chosenProblem));
             else
                 probChoiceBox.getSelectionModel().select(0);
         }
@@ -177,22 +173,22 @@ public class MainPageController {
         }
     }
 
-    public void proceed(ActionEvent actionEvent) throws IOException {
-        if (BaseController.chosedProblem != null && BaseController.chosedAlgorithm != null) {
-            if (BaseController.chosedProblem instanceof  KnapsackProblem) {
-                ((KnapsackProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(numberOfItems.getText()),
+    public void proceed() throws IOException {
+        if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
+            if (BaseController.chosenProblem instanceof  KnapsackProblem) {
+                ((KnapsackProblem) BaseController.chosenProblem).populateProblem(Integer.valueOf(numberOfItems.getText()),
                         Integer.valueOf(averageWeight.getText()), Integer.valueOf(backpackCapacity.getText()));
             }
-            if (BaseController.chosedProblem instanceof  VehicleRoutingProblem) {
+            if (BaseController.chosenProblem instanceof  VehicleRoutingProblem) {
                 if (Integer.parseInt(averageDemand.getText()) > Integer.parseInt(vehicleCapacity.getText())) {
                     warning.setText("Average demand should not be higher than vehicle capacity!");
                     return;
                 }
-                ((VehicleRoutingProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(sizeOfProblem.getText()),
+                ((VehicleRoutingProblem) BaseController.chosenProblem).populateProblem(Integer.valueOf(sizeOfProblem.getText()),
                         Integer.valueOf(vehicleCapacity.getText()), Integer.valueOf(averageDemand.getText()));
             }
-            if (BaseController.chosedProblem instanceof  TargetAssignmentProblem) {
-                ((TargetAssignmentProblem) BaseController.chosedProblem).populateProblem(Integer.valueOf(numberOfTargets.getText()),
+            if (BaseController.chosenProblem instanceof  TargetAssignmentProblem) {
+                ((TargetAssignmentProblem) BaseController.chosenProblem).populateProblem(Integer.valueOf(numberOfTargets.getText()),
                         Integer.valueOf(numberOfWeapons.getText()), Integer.valueOf(maxAssignedTargets.getText()));
             }
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
@@ -201,12 +197,12 @@ public class MainPageController {
         }
     }
 
-    public void removeWarning(MouseEvent mouseEvent) {
+    public void removeWarning() {
         warning.setText("");
     }
 
-    public void visualizeData(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/vizualizationPage.fxml")));
+    public void visualizeData() throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/visualizationPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
     }

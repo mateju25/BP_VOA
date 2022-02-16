@@ -9,7 +9,6 @@ import lombok.Setter;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +26,11 @@ public class KnapsackProblem implements Problem {
         this.colorsOfItems = new ArrayList<>();
         this.averageWeightOfItem = averageWeightOfItem;
         for (int i = 0; i < numOfItems; i++) {
-            var item = BaseController.rndm.nextInt(2 * averageWeightOfItem) + 1;
+            var item = BaseController.randomGenerator.nextInt(2 * averageWeightOfItem) + 1;
             this.itemWeight.add(item);
         }
         for (int i = 0; i < numOfItems; i++) {
-            var item = Color.web(DistinctColors.colors[BaseController.rndm.nextInt(DistinctColors.colors.length)]);
+            var item = Color.web(DistinctColors.colors[BaseController.randomGenerator.nextInt(DistinctColors.colors.length)]);
             this.colorsOfItems.add(item);
         }
     }
@@ -47,13 +46,13 @@ public class KnapsackProblem implements Problem {
 
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
-        var treshhold = 0.5;
+        var threshold = 0.5;
         if (this.itemWeight.size() * averageWeightOfItem > weightOfBackpack)
-            treshhold = weightOfBackpack / (this.itemWeight.size() * 1.0 * averageWeightOfItem);
+            threshold = weightOfBackpack / (this.itemWeight.size() * 1.0 * averageWeightOfItem);
         do {
             individual = new ArrayList<>();
             for (int i = 0; i < itemWeight.size(); i++) {
-                if (BaseController.rndm.nextDouble() < treshhold * 0.5)
+                if (BaseController.randomGenerator.nextDouble() < threshold * 0.5)
                     individual.add(1);
                 else
                     individual.add(0);
@@ -70,7 +69,7 @@ public class KnapsackProblem implements Problem {
         var tmpIndividual = new ArrayList<>(individual);
         do {
             individual = new ArrayList<>(tmpIndividual);
-            var index = BaseController.rndm.nextInt(this.itemWeight.size());
+            var index = BaseController.randomGenerator.nextInt(this.itemWeight.size());
             individual.set(index, ((individual.get(index)) + 1) % 2);
         } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
         return individual;
@@ -80,7 +79,7 @@ public class KnapsackProblem implements Problem {
         var child1 = new ArrayList<Integer>();
         var child2 = new ArrayList<Integer>();
         do {
-            var index = BaseController.rndm.nextInt(itemWeight.size());
+            var index = BaseController.randomGenerator.nextInt(itemWeight.size());
             child1 = new ArrayList<>();
             child2 = new ArrayList<>();
             for (int i = 0; i < itemWeight.size(); i++) {
@@ -126,7 +125,7 @@ public class KnapsackProblem implements Problem {
             var best = data.getBestIndividual();
 
             gc.setLineWidth(1);
-            gc.strokeText((int)(1/data.getBestFitness()*100) + "%", 80 + WIDTH_OF_CONTAINER/2, HEIGHT_OF_CONTAINER + 40);
+            gc.strokeText((int)(1/data.getBestFitness()*100) + "%", (int) (80 +  WIDTH_OF_CONTAINER/2), HEIGHT_OF_CONTAINER + 40);
 
             var level = 0;
             for (int i = 0; i < best.size(); i++) {
