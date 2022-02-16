@@ -11,6 +11,7 @@ import model.utils.DistinctColors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class VehicleRoutingProblem implements Problem {
@@ -33,8 +34,12 @@ public class VehicleRoutingProblem implements Problem {
     private Double fitnessCoefficient;
     private List<Color> colorsOfItems;
 
+    @Override
+    public void init(Map<String, String> parameters) {
+        var sizeOfTheProblem = Integer.parseInt(parameters.get("sizeOfProblem"));
+        this.vehicleCapacity = Integer.parseInt(parameters.get("vehicleCapacity"));
+        var averageDemand = Integer.parseInt(parameters.get("averageDemand"));
 
-    public void populateProblem(Integer sizeOfTheProblem, Integer vehicleCapacity, Integer averageDemand) {
         points = new ArrayList<>();
         colorsOfItems = new ArrayList<>();
         points.add(new Point(250, 250, 0));
@@ -63,7 +68,6 @@ public class VehicleRoutingProblem implements Problem {
                 matrixOfDistances.get(j).set(i, (int) Math.round(distance));
             }
         }
-        this.vehicleCapacity = vehicleCapacity;
 
         var tmpIndividual = makeOneIndividual();
         fitnessCoefficient = 1.0;

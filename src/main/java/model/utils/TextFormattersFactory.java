@@ -6,7 +6,6 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 public class TextFormattersFactory {
-
     public static TextFormatter makeIntegerFormatter(Integer range) {
         var builder = new StringBuilder("^(\\s*|[1-9]|");
         if (range < 100) {

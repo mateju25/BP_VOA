@@ -24,7 +24,9 @@ import model.problems.VehicleRoutingProblem;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
@@ -175,22 +177,23 @@ public class MainPageController {
 
     public void proceed() throws IOException {
         if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
-            if (BaseController.chosenProblem instanceof  KnapsackProblem) {
-                ((KnapsackProblem) BaseController.chosenProblem).populateProblem(Integer.valueOf(numberOfItems.getText()),
-                        Integer.valueOf(averageWeight.getText()), Integer.valueOf(backpackCapacity.getText()));
+            if (averageDemand != null && vehicleCapacity != null && Integer.parseInt(averageDemand.getText()) > Integer.parseInt(vehicleCapacity.getText())) {
+                warning.setText("Average demand should not be higher than vehicle capacity!");
+                return;
             }
-            if (BaseController.chosenProblem instanceof  VehicleRoutingProblem) {
-                if (Integer.parseInt(averageDemand.getText()) > Integer.parseInt(vehicleCapacity.getText())) {
-                    warning.setText("Average demand should not be higher than vehicle capacity!");
-                    return;
-                }
-                ((VehicleRoutingProblem) BaseController.chosenProblem).populateProblem(Integer.valueOf(sizeOfProblem.getText()),
-                        Integer.valueOf(vehicleCapacity.getText()), Integer.valueOf(averageDemand.getText()));
-            }
-            if (BaseController.chosenProblem instanceof  TargetAssignmentProblem) {
-                ((TargetAssignmentProblem) BaseController.chosenProblem).populateProblem(Integer.valueOf(numberOfTargets.getText()),
-                        Integer.valueOf(numberOfWeapons.getText()), Integer.valueOf(maxAssignedTargets.getText()));
-            }
+            var map = new HashMap<String, String>();
+            if (numberOfItems != null) map.put(numberOfItems.getId(), numberOfItems.getText());
+            if (averageWeight != null) map.put(averageWeight.getId(), averageWeight.getText());
+            if (backpackCapacity != null) map.put(backpackCapacity.getId(), backpackCapacity.getText());
+            if (sizeOfProblem != null) map.put(sizeOfProblem.getId(), sizeOfProblem.getText());
+            if (vehicleCapacity != null) map.put(vehicleCapacity.getId(), vehicleCapacity.getText());
+            if (averageDemand != null) map.put(averageDemand.getId(), averageDemand.getText());
+            if (numberOfTargets != null) map.put(numberOfTargets.getId(), numberOfTargets.getText());
+            if (numberOfWeapons != null) map.put(numberOfWeapons.getId(), numberOfWeapons.getText());
+            if (maxAssignedTargets != null) map.put(maxAssignedTargets.getId(), maxAssignedTargets.getText());
+
+            BaseController.chosenProblem.init(map);
+
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();

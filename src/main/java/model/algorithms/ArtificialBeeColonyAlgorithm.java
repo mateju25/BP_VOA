@@ -21,14 +21,15 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     private Integer forgetCount;
     private Double percentageEmployed;
 
-    public void setAlgorithm(Integer sizeBeeHive, Integer numberOfIterations, Integer forgetCount, Double percentageEmployed) {
-        this.sizeBeeHive = sizeBeeHive;
-        this.numberOfIterations = numberOfIterations;
-        this.forgetCount = forgetCount;
-        this.percentageEmployed = percentageEmployed;
+
+    @Override
+    public void init(Map<String, String> parameters) {
+        this.sizeBeeHive = Integer.parseInt(parameters.get("sizeBeeHive"));
+        this.numberOfIterations = Integer.parseInt(parameters.get("numberOfIterations"));
+        this.forgetCount = Integer.parseInt(parameters.get("forgetCount"));
+        this.percentageEmployed = Double.parseDouble(parameters.get("employedBees"));
         resetAlgorithm();
     }
-
     @Override
     public void initFirstGeneration() {
         for (int i = 0; i < this.sizeBeeHive * percentageEmployed; i++) {

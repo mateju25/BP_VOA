@@ -5,8 +5,10 @@ import javafx.util.Pair;
 import model.utils.AlgorithmResults;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Problem {
+    void init(Map<String, String> parameters);
     List<Integer> makeOneIndividual();
     Double fitness(List<Integer> individual);
     List<Integer> mutate(List<Integer> individual);

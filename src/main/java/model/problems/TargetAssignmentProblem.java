@@ -7,10 +7,7 @@ import javafx.util.Pair;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,7 +19,12 @@ public class TargetAssignmentProblem implements Problem {
     private Integer numOfWeapons;
     private List<Color> colorsOfItems;
 
-    public void populateProblem(Integer numOfTargets, Integer numOfWeapons, Integer maximumAssignedTargets) {
+    @Override
+    public void init(Map<String, String> parameters) {
+        this.numOfTargets = Integer.parseInt(parameters.get("numberOfTargets"));
+        this.numOfWeapons = Integer.parseInt(parameters.get("numberOfWeapons"));
+        this.maximumAssignedTargets = Integer.parseInt(parameters.get("maxAssignedTargets"));
+
         matrixOfProbabilities = new ArrayList<>(numOfWeapons);
         targetValues = new ArrayList<>(numOfTargets);
         colorsOfItems = new ArrayList<>();
@@ -35,9 +37,6 @@ public class TargetAssignmentProblem implements Problem {
         for (int j = 0; j < numOfTargets; j++) {
             targetValues.add((double) (BaseController.randomGenerator.nextInt(5) + 1));
         }
-        this.maximumAssignedTargets = maximumAssignedTargets;
-        this.numOfWeapons = numOfWeapons;
-        this.numOfTargets = numOfTargets;
 
         for (int i = 0; i < numOfWeapons; i++) {
             var item = Color.web(DistinctColors.colors[BaseController.randomGenerator.nextInt(DistinctColors.colors.length)]);

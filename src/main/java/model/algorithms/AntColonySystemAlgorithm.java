@@ -5,9 +5,16 @@ import lombok.Setter;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
+import java.util.Map;
+
 @Getter @Setter
 public class AntColonySystemAlgorithm implements Algorithm {
     private Problem problem;
+
+    @Override
+    public void init(Map<String, String> parameters) {
+
+    }
 
     @Override
     public void initFirstGeneration() {

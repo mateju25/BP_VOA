@@ -11,6 +11,7 @@ import model.utils.DistinctColors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,16 +21,18 @@ public class KnapsackProblem implements Problem {
     private List<Color> colorsOfItems;
     private Integer averageWeightOfItem;
 
-    public void populateProblem(Integer numOfItems, Integer averageWeightOfItem, Integer weightOfBackpack) {
-        this.weightOfBackpack = weightOfBackpack;
+    @Override
+    public void init(Map<String, String> parameters) {
+        var numberOfItems = Integer.parseInt(parameters.get("numberOfItems"));
+        this.averageWeightOfItem = Integer.parseInt(parameters.get("averageWeight"));
+        this.weightOfBackpack = Integer.parseInt(parameters.get("backpackCapacity"));
         this.itemWeight = new ArrayList<>();
         this.colorsOfItems = new ArrayList<>();
-        this.averageWeightOfItem = averageWeightOfItem;
-        for (int i = 0; i < numOfItems; i++) {
+        for (int i = 0; i < numberOfItems; i++) {
             var item = BaseController.randomGenerator.nextInt(2 * averageWeightOfItem) + 1;
             this.itemWeight.add(item);
         }
-        for (int i = 0; i < numOfItems; i++) {
+        for (int i = 0; i < numberOfItems; i++) {
             var item = Color.web(DistinctColors.colors[BaseController.randomGenerator.nextInt(DistinctColors.colors.length)]);
             this.colorsOfItems.add(item);
         }

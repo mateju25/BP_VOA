@@ -4,8 +4,11 @@ import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Algorithm {
+    void init(Map<String, String> parameters);
+
     void initFirstGeneration();
     AlgorithmResults nextGeneration();
     void resetAlgorithm();

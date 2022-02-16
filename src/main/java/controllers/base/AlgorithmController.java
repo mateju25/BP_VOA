@@ -13,6 +13,7 @@ import model.algorithms.GeneticAlgorithm;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
@@ -63,26 +64,26 @@ public class AlgorithmController {
             numberIndividuals.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             numberGenerations.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             sizeTournament.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            BaseController.makeTooltip(toolRoulette,"Percentage of new individuals for generation created by roulette selection a crossover between parents");
-            BaseController.makeTooltip(toolTournament,"Percentage of new individuals for generation created by tournament selection a crossover between parents");
-            BaseController.makeTooltip(toolTournamentSize,"Size of tournament selection if percentage other than 0 (should not be bigger than number of individuals)");
-            BaseController.makeTooltip(toolElitism,"Percentage of new individuals for generation that performed the best in the old generation");
-            BaseController.makeTooltip(toolCrossover,"Type of crossover used in generating new individuals");
-            BaseController.makeTooltip(toolMutation,"Power of mutation in individuals");
-            BaseController.makeTooltip(toolNumberGenerations,"Number of all generation that will be run");
-            BaseController.makeTooltip(toolNumberIndividuals,"Number of individuals in each generation");
+            BaseController.makeTooltip(toolRoulette, "Percentage of new individuals for generation created by roulette selection a crossover between parents");
+            BaseController.makeTooltip(toolTournament, "Percentage of new individuals for generation created by tournament selection a crossover between parents");
+            BaseController.makeTooltip(toolTournamentSize, "Size of tournament selection if percentage other than 0 (should not be bigger than number of individuals)");
+            BaseController.makeTooltip(toolElitism, "Percentage of new individuals for generation that performed the best in the old generation");
+            BaseController.makeTooltip(toolCrossover, "Type of crossover used in generating new individuals");
+            BaseController.makeTooltip(toolMutation, "Power of mutation in individuals");
+            BaseController.makeTooltip(toolNumberGenerations, "Number of all generation that will be run");
+            BaseController.makeTooltip(toolNumberIndividuals, "Number of individuals in each generation");
         }
         if (sizeBeeHive != null) {
             sizeBeeHive.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             numberOfIterations.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             forgetCount.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             employedBees.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
-            employedBees.textProperty().addListener((observable, oldValue, newValue) -> onlookerBees.setText((1 - Double.parseDouble(newValue))+ ""));
-            BaseController.makeTooltip(toolSize,"Size of bee hive (number of exploited solutions to the problem)");
-            BaseController.makeTooltip(toolIterations,"Number of iterations of the algorithm");
-            BaseController.makeTooltip(toolEmployed,"Percentage of total bees in hive that are employed and assigned to source");
-            BaseController.makeTooltip(toolOnlooker,"Percentage of total bees in hive that are onlooker and follow employed bees (together with percentage employed should be 1)");
-            BaseController.makeTooltip(toolForget,"Number of iterations after which source that remained unchanged is replaced with new source");
+            employedBees.textProperty().addListener((observable, oldValue, newValue) -> onlookerBees.setText((1 - Double.parseDouble(newValue)) + ""));
+            BaseController.makeTooltip(toolSize, "Size of bee hive (number of exploited solutions to the problem)");
+            BaseController.makeTooltip(toolIterations, "Number of iterations of the algorithm");
+            BaseController.makeTooltip(toolEmployed, "Percentage of total bees in hive that are employed and assigned to source");
+            BaseController.makeTooltip(toolOnlooker, "Percentage of total bees in hive that are onlooker and follow employed bees (together with percentage employed should be 1)");
+            BaseController.makeTooltip(toolForget, "Number of iterations after which source that remained unchanged is replaced with new source");
         }
 
         if (!controllerLoaded) {
@@ -97,25 +98,29 @@ public class AlgorithmController {
 
     public void proceed() throws IOException {
         if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
-            if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm) {
-                if (Integer.parseInt(sizeTournament.getText()) > Integer.parseInt(numberIndividuals.getText())) {
-                    warning.setText("Tournament size should not exceed number of individuals!");
-                    return;
-                }
-                if (Double.parseDouble(percentageRoulette.getText()) +  Double.parseDouble(percentageTournament.getText()) + Double.parseDouble(percentageElitism.getText()) > 1.0) {
-                    warning.setText("Sum of percentages for roulette, tournament and elitism should not exceed 1");
-                    return;
-                }
-                ((GeneticAlgorithm) BaseController.chosenAlgorithm).setAlgorithm(Integer.valueOf(numberIndividuals.getText()),
-                        Integer.valueOf(numberGenerations.getText()), Double.valueOf(percentageRoulette.getText()),
-                        Double.valueOf(percentageTournament.getText()), Integer.valueOf(sizeTournament.getText()),
-                        Double.valueOf(percentageElitism.getText()), Double.valueOf(percentageMutation.getText()));
+            if (sizeTournament != null && numberIndividuals != null && Integer.parseInt(sizeTournament.getText()) > Integer.parseInt(numberIndividuals.getText())) {
+                warning.setText("Tournament size should not exceed number of individuals!");
+                return;
             }
-            if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm) {
-                ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).setAlgorithm(Integer.valueOf(sizeBeeHive.getText()),
-                        Integer.valueOf(numberOfIterations.getText()), Integer.valueOf(forgetCount.getText()),
-                        Double.valueOf(employedBees.getText()));
+            if (percentageRoulette != null && percentageTournament != null && percentageElitism != null && Double.parseDouble(percentageRoulette.getText()) + Double.parseDouble(percentageTournament.getText()) + Double.parseDouble(percentageElitism.getText()) > 1.0) {
+                warning.setText("Sum of percentages for roulette, tournament and elitism should not exceed 1");
+                return;
             }
+
+            var map = new HashMap<String, String>();
+            if (numberIndividuals != null) map.put(numberIndividuals.getId(), numberIndividuals.getText());
+            if (numberGenerations != null) map.put(numberGenerations.getId(), numberGenerations.getText());
+            if (percentageRoulette != null) map.put(percentageRoulette.getId(), percentageRoulette.getText());
+            if (percentageTournament != null) map.put(percentageTournament.getId(), percentageTournament.getText());
+            if (sizeTournament != null) map.put(sizeTournament.getId(), sizeTournament.getText());
+            if (percentageElitism != null) map.put(percentageElitism.getId(), percentageElitism.getText());
+            if (percentageMutation != null) map.put(percentageMutation.getId(), percentageMutation.getText());
+            if (sizeBeeHive != null) map.put(sizeBeeHive.getId(), sizeBeeHive.getText());
+            if (numberOfIterations != null) map.put(numberOfIterations.getId(), numberOfIterations.getText());
+            if (forgetCount != null) map.put(forgetCount.getId(), forgetCount.getText());
+            if (employedBees != null) map.put(employedBees.getId(), employedBees.getText());
+
+            BaseController.chosenAlgorithm.init(map);
 
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));

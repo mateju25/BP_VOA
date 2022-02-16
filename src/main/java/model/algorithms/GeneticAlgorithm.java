@@ -23,14 +23,16 @@ public class GeneticAlgorithm implements Algorithm {
     private Double percentageElitism;
     private Double percentageMutation;
 
-    public void setAlgorithm(Integer numOfIndividuals, Integer numOfGenerations, Double percentageRoulette, Double percentageTournament, Integer sizeTournament, Double percentageElitism, Double percentageMutation) {
-        this.numOfIndividuals = numOfIndividuals;
-        this.numOfGenerations = numOfGenerations;
-        this.percentageRoulette = percentageRoulette;
-        this.percentageTournament = percentageTournament;
-        this.sizeTournament = sizeTournament;
-        this.percentageElitism = percentageElitism;
-        this.percentageMutation = percentageMutation;
+
+    @Override
+    public void init(Map<String, String> parameters) {
+        this.numOfIndividuals = Integer.parseInt(parameters.get("numberIndividuals"));
+        this.numOfGenerations = Integer.parseInt(parameters.get("numberGenerations"));
+        this.percentageRoulette = Double.parseDouble(parameters.get("percentageRoulette"));
+        this.percentageTournament = Double.parseDouble(parameters.get("percentageTournament"));
+        this.sizeTournament = Integer.parseInt(parameters.get("sizeTournament"));
+        this.percentageElitism = Double.parseDouble(parameters.get("percentageElitism"));
+        this.percentageMutation = Double.parseDouble(parameters.get("percentageMutation"));
         resetAlgorithm();
     }
 
