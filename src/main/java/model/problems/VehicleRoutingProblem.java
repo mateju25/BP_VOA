@@ -5,14 +5,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import lombok.Getter;
+import model.algorithms.Algorithm;
+import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class VehicleRoutingProblem implements Problem {
     @Getter
@@ -31,12 +31,14 @@ public class VehicleRoutingProblem implements Problem {
     private List<Point> points;
     private List<List<Integer>> matrixOfDistances;
     private Integer vehicleCapacity;
+    private Integer sizeOfTheProblem;
     private Double fitnessCoefficient;
     private List<Color> colorsOfItems;
 
+
     @Override
     public void init(Map<String, String> parameters) {
-        var sizeOfTheProblem = Integer.parseInt(parameters.get("sizeOfProblem"));
+        this.sizeOfTheProblem = Integer.parseInt(parameters.get("sizeOfProblem"));
         this.vehicleCapacity = Integer.parseInt(parameters.get("vehicleCapacity"));
         var averageDemand = Integer.parseInt(parameters.get("averageDemand"));
 
@@ -75,6 +77,16 @@ public class VehicleRoutingProblem implements Problem {
         while (fitness * fitnessCoefficient > 1)
             fitnessCoefficient *= 0.1;
         fitnessCoefficient *= 10;
+    }
+
+    @Override
+    public List<List<Double>> initPheromoneMatrix() {
+        ArrayList<List<Double>> matrix = new ArrayList<>();
+        for (int i = 0; i < sizeOfTheProblem; i++) {
+            matrix.add(new ArrayList<>(Collections.nCopies(sizeOfTheProblem, 0.0)));
+//            matrix.add(new ArrayList<>(matrixOfDistances.get(i).stream().mapToDouble(Double::valueOf).boxed().collect(Collectors.toList())));
+        }
+        return matrix;
     }
 
     private List<Integer> checkAnAddBaseTownToIndividual(List<Integer> individual) {
@@ -116,6 +128,36 @@ public class VehicleRoutingProblem implements Problem {
 
         return checkAnAddBaseTownToIndividual(shuffledIndividual);
     }
+
+    public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
+        var newIndividual = new ArrayList<Integer>();
+        newIndividual.add(0);
+        Integer fromCity = 0;
+        var needToVisitPlaces = IntStream.rangeClosed(1, sizeOfTheProblem-1).boxed().collect(Collectors.toList());
+        while (needToVisitPlaces.size() > 0) {
+            var probList = new ArrayList<Double>();
+            for (int i = 0; i < needToVisitPlaces.size(); i++) {
+                probList.add(acs.getProbabilityOfEdgeToSelect(fromCity, needToVisitPlaces.get(i), new ArrayList<>(needToVisitPlaces)));
+            }
+
+            var index = Algorithm.getCumulativeFitnessesIndex(probList);
+
+            Integer toCity = needToVisitPlaces.remove(index);
+            newIndividual.add(toCity);
+
+            acs.getMatrixOfPheromone().get(fromCity).set(toCity,
+                    acs.newProbValueDueToValue(fromCity, toCity, matrixOfDistances.get(fromCity).stream().filter(e -> e != 0).mapToDouble(Double::valueOf).boxed().collect(Collectors.toList())));
+
+            fromCity = toCity;
+        }
+        return checkAnAddBaseTownToIndividual(newIndividual);
+    }
+
+    @Override
+    public Double getHeuristicValue(Integer from, Integer to) {
+        return matrixOfDistances.get(from).get(to) + 0.0;
+    }
+
 
     @Override
     public List<Integer> mutate(List<Integer> individual) {

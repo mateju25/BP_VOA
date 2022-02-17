@@ -2,6 +2,7 @@ package model.problems;
 
 import javafx.scene.canvas.Canvas;
 import javafx.util.Pair;
+import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 
 import java.util.List;
@@ -18,4 +19,9 @@ public interface Problem {
     String[] nameOfFxmlFiles();
 
     void visualize(Canvas canvas, AlgorithmResults data);
+
+    //ACS algorithm
+    List<List<Double>> initPheromoneMatrix();
+    List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs);
+    Double getHeuristicValue(Integer from, Integer to);
 }

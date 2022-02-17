@@ -99,7 +99,7 @@ public class MainPageController {
                         }
                     });
             algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosenAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
-            algChoiceBox.getSelectionModel().select(1);
+            algChoiceBox.getSelectionModel().select(0);
 
         }
         if (probChoiceBox != null) {

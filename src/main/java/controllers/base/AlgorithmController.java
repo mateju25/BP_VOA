@@ -51,6 +51,14 @@ public class AlgorithmController {
     public ImageView toolOnlooker;
     public ImageView toolForget;
 
+    //ACS
+    public TextField numberOfAnts;
+    public TextField pheromone;
+    public TextField parameterB;
+    public TextField parameterA;
+    public TextField parameterQ;
+
+
     public Label heading;
     public Pane algoPane;
 
@@ -119,6 +127,11 @@ public class AlgorithmController {
             if (numberOfIterations != null) map.put(numberOfIterations.getId(), numberOfIterations.getText());
             if (forgetCount != null) map.put(forgetCount.getId(), forgetCount.getText());
             if (employedBees != null) map.put(employedBees.getId(), employedBees.getText());
+            if (numberOfAnts != null) map.put(numberOfAnts.getId(), numberOfAnts.getText());
+            if (pheromone != null) map.put(pheromone.getId(), pheromone.getText());
+            if (parameterB != null) map.put(parameterB.getId(), parameterB.getText());
+            if (parameterA != null) map.put(parameterA.getId(), parameterA.getText());
+            if (parameterQ != null) map.put(parameterQ.getId(), parameterQ.getText());
 
             BaseController.chosenAlgorithm.init(map);
 

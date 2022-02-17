@@ -4,6 +4,7 @@ import controllers.base.BaseController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
@@ -44,6 +45,16 @@ public class TargetAssignmentProblem implements Problem {
         }
     }
 
+    @Override
+    public List<List<Double>> initPheromoneMatrix() {
+        ArrayList<List<Double>> matrix = new ArrayList<>();
+        for (int i = 0; i < numOfWeapons; i++) {
+            ArrayList<Double> lst = new ArrayList<Double>(Collections.nCopies(numOfTargets, 0.0));
+            matrix.add(lst);
+        }
+        return matrix;
+    }
+
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
         for (int i = 0; i < numOfWeapons; i++) {
@@ -59,6 +70,16 @@ public class TargetAssignmentProblem implements Problem {
         }
         return individual;
     }
+
+    public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
+        return null;
+    }
+
+    @Override
+    public Double getHeuristicValue(Integer from, Integer to) {
+        return null;
+    }
+
 
     @Override
     public Double fitness(List<Integer> individual) {

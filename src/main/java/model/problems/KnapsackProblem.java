@@ -6,10 +6,12 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
+import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +22,11 @@ public class KnapsackProblem implements Problem {
     private Integer weightOfBackpack;
     private List<Color> colorsOfItems;
     private Integer averageWeightOfItem;
+    private Integer numberOfItems;
 
     @Override
     public void init(Map<String, String> parameters) {
-        var numberOfItems = Integer.parseInt(parameters.get("numberOfItems"));
+        this.numberOfItems = Integer.parseInt(parameters.get("numberOfItems"));
         this.averageWeightOfItem = Integer.parseInt(parameters.get("averageWeight"));
         this.weightOfBackpack = Integer.parseInt(parameters.get("backpackCapacity"));
         this.itemWeight = new ArrayList<>();
@@ -36,6 +39,16 @@ public class KnapsackProblem implements Problem {
             var item = Color.web(DistinctColors.colors[BaseController.randomGenerator.nextInt(DistinctColors.colors.length)]);
             this.colorsOfItems.add(item);
         }
+    }
+
+    @Override
+    public List<List<Double>> initPheromoneMatrix() {
+        ArrayList<List<Double>> matrix = new ArrayList<>();
+        for (int i = 0; i < numberOfItems; i++) {
+            ArrayList<Double> lst = new ArrayList<>(Collections.nCopies(numberOfItems, 0.0));
+            matrix.add(lst);
+        }
+        return matrix;
     }
 
     public Integer sumOfItems(List<Integer> items) {
@@ -62,6 +75,20 @@ public class KnapsackProblem implements Problem {
             }
         } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
         return individual;
+    }
+
+    public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
+        var individual = new ArrayList<Integer>();
+        do {
+            individual = new ArrayList<>();
+
+        } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
+        return individual;
+    }
+
+    @Override
+    public Double getHeuristicValue(Integer from, Integer to) {
+        return 1.0;
     }
 
     public Double fitness(List<Integer> individual) {
