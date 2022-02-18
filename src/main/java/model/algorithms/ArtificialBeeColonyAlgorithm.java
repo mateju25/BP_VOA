@@ -86,7 +86,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
 
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();
             actualGeneration++;
-            return new AlgorithmResults(problem, generationBest, avgFitness, bestIndividual, actualGeneration);
+            return new AlgorithmResults(problem, generationBest, avgFitness, bestIndividual, actualGeneration, numberOfIterations);
         } else
             return null;
     }

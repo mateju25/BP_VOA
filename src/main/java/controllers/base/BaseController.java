@@ -1,19 +1,15 @@
 package controllers.base;
 
 import javafx.scene.Node;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.algorithms.Algorithm;
 import model.problems.Problem;
-import model.utils.TextFormattersFactory;
-import org.w3c.dom.Text;
+import model.utils.SimulationResults;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class BaseController {
@@ -27,6 +23,10 @@ public class BaseController {
 
     public static Stage mainStage;
     public static VisualizationController visualizationController;
+
+    public static Boolean isFirstLoad = true;
+
+    public static ArrayList<SimulationResults> savedDatasets;
 
     public static void makeTooltip(Node component, String message) {
         var t = new Tooltip(message);

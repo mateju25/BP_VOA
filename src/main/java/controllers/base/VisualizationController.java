@@ -45,10 +45,31 @@ public class VisualizationController {
     public void initialize() {
         BaseController.visualizationController = this;
 
+
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(10000);
         yAxis.setUpperBound(1);
         chart.setAnimated(false);
+
+        if (BaseController.savedDatasets != null) {
+            for (SimulationResults simulationResults: BaseController.savedDatasets) {
+                listView.getItems().add(simulationResults);
+
+                simulationResults.setNumberOfDataset(listView.getItems().size());
+
+                addDataToChart(simulationResults.getBestFitness(), "Best " + simulationResults.getNumberOfDataset());
+                addDataToChart(simulationResults.getAverageFitness(), "Average " + simulationResults.getNumberOfDataset());
+
+
+                simulationResults.setShowBest(true);
+                simulationResults.setShowAverage(true);
+                simulationResults.setDeleted(false);
+
+                yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
+            }
+            BaseController.savedDatasets = null;
+        }
+
 
         listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener() {
             @Override
@@ -83,7 +104,6 @@ public class VisualizationController {
 
             addDataToChart(results.getBestFitness(), "Best " + results.getNumberOfDataset());
             addDataToChart(results.getAverageFitness(), "Average " + results.getNumberOfDataset());
-
 
             yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
         }

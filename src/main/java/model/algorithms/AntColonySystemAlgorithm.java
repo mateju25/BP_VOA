@@ -99,7 +99,7 @@ public class AntColonySystemAlgorithm implements Algorithm {
             this.generation = newGeneration;
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();
             actualGeneration++;
-            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, bestIndividual, actualGeneration);
+            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, bestIndividual, actualGeneration, numberOfIterations);
         } else
             return null;
     }

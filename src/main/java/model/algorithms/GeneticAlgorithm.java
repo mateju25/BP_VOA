@@ -102,7 +102,7 @@ public class GeneticAlgorithm implements Algorithm {
             this.generation = newGeneration;
             var avgFitness = generation.stream().mapToDouble(problem::fitness).average().getAsDouble();
             actualGeneration++;
-            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, bestIndividual, actualGeneration);
+            return new AlgorithmResults(problem, newGeneration.get(0), avgFitness, bestIndividual, actualGeneration, numOfGenerations);
         } else
             return null;
     }

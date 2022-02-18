@@ -1,19 +1,24 @@
 package controllers.base;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import model.utils.AlgorithmResults;
@@ -22,6 +27,7 @@ import model.utils.SimulationResults;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -40,10 +46,12 @@ public class SimulationController {
     @FXML
     public Button btnPause;
     public Slider speedChanger;
-    public Label lblSpeed;
     public Canvas canvas;
     public NumberAxis yAxis;
     public Button btnSave;
+    public Button btnRestart;
+    public Button btnSaveD;
+    public NumberAxis xAxis;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
@@ -55,12 +63,22 @@ public class SimulationController {
 
 
     public void initialize() {
+        simulationRestart = false;
+        btnSave.setDisable(true);
+        btnSaveD.setDisable(true);
+        btnRestart.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/restart.png")))));
+        btnPause.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pause.png")))));
+        btnContinue.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/play.png")))));
+
+        BaseController.makeTooltip(btnRestart, "Restart");
+        BaseController.makeTooltip(btnPause, "Pause");
+        BaseController.makeTooltip(btnContinue, "Continue");
+
         BaseController.randomGenerator = new Random(1);
         results = new SimulationResults(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
         btnContinue.setDisable(true);
         canvas.setVisible(!simulationChart);
 
-        lblSpeed.setText(simulationSpeed + " ms");
         heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
 
         XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
@@ -76,6 +94,7 @@ public class SimulationController {
         chart.getData().add(seriesAverage);
 
         BaseController.chosenAlgorithm.setProblem(BaseController.chosenProblem);
+        BaseController.chosenAlgorithm.resetAlgorithm();
         BaseController.chosenAlgorithm.initFirstGeneration();
 
         executorService = Executors.newCachedThreadPool(r -> {
@@ -101,7 +120,6 @@ public class SimulationController {
                             executorService.execute(this);
                     }
                 } catch (InterruptedException ex) {
-                    ex.printStackTrace();
                 }
             }
         }
@@ -125,6 +143,11 @@ public class SimulationController {
                 }
                 yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
                 BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
+
+                if (data.getActualGeneration().equals(data.getMaxGeneration())) {
+                    btnSave.setDisable(false);
+                    btnSaveD.setDisable(false);
+                }
             }
         };
 
@@ -139,8 +162,6 @@ public class SimulationController {
                     Number newValue) {
 
                 simulationSpeed = newValue.intValue();
-                lblSpeed.setText(simulationSpeed + " ms");
-
             }
 
         });
@@ -180,17 +201,27 @@ public class SimulationController {
         btnPause.setDisable(true);
     }
 
-    public void restartSim() {
+    public void restartSim() throws IOException {
+        executorService.shutdownNow();
         simulationRestart = true;
         animationTimer.stop();
         chart.getData().clear();
-        BaseController.chosenAlgorithm.resetAlgorithm();
-        initialize();
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
+        BaseController.mainStage.setScene(new Scene(root));
+        BaseController.mainStage.show();
     }
 
     public void switchVisualization() {
         simulationChart = !simulationChart;
         canvas.setVisible(!simulationChart);
         chart.setVisible(simulationChart);
+    }
+
+    public void addToVisualization(ActionEvent actionEvent) {
+        btnSaveD.setDisable(true);
+        if (BaseController.savedDatasets == null)
+            BaseController.savedDatasets = new ArrayList<>();
+
+        BaseController.savedDatasets.add(results);
     }
 }

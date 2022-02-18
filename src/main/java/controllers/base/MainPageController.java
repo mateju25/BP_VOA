@@ -1,5 +1,6 @@
 package controllers.base;
 
+import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -9,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import model.algorithms.Algorithm;
@@ -32,6 +35,7 @@ import java.util.Random;
 
 public class MainPageController {
     public Label warning;
+    public ImageView animationPic;
     private Boolean controllerLoaded = false;
 
     @FXML
@@ -65,6 +69,21 @@ public class MainPageController {
     public void initialize() {
         if (controllerLoaded)
             return;
+
+//        if (BaseController.isFirstLoad) {
+//            BaseController.isFirstLoad = false;
+//            animationPic.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_animation.png"))));
+//            FadeTransition ft = new FadeTransition(Duration.millis(2000), animationPic);
+//            ft.setDelay(Duration.millis(1500));
+//            ft.setFromValue(1.0);
+//            ft.setToValue(0.0);
+//            ft.play();
+//            ft.setOnFinished(event -> animationPic.setMouseTransparent(true));
+//
+//        }
+        animationPic.setMouseTransparent(true);
+
+
         BaseController.randomGenerator = new Random(1);
         controllerLoaded = true;
         if (BaseController.algorithms == null) {
