@@ -145,7 +145,8 @@ public class AlgorithmController extends MenuController {
                 numberOfIterations.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations()+"");
                 employedBees.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
                 forgetCount.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getForgetCount()+"");
-                onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
+                if (((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() != null)
+                    onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
             }
         }
         if (numberOfAnts != null) {

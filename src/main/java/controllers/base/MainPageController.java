@@ -168,7 +168,7 @@ public class MainPageController extends MenuController {
                 }
             }
             else
-                probChoiceBox.getSelectionModel().select(0);
+                probChoiceBox.getSelectionModel().select(2);
         }
 
         presetProblems.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
