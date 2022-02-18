@@ -7,6 +7,8 @@ import model.utils.AlgorithmResults;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public interface Problem {
     void init(Map<String, String> parameters);
@@ -16,9 +18,14 @@ public interface Problem {
     Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2);
 
     String nameForFaces();
-    String[] nameOfFxmlFiles();
+    String nameOfFxmlFiles();
 
     void visualize(Canvas canvas, AlgorithmResults data);
+
+    default List<Integer> presetProblems() {
+        return IntStream.rangeClosed(0, 2).boxed().collect(Collectors.toList());
+    };
+    void setPreset(Integer number);
 
     //ACS algorithm
     List<List<Double>> initPheromoneMatrix();

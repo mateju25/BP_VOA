@@ -43,7 +43,7 @@
         <Pane layoutX="103.0" layoutY="396.0" prefHeight="200.0" prefWidth="414.0" styleClass="pane-around">
             <Label layoutX="14.0" layoutY="14.0" text="Preset problems" />
             <Label layoutX="73.0" layoutY="73.0" styleClass="label-small-text" text="Available problems:" />
-            <ChoiceBox focusTraversable="false" layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0" />
+            <ChoiceBox fx:id="presetProblems" focusTraversable="false" layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0" />
         </Pane>
         <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="700.0" layoutY="463.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <ImageView fx:id="animationPic" fitHeight="701.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true" />

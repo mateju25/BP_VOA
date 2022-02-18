@@ -9,6 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import model.algorithms.AntColonySystemAlgorithm;
+import model.algorithms.ArtificialBeeColonyAlgorithm;
+import model.algorithms.GeneticAlgorithm;
+import model.problems.TargetAssignmentProblem;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
@@ -111,6 +115,7 @@ public class AlgorithmController extends MenuController {
             BaseController.makeTooltip(toolParamB, "Strength of relying on heuristic function in process of generating solution");
         }
 
+        actualizeTextEdits();
 
         if (!controllerLoaded) {
             heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " parameters");
@@ -119,6 +124,39 @@ public class AlgorithmController extends MenuController {
             controllerLoaded = true;
             Parent root = loader.load();
             algoPane.getChildren().add(root);
+        }
+    }
+
+    private  void actualizeTextEdits() {
+        if (percentageRoulette != null) {
+            if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm) {
+                percentageRoulette.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageRoulette()+"");
+                percentageTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageTournament()+"");
+                percentageElitism.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageElitism()+"");
+                percentageMutation.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageMutation()+"");
+                numberIndividuals.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getNumOfIndividuals()+"");
+                numberGenerations.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getNumOfGenerations()+"");
+                sizeTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getSizeTournament()+"");
+            }
+        }
+        if (sizeBeeHive != null) {
+            if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm) {
+                sizeBeeHive.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getSizeBeeHive()+"");
+                numberOfIterations.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations()+"");
+                employedBees.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
+                forgetCount.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getForgetCount()+"");
+                onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
+            }
+        }
+        if (numberOfAnts != null) {
+            if (BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm) {
+                numberOfAnts.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getNumberOfAnts()+"");
+                numberOfIterations.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations()+"");
+                parameterB.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterBeta()+"");
+                parameterA.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterAlpha()+"");
+                pheromone.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getPheromoneVapor()+"");
+                parameterQ.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterQ()+"");
+            }
         }
     }
 

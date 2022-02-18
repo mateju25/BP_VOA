@@ -10,10 +10,9 @@ import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Getter
 @Setter
@@ -135,10 +134,8 @@ public class KnapsackProblem implements Problem {
     }
 
     @Override
-    public String[] nameOfFxmlFiles() {
-        var arr = new String[1];
-        arr[0] = "KPPage.fxml";
-        return arr;
+    public String nameOfFxmlFiles() {
+        return "KPPage.fxml";
     }
 
     @Override
@@ -171,5 +168,31 @@ public class KnapsackProblem implements Problem {
                 level += Math.round(((weight * 1.0) / weightOfBackpack) * WIDTH_OF_CONTAINER);
             }
         }
+    }
+
+    @Override
+    public void setPreset(Integer number) {
+        var params = new HashMap<String, String>();
+        switch (number) {
+            case 0: {
+                params.put("numberOfItems", "10");
+                params.put("averageWeight", "2");
+                params.put("backpackCapacity", "10");
+                break;
+            }
+            case 1: {
+                params.put("numberOfItems", "100");
+                params.put("averageWeight", "3");
+                params.put("backpackCapacity", "200");
+                break;
+            }
+            case 2: {
+                params.put("numberOfItems", "1000");
+                params.put("averageWeight", "4");
+                params.put("backpackCapacity", "800");
+                break;
+            }
+        }
+        init(params);
     }
 }

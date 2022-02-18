@@ -4,14 +4,18 @@ import controllers.base.BaseController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+import lombok.Getter;
+import lombok.Setter;
 import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Getter @Setter
 public class TargetAssignmentProblem implements Problem {
     private List<List<Double>> matrixOfProbabilities;
     private List<Double> targetValues;
@@ -126,10 +130,8 @@ public class TargetAssignmentProblem implements Problem {
     }
 
     @Override
-    public String[] nameOfFxmlFiles() {
-        var arr = new String[1];
-        arr[0] = "TAPPage.fxml";
-        return arr;
+    public String nameOfFxmlFiles() {
+        return "TAPPage.fxml";
     }
 
     @Override
@@ -176,5 +178,31 @@ public class TargetAssignmentProblem implements Problem {
             }
 
         }
+    }
+
+    @Override
+    public void setPreset(Integer number) {
+        var params = new HashMap<String, String>();
+        switch (number) {
+            case 0: {
+                params.put("numberOfTargets", "10");
+                params.put("numberOfWeapons", "10");
+                params.put("maxAssignedTargets", "2");
+                break;
+            }
+            case 1: {
+                params.put("numberOfTargets", "20");
+                params.put("numberOfWeapons", "20");
+                params.put("maxAssignedTargets", "3");
+                break;
+            }
+            case 2: {
+                params.put("numberOfTargets", "40");
+                params.put("numberOfWeapons", "40");
+                params.put("maxAssignedTargets", "4");
+                break;
+            }
+        }
+        init(params);
     }
 }

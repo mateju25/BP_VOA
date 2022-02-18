@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import lombok.Getter;
+import lombok.Setter;
 import model.algorithms.Algorithm;
 import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Getter @Setter
 public class VehicleRoutingProblem implements Problem {
     @Getter
     private static class Point {
@@ -32,6 +34,7 @@ public class VehicleRoutingProblem implements Problem {
     private List<List<Integer>> matrixOfDistances;
     private Integer vehicleCapacity;
     private Integer sizeOfTheProblem;
+    private Integer averageDemand;
     private Double fitnessCoefficient;
     private List<Color> colorsOfItems;
 
@@ -40,7 +43,7 @@ public class VehicleRoutingProblem implements Problem {
     public void init(Map<String, String> parameters) {
         this.sizeOfTheProblem = Integer.parseInt(parameters.get("sizeOfProblem"));
         this.vehicleCapacity = Integer.parseInt(parameters.get("vehicleCapacity"));
-        var averageDemand = Integer.parseInt(parameters.get("averageDemand"));
+        this.averageDemand = Integer.parseInt(parameters.get("averageDemand"));
 
         points = new ArrayList<>();
         colorsOfItems = new ArrayList<>();
@@ -205,10 +208,8 @@ public class VehicleRoutingProblem implements Problem {
     }
 
     @Override
-    public String[] nameOfFxmlFiles() {
-        var arr = new String[1];
-        arr[0] = "VRPPage.fxml";
-        return arr;
+    public String nameOfFxmlFiles() {
+        return "VRPPage.fxml";
     }
 
     @Override
@@ -261,5 +262,31 @@ public class VehicleRoutingProblem implements Problem {
                 gc.fillText(this.points.get(i).demand+"", points.get(i).xCor + LEFT_OFFSET - 1, points.get(i).yCor + UP_OFFSET - 1);
             }
         }
+    }
+
+    @Override
+    public void setPreset(Integer number) {
+        var params = new HashMap<String, String>();
+        switch (number) {
+            case 0: {
+                params.put("sizeOfProblem", "10");
+                params.put("vehicleCapacity", "10");
+                params.put("averageDemand", "2");
+                break;
+            }
+            case 1: {
+                params.put("sizeOfProblem", "20");
+                params.put("vehicleCapacity", "20");
+                params.put("averageDemand", "3");
+                break;
+            }
+            case 2: {
+                params.put("sizeOfProblem", "40");
+                params.put("vehicleCapacity", "40");
+                params.put("averageDemand", "4");
+                break;
+            }
+        }
+        init(params);
     }
 }

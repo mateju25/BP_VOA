@@ -38,6 +38,7 @@ import java.util.Random;
 public class MainPageController extends MenuController {
     public Label warning;
     public ImageView animationPic;
+    public ChoiceBox<String> presetProblems;
     private Boolean controllerLoaded = false;
 
     @FXML
@@ -120,7 +121,11 @@ public class MainPageController extends MenuController {
                         }
                     });
             algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosenAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
-            algChoiceBox.getSelectionModel().select(0);
+            if (BaseController.chosenAlgorithm != null) {
+                algChoiceBox.getSelectionModel().select(BaseController.algorithms.indexOf(BaseController.chosenAlgorithm));
+            }
+            else
+                algChoiceBox.getSelectionModel().select(0);
 
         }
         if (probChoiceBox != null) {
@@ -129,7 +134,7 @@ public class MainPageController extends MenuController {
                 var index = BaseController.problems.indexOf(BaseController.chosenProblem);
                 probChoiceBox.getSelectionModel().clearAndSelect(index);
                 Problem selectedProblem = probChoiceBox.getItems().get(index);
-                loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
+                loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles());
             }
             probChoiceBox.setConverter(
                     new StringConverter<>() {
@@ -148,15 +153,30 @@ public class MainPageController extends MenuController {
                 @Override
                 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                     Problem selectedProblem = probChoiceBox.getItems().get(newValue.intValue());
-                    loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles()[0]);
+                    loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles());
                     BaseController.chosenProblem = selectedProblem;
+
+                    for (Integer number : BaseController.chosenProblem.presetProblems()) {
+                        presetProblems.getItems().add("Preset " + BaseController.chosenProblem.nameForFaces() + " " + number);
+                    }
                 }
             });
-            if (BaseController.chosenProblem != null)
+            if (BaseController.chosenProblem != null) {
                 probChoiceBox.getSelectionModel().select(BaseController.problems.indexOf(BaseController.chosenProblem));
+                for (Integer number : BaseController.chosenProblem.presetProblems()) {
+                    presetProblems.getItems().add("Preset " + BaseController.chosenProblem.nameForFaces() + " " + number);
+                }
+            }
             else
                 probChoiceBox.getSelectionModel().select(0);
         }
+
+        presetProblems.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (BaseController.chosenProblem != null) {
+                BaseController.chosenProblem.setPreset((Integer) newValue);
+                actualizeTextEdits();
+            }
+        });
     }
 
     private void loadSpecificFxmlPart(String part) {
@@ -193,6 +213,31 @@ public class MainPageController extends MenuController {
             BaseController.makeTooltip(toolNumberOfWeapons,"Number of weapons that will be generated (each will have a random probability to destroy each target)");
             BaseController.makeTooltip(toolMaximum,"Maximum number of assigned targets to one weapon");
             BaseController.makeTooltip(toolNumberOfTargets,"Number of targets that will be generated (each will have a destruction level 1 - 5)");
+        }
+        actualizeTextEdits();
+    }
+
+    private  void actualizeTextEdits() {
+        if (averageWeight != null) {
+            if (BaseController.chosenProblem instanceof KnapsackProblem) {
+                averageWeight.setText(((KnapsackProblem) BaseController.chosenProblem).getAverageWeightOfItem()+"");
+                backpackCapacity.setText(((KnapsackProblem) BaseController.chosenProblem).getWeightOfBackpack()+"");
+                numberOfItems.setText(((KnapsackProblem) BaseController.chosenProblem).getNumberOfItems()+"");
+            }
+        }
+        if (sizeOfProblem != null) {
+            if (BaseController.chosenProblem instanceof VehicleRoutingProblem) {
+                sizeOfProblem.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getSizeOfTheProblem()+"");
+                vehicleCapacity.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getVehicleCapacity()+"");
+                averageDemand.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getAverageDemand()+"");
+            }
+        }
+        if (numberOfWeapons != null) {
+            if (BaseController.chosenProblem instanceof TargetAssignmentProblem) {
+                numberOfWeapons.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getNumOfWeapons()+"");
+                numberOfTargets.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getNumOfTargets()+"");
+                maxAssignedTargets.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getMaximumAssignedTargets()+"");
+            }
         }
     }
 
