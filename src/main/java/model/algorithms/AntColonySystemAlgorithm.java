@@ -6,6 +6,8 @@ import lombok.Setter;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,6 @@ public class AntColonySystemAlgorithm implements Algorithm {
     public Double getProbabilityOfEdgeToSelect(Integer from, Integer to, List<Integer> notVisited) {
 
         if (BaseController.randomGenerator.nextDouble() < parameterQ) {
-            Integer removeFromNotVisited = null;
             for (int i = 0; i < bestIndividual.size() - 1; i++) {
                 if (bestIndividual.get(i).equals(from) && bestIndividual.get(i + 1).equals(to))
                     notVisited.remove(to);
@@ -71,12 +72,6 @@ public class AntColonySystemAlgorithm implements Algorithm {
             if (problem.fitness(generationBest) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
                 bestIndividual = new ArrayList<>(generationBest);
 
-            for (List<Double> lst : matrixOfPheromone) {
-                for (Double doub: lst){
-                    System.out.print(doub + " ");
-                }
-                System.out.println();
-            }
 
             //update all
 //            for (List<Integer> individual: generation ) {
@@ -88,32 +83,28 @@ public class AntColonySystemAlgorithm implements Algorithm {
 //                }
 //            }
 
+            DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance();
+            decimalFormat.setMinimumFractionDigits(2);
             for (List<Double> lst : matrixOfPheromone) {
                 for (Double doub: lst){
-                    System.out.print(doub + " ");
+                    System.out.print(decimalFormat.format(doub) + " ");
                 }
                 System.out.println();
             }
+            generation.forEach(System.out::println);
+            System.out.println("-------------------------------------------------------------------------------");
+
 
             //update best in generation
             var fitness = problem.fitness(generationBest);
             for (int i = 0; i < generationBest.size()-1; i++) {
-                matrixOfPheromone.get(generationBest.get(i)).set(generationBest.get(i+1), fitness);
-            }
-
-            for (List<Double> lst : matrixOfPheromone) {
-                for (Double doub: lst){
-                    System.out.print(doub + " ");
-                }
-                System.out.println();
+                matrixOfPheromone.get(generationBest.get(i)).set(generationBest.get(i+1), problem.getHeuristicValue(generationBest.get(i), generationBest.get(i+1)));
             }
 
             List<List<Integer>> newGeneration = new ArrayList<>();
             while (newGeneration.size() < generation.size()) {
                 newGeneration.add(problem.makeOneIndividual(this));
             }
-
-
 
             newGeneration = newGeneration.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
             if (problem.fitness(newGeneration.get(0)) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)

@@ -81,6 +81,10 @@ public class KnapsackProblem implements Problem {
         var individual = new ArrayList<Integer>();
         do {
             individual = new ArrayList<>();
+            individual.add(1);
+            for (int i = 1; i < itemWeight.size(); i++) {
+
+            }
 
         } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
         return individual;
