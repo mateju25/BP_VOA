@@ -1,6 +1,7 @@
 package controllers.base;
 
-import controllers.listCells.DatasetPartController;
+import controllers.components.DatasetPartController;
+import controllers.components.MenuController;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -22,7 +23,6 @@ import model.utils.SimulationResults;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class VisualizationController {
+public class VisualizationController extends MenuController {
 
 
     public Label heading;
@@ -41,6 +41,8 @@ public class VisualizationController {
     public Button btnAdd;
     public ListView<SimulationResults> listView;
     public Button btnExportPic;
+    public Pane infoBox;
+    public Label infoBoxLabel;
 
     public void initialize() {
         BaseController.visualizationController = this;
@@ -86,20 +88,26 @@ public class VisualizationController {
         BaseController.mainStage.show();
     }
 
-    public void addDataset() throws FileNotFoundException {
+    public void addDataset(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
 
         var files = fileChooser.showOpenMultipleDialog(BaseController.mainStage.getOwner());
-        if (files == null)
+        if (files == null) {
+            BaseController.showInfo(infoBox, infoBoxLabel, "No file selected!");
             return;
-
+        }
         for (File file : files) {
             var results = new SimulationResults();
-            listView.getItems().add(results);
 
-            results.loadFromCsv(file);
+            try {
+                results.loadFromCsv(file);
+            } catch (Exception e) {
+                BaseController.showInfo(infoBox, infoBoxLabel, "There was an error loading file!");
+                return;
+            }
+            listView.getItems().add(results);
             results.setNumberOfDataset(listView.getItems().size());
 
             addDataToChart(results.getBestFitness(), "Best " + results.getNumberOfDataset());

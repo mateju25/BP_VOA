@@ -5,7 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -13,14 +15,25 @@
 
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
-        <Menu id="menu1" mnemonicParsing="false" text="Settings" />
-        <Menu id="menu2" mnemonicParsing="false" text="About" />
+        <Menu id="menu1" mnemonicParsing="false" text="Settings">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+         </items></Menu>
+        <Menu id="menu2" mnemonicParsing="false" text="About">
+         <items>
+            <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
+            <MenuItem mnemonicParsing="false" onAction="#about" text="About program" />
+         </items></Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
+        <ChoiceBox fx:id="probChoiceBox" focusTraversable="false" layoutX="167.0" layoutY="108.0" prefHeight="30.0" prefWidth="288.0" />
         <Label layoutX="194.0" layoutY="49.0" styleClass="label-underline" text="Choose optimization problem" />
         <Label layoutX="718.0" layoutY="49.0" styleClass="label-underline" text="Choose optimization algorithm" />
         <Line endX="44.0" endY="383.0" layoutX="525.0" layoutY="231.0" startX="44.0" startY="-177.0" styleClass="divider" />
-        <ChoiceBox fx:id="algChoiceBox" layoutX="696.0" layoutY="299.0" prefHeight="30.0" prefWidth="288.0" />
+        <ChoiceBox fx:id="algChoiceBox" focusTraversable="false" layoutX="696.0" layoutY="299.0" prefHeight="30.0" prefWidth="288.0" />
         <Button layoutX="863.0" layoutY="517.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Proceed" />
         <Button layoutX="684.0" layoutY="517.0" mnemonicParsing="false" onAction="#visualizeData" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Data visualization" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
         <Pane layoutX="103.0" layoutY="159.0" onMouseEntered="#removeWarning" prefHeight="200.0" prefWidth="414.0" styleClass="pane-around">
@@ -30,9 +43,8 @@
         <Pane layoutX="103.0" layoutY="396.0" prefHeight="200.0" prefWidth="414.0" styleClass="pane-around">
             <Label layoutX="14.0" layoutY="14.0" text="Preset problems" />
             <Label layoutX="73.0" layoutY="73.0" styleClass="label-small-text" text="Available problems:" />
-            <ChoiceBox layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0" />
+            <ChoiceBox focusTraversable="false" layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0" />
         </Pane>
-        <ChoiceBox fx:id="probChoiceBox" layoutX="167.0" layoutY="108.0" prefHeight="30.0" prefWidth="288.0" />
         <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="700.0" layoutY="463.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <ImageView fx:id="animationPic" fitHeight="701.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true" />
     </AnchorPane>

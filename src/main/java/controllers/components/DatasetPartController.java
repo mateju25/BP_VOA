@@ -1,4 +1,4 @@
-package controllers.listCells;
+package controllers.components;
 
 import controllers.base.BaseController;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +32,7 @@ public class DatasetPartController extends ListCell<SimulationResults> {
         } else {
 
             if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/views/listCells/datasetPart.fxml"));
+                mLLoader = new FXMLLoader(getClass().getResource("/views/components/datasetPart.fxml"));
                 try {
                     mLLoader.load();
                 } catch (IOException e) {

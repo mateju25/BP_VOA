@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="pane" prefHeight="37.0" prefWidth="897.0" stylesheets="@../../css/main.css"
             xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.listCells.DatasetPartController">
+            fx:controller="controllers.components.DatasetPartController">
     <Label fx:id="lblNumber" layoutX="14.0" layoutY="11.0" prefHeight="17.0" prefWidth="25.0"
            styleClass="label-small-text" stylesheets="@../../css/main.css" text="s"/>
     <Line endX="39.0" endY="8.0" layoutY="24.0" startX="39.0" startY="-20.0" styleClass="divider"/>

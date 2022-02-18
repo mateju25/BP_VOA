@@ -1,7 +1,10 @@
 package controllers.base;
 
+import javafx.animation.FadeTransition;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.algorithms.Algorithm;
@@ -32,5 +35,15 @@ public class BaseController {
         var t = new Tooltip(message);
         t.setShowDelay(Duration.seconds(0.5));
         Tooltip.install(component, t);
+    }
+
+    public static void showInfo(Pane pane, Label label, String message) {
+        pane.setOpacity(1.0);
+        label.setText(message);
+        FadeTransition ft = new FadeTransition(Duration.millis(2000), pane);
+        ft.setDelay(Duration.millis(1500));
+        ft.setFromValue(1.0);
+        ft.setToValue(0.0);
+        ft.play();
     }
 }

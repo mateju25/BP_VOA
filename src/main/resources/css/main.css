@@ -39,7 +39,7 @@
     -fx-border-color: -fx-black;
     -fx-border-radius: 2px;
 }
-.choice-box:hover {
+.choice-box:hover, .choice-box:focused {
     -fx-cursor: hand;
 }
 
@@ -51,7 +51,7 @@
     -fx-border-radius: 2px;
 }
 
-.button-black:hover {
+.button-black:hover, .button-black:focused {
     -fx-background-color: -fx-black;
     -fx-cursor: hand;
 }
@@ -79,6 +79,21 @@
     -fx-background-radius: 3px;
     -fx-padding: 3px;
 }
+
+.info-pane {
+    -fx-background-radius: 3px;
+    -fx-padding: 3px;
+    -fx-background-color: -fx-light-blue;
+}
+
+.text-area *.text {
+    -fx-text-alignment: center;
+}
+.text-area .content {
+    -fx-background-color: -fx-white;
+}
+
+
 /*.default-color0.chart-line-symbol { -fx-background-color: #d08b6e; }*/
 /*.default-color1.chart-line-symbol { -fx-background-color: #d9d081; }*/
 /*.default-color2.chart-line-symbol { -fx-background-color: #c18ec1; }*/

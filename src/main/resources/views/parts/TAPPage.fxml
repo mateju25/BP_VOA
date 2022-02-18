@@ -6,25 +6,20 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css"
-            xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
-    <Label layoutX="40.0" layoutY="20.0" styleClass="label-small-text" text="Number of weapons:"/>
-    <Label layoutX="40.0" layoutY="119.0" styleClass="label-small-text" text="Number of targets:"/>
-    <TextField fx:id="numberOfWeapons" layoutX="186.0" layoutY="14.0" prefHeight="28.0" prefWidth="189.0" text="10"/>
-    <TextField fx:id="numberOfTargets" layoutX="186.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" text="22"/>
-    <Label layoutX="40.0" layoutY="57.0" prefHeight="47.0" prefWidth="143.0" styleClass="label-small-text"
-           text="Maximum assigned weapons to target:" wrapText="true"/>
-    <TextField fx:id="maxAssignedTargets" layoutX="186.0" layoutY="66.0" prefHeight="28.0" prefWidth="189.0" text="2"/>
-    <ImageView fx:id="toolNumberOfWeapons" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="17.0"
-               pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../images/tooltip.png"/>
+<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <Label focusTraversable="false" layoutX="40.0" layoutY="20.0" styleClass="label-small-text" text="Number of weapons:" />
+    <Label focusTraversable="false" layoutX="40.0" layoutY="119.0" styleClass="label-small-text" text="Number of targets:" />
+    <TextField fx:id="numberOfWeapons" layoutX="186.0" layoutY="14.0" prefHeight="28.0" prefWidth="189.0" text="10" />
+    <TextField fx:id="maxAssignedTargets" layoutX="186.0" layoutY="66.0" prefHeight="28.0" prefWidth="189.0" text="2" />
+    <TextField fx:id="numberOfTargets" layoutX="186.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" text="22" />
+    <Label focusTraversable="false" layoutX="40.0" layoutY="57.0" prefHeight="47.0" prefWidth="143.0" styleClass="label-small-text" text="Maximum assigned weapons to target:" wrapText="true" />
+    <ImageView fx:id="toolNumberOfWeapons" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../images/tooltip.png" />
     </ImageView>
-    <ImageView fx:id="toolMaximum" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="71.0"
-               pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../images/tooltip.png"/>
+    <ImageView fx:id="toolMaximum" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../images/tooltip.png" />
     </ImageView>
-    <ImageView fx:id="toolNumberOfTargets" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="117.0"
-               pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../images/tooltip.png"/>
+    <ImageView fx:id="toolNumberOfTargets" fitHeight="20.0" fitWidth="20.0" layoutX="379.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../../images/tooltip.png" />
     </ImageView>
 </AnchorPane>
