@@ -1,5 +1,6 @@
 package controllers.base;
 
+import controllers.components.MenuController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,8 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import model.algorithms.ArtificialBeeColonyAlgorithm;
-import model.algorithms.GeneticAlgorithm;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
-public class AlgorithmController {
+public class AlgorithmController extends MenuController {
     public Label warning;
     private Boolean controllerLoaded = false;
 

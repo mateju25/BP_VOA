@@ -58,6 +58,8 @@ public class SimulationResults {
             } else {
                 line = sc.nextLine();
                 var parts = line.split(",");
+                if (parts.length != 2)
+                    throw new FileNotFoundException();
                 averageFitness.add(Double.parseDouble(parts[0]));
                 bestFitness.add(Double.parseDouble(parts[1]));
             }

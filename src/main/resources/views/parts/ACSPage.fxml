@@ -29,11 +29,11 @@
         <Label layoutX="43.0" layoutY="87.0" styleClass="label-small-text" text="Pheromone level:" />
         <TextField fx:id="pheromone" layoutX="170.0" layoutY="82.0" prefHeight="28.0" prefWidth="189.0" text="0.9" />
         <Label layoutX="409.0" layoutY="184.0" styleClass="label-small-text" text="Parameter beta:" />
+      <TextField fx:id="parameterQ" layoutX="170.0" layoutY="179.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
+        <TextField fx:id="parameterA" layoutX="547.0" layoutY="82.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
         <TextField fx:id="parameterB" layoutX="547.0" layoutY="179.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
         <Label layoutX="407.0" layoutY="87.0" styleClass="label-small-text" text="Parameter alpha:" />
-        <TextField fx:id="parameterA" layoutX="547.0" layoutY="82.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
       <Label layoutX="43.0" layoutY="183.0" styleClass="label-small-text" text="Parameter q:" />
-      <TextField fx:id="parameterQ" layoutX="170.0" layoutY="179.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
       <ImageView fx:id="toolPheromone" fitHeight="20.0" fitWidth="20.0" layoutX="361.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../images/tooltip.png" />

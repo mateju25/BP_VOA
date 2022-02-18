@@ -1,8 +1,10 @@
 package controllers.base;
 
+import controllers.components.MenuController;
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,7 +35,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
-public class MainPageController {
+public class MainPageController extends MenuController {
     public Label warning;
     public ImageView animationPic;
     private Boolean controllerLoaded = false;
@@ -228,4 +230,5 @@ public class MainPageController {
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
     }
+
 }

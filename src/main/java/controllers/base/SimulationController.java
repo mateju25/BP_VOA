@@ -1,5 +1,6 @@
 package controllers.base;
 
+import controllers.components.MenuController;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import lombok.SneakyThrows;
 import model.utils.AlgorithmResults;
 import model.utils.SimulationResults;
 
@@ -34,7 +36,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SimulationController {
+public class SimulationController extends MenuController {
     @FXML
     public Label heading;
     @FXML
@@ -52,6 +54,8 @@ public class SimulationController {
     public Button btnRestart;
     public Button btnSaveD;
     public NumberAxis xAxis;
+    public Pane infoBox;
+    public Label infoBoxLabel;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
@@ -127,6 +131,7 @@ public class SimulationController {
         executorService.execute(new AddToQueue());
 
         animationTimer = new AnimationTimer() {
+            @SneakyThrows
             @Override
             public void handle(long now) {
                 if (dataQ.isEmpty()) return;
@@ -174,7 +179,11 @@ public class SimulationController {
             fileChooser.setInitialFileName(BaseController.chosenAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
                     .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
             try {
-                results.writeToCsv(fileChooser.showSaveDialog(BaseController.mainStage));
+                var file = fileChooser.showSaveDialog(BaseController.mainStage);
+                if (file != null) {
+                    results.writeToCsv(file);
+                    BaseController.showInfo(infoBox, infoBoxLabel, "Simulation saved!");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -223,5 +232,6 @@ public class SimulationController {
             BaseController.savedDatasets = new ArrayList<>();
 
         BaseController.savedDatasets.add(results);
+        BaseController.showInfo(infoBox, infoBoxLabel, "Simulation results added to visualization page!");
     }
 }

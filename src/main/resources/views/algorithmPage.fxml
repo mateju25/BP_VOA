@@ -8,12 +8,20 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.MenuItem?>
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css"
       xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="controllers.base.AlgorithmController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
-        <Menu id="menu1" mnemonicParsing="false" text="Settings"/>
-        <Menu id="menu2" mnemonicParsing="false" text="About"/>
+        <Menu id="menu1" mnemonicParsing="false" text="Settings">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Close" onAction="#closeApp"/>
+            </items></Menu>
+        <Menu id="menu2" mnemonicParsing="false" text="About">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Documentation" onAction="#openDoc"/>
+                <MenuItem mnemonicParsing="false" text="About program" onAction="#about"/>
+            </items></Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
         <Label fx:id="heading" alignment="CENTER" layoutX="379.0" layoutY="55.0" prefHeight="22.0" prefWidth="382.0"
