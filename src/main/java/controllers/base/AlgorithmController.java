@@ -57,7 +57,11 @@ public class AlgorithmController {
     public TextField parameterB;
     public TextField parameterA;
     public TextField parameterQ;
-
+    public ImageView toolAnts;
+    public ImageView toolPheromone;
+    public ImageView toolParamQ;
+    public ImageView toolParamA;
+    public ImageView toolParamB;
 
     public Label heading;
     public Pane algoPane;
@@ -93,6 +97,21 @@ public class AlgorithmController {
             BaseController.makeTooltip(toolOnlooker, "Percentage of total bees in hive that are onlooker and follow employed bees (together with percentage employed should be 1)");
             BaseController.makeTooltip(toolForget, "Number of iterations after which source that remained unchanged is replaced with new source");
         }
+        if (numberOfAnts != null) {
+            numberOfAnts.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            numberOfIterations.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
+            parameterB.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
+            parameterA.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
+            pheromone.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
+            parameterQ.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
+            BaseController.makeTooltip(toolAnts, "Amount of ants used in algorithm (number of exploited solutions to the problem)");
+            BaseController.makeTooltip(toolIterations, "Number of iterations of the algorithm");
+            BaseController.makeTooltip(toolPheromone, "Strength of pheromone evaporation level (the higher the stronger level)");
+            BaseController.makeTooltip(toolParamQ, "Strength of exploitation in solution generation");
+            BaseController.makeTooltip(toolParamA, "Strength of relying on pheromones in process of generating solution");
+            BaseController.makeTooltip(toolParamB, "Strength of relying on heuristic function in process of generating solution");
+        }
+
 
         if (!controllerLoaded) {
             heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " parameters");

@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
 <Pane prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
@@ -9,18 +11,48 @@
         <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm" />
         <Label layoutX="197.0" layoutY="54.0" styleClass="label-small-text" text="Number of ants:" />
         <TextField fx:id="numberOfAnts" layoutX="374.0" layoutY="48.0" prefHeight="28.0" prefWidth="189.0" text="40" />
-        <Label layoutX="197.0" layoutY="90.0" styleClass="label-small-text" text="Number of generations:" />
-        <TextField fx:id="numberOfIterations" layoutX="374.0" layoutY="84.0" prefHeight="28.0" prefWidth="189.0" text="100"/>
+        <Label layoutX="197.0" layoutY="90.0" styleClass="label-small-text" text="Number of iterations:" />
+        <TextField fx:id="numberOfIterations" layoutX="374.0" layoutY="84.0" prefHeight="28.0" prefWidth="189.0" text="100" />
+      <ImageView fx:id="toolAnts" fitHeight="20.0" fitWidth="20.0" layoutX="565.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tooltip.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="toolIterations" fitHeight="20.0" fitWidth="20.0" layoutX="565.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tooltip.png" />
+         </image>
+      </ImageView>
     </Pane>
     <Pane layoutX="55.0" layoutY="188.0" prefHeight="275.0" prefWidth="790.0" styleClass="pane-around">
         <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Selection of new individuals:" />
-        <Label layoutX="219.0" layoutY="70.0" styleClass="label-small-text" text="Pheromone level:" />
-        <TextField fx:id="pheromone" layoutX="380.0" layoutY="65.0" prefHeight="28.0" prefWidth="189.0" text="0.9"/>
-        <Label layoutX="219.0" layoutY="200.0" styleClass="label-small-text" text="Parameter beta:" />
-        <TextField fx:id="parameterB" layoutX="380.0" layoutY="194.0" prefHeight="28.0" prefWidth="189.0" text="0.5"/>
-        <Label layoutX="221.0" layoutY="133.0" styleClass="label-small-text" text="Parameter alpha:" />
-        <TextField fx:id="parameterA" layoutX="380.0" layoutY="127.0" prefHeight="28.0" prefWidth="189.0" text="0.5"/>
-      <Label layoutX="220.0" layoutY="239.0" styleClass="label-small-text" text="Parameter q:" />
-      <TextField fx:id="parameterQ" layoutX="381.0" layoutY="233.0" prefHeight="28.0" prefWidth="189.0" text="0.5"/>
+        <Label layoutX="43.0" layoutY="87.0" styleClass="label-small-text" text="Pheromone level:" />
+        <TextField fx:id="pheromone" layoutX="170.0" layoutY="82.0" prefHeight="28.0" prefWidth="189.0" text="0.9" />
+        <Label layoutX="409.0" layoutY="184.0" styleClass="label-small-text" text="Parameter beta:" />
+        <TextField fx:id="parameterB" layoutX="547.0" layoutY="179.0" prefHeight="28.0" prefWidth="189.0" text="1" />
+        <Label layoutX="407.0" layoutY="87.0" styleClass="label-small-text" text="Parameter alpha:" />
+        <TextField fx:id="parameterA" layoutX="547.0" layoutY="82.0" prefHeight="28.0" prefWidth="189.0" text="1" />
+      <Label layoutX="43.0" layoutY="183.0" styleClass="label-small-text" text="Parameter q:" />
+      <TextField fx:id="parameterQ" layoutX="170.0" layoutY="179.0" prefHeight="28.0" prefWidth="189.0" text="0.5" />
+      <ImageView fx:id="toolPheromone" fitHeight="20.0" fitWidth="20.0" layoutX="361.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tooltip.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="toolParamQ" fitHeight="20.0" fitWidth="20.0" layoutX="361.0" layoutY="183.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tooltip.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="toolParamA" fitHeight="20.0" fitWidth="20.0" layoutX="737.0" layoutY="86.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tooltip.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="toolParamB" fitHeight="20.0" fitWidth="20.0" layoutX="737.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/tooltip.png" />
+         </image>
+      </ImageView>
     </Pane>
 </Pane>

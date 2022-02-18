@@ -6,8 +6,6 @@ import lombok.Setter;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,25 +34,29 @@ public class AntColonySystemAlgorithm implements Algorithm {
         resetAlgorithm();
     }
 
-    public Double getProbabilityOfEdgeToSelect(Integer from, Integer to, List<Integer> notVisited) {
-
-        if (BaseController.randomGenerator.nextDouble() < parameterQ) {
-            for (int i = 0; i < bestIndividual.size() - 1; i++) {
-                if (bestIndividual.get(i).equals(from) && bestIndividual.get(i + 1).equals(to))
-                    notVisited.remove(to);
-            }
-        }
+    public Map<Integer, Double> getProbabilityOfEdges(Integer from, List<Integer> notVisited) {
+        var map = new HashMap<Integer, Double>();
         var sum = 0.0;
-        notVisited = notVisited.stream().filter(e -> !e.equals(to)).collect(Collectors.toList());
         for (Integer number : notVisited) {
             sum += Math.pow(matrixOfPheromone.get(from).get(number), parameterAlpha) + Math.pow(problem.getHeuristicValue(from, number), parameterBeta);
         }
-        return (Math.pow(matrixOfPheromone.get(from).get(to), parameterAlpha) + Math.pow(problem.getHeuristicValue(from, to), parameterBeta)) / sum;
+        for (Integer number : notVisited) {
+            map.put(number, (Math.pow(matrixOfPheromone.get(from).get(number), parameterAlpha) + Math.pow(problem.getHeuristicValue(from, number), parameterBeta)) / sum);
+        }
+        if (BaseController.randomGenerator.nextDouble() < parameterQ) {
+            var max = map.values().stream().mapToDouble(e -> e).max().getAsDouble();
+            HashMap<Integer, Double> finalMap = map;
+            var key = map.keySet().stream().filter(e -> finalMap.get(e).equals(max)).findFirst().get();
+            map = new HashMap<Integer, Double>();
+            map.put(key, max);
+        }
+        return map;
     }
 
-    public Double newProbValueDueToValue(Integer from, Integer to, List<Double> heuristic) {
-        return pheromoneVapor * matrixOfPheromone.get(from).get(to) +
-                (1-pheromoneVapor)*heuristic.stream().min(Double::compareTo).get();
+
+    public void localUpdateEdge(Integer fromCity, Integer newIndex) {
+        var newVal = matrixOfPheromone.get(fromCity).get(newIndex) * (1-pheromoneVapor) + pheromoneVapor * 0;
+        matrixOfPheromone.get(fromCity).set(newIndex, newVal);
     }
 
     @Override
@@ -73,32 +75,17 @@ public class AntColonySystemAlgorithm implements Algorithm {
                 bestIndividual = new ArrayList<>(generationBest);
 
 
-            //update all
-//            for (List<Integer> individual: generation ) {
-//                var fitness = problem.fitness(individual);
-//                for (int i = 0; i < individual.size()-1; i++) {
-//                    var newVal = matrixOfPheromone.get(individual.get(i)).get(individual.get(i+1)) * pheromoneVapor;
-////                            + (1-pheromoneVapor)*problem.getHeuristicValue(individual.get(i), individual.get(i+1));
-//                    matrixOfPheromone.get(individual.get(i)).set(individual.get(i+1), newVal);
-//                }
-//            }
-
-            DecimalFormat decimalFormat = (DecimalFormat) DecimalFormat.getInstance();
-            decimalFormat.setMinimumFractionDigits(2);
-            for (List<Double> lst : matrixOfPheromone) {
-                for (Double doub: lst){
-                    System.out.print(decimalFormat.format(doub) + " ");
-                }
-                System.out.println();
-            }
-            generation.forEach(System.out::println);
-            System.out.println("-------------------------------------------------------------------------------");
-
-
-            //update best in generation
+            //update best
+            var edges = problem.initPheromoneMatrix();
             var fitness = problem.fitness(generationBest);
             for (int i = 0; i < generationBest.size()-1; i++) {
-                matrixOfPheromone.get(generationBest.get(i)).set(generationBest.get(i+1), problem.getHeuristicValue(generationBest.get(i), generationBest.get(i+1)));
+                edges.get(generationBest.get(i)).set(generationBest.get(i+1), fitness);
+            }
+
+            for (int i = 0; i < matrixOfPheromone.size(); i++) {
+                for (int j = 0; j < matrixOfPheromone.get(i).size(); j++) {
+                    matrixOfPheromone.get(i).set(j, matrixOfPheromone.get(i).get(j)*(1-pheromoneVapor) + pheromoneVapor * edges.get(i).get(j));
+                }
             }
 
             List<List<Integer>> newGeneration = new ArrayList<>();

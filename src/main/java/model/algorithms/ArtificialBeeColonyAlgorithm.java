@@ -7,6 +7,7 @@ import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -38,16 +39,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     }
 
     public Integer rouletteSelection() {
-        double[] cumulativeFitnesses = Algorithm.makeCumulativeFitnesses(problem, generation);
-
-        double randomFitness = BaseController.randomGenerator.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
-        int index = Arrays.binarySearch(cumulativeFitnesses, randomFitness);
-        if (index < 0)
-        {
-            index = Math.abs(index + 1);
-        }
-
-        return index;
+        return Algorithm.getCumulativeFitnessesIndex(generation.stream().mapToDouble(e -> problem.fitness(e)).boxed().collect(Collectors.toList()));
     }
 
     private void takeBetterIndividual(Integer index, Integer oldCountIndex) {

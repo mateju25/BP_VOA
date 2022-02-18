@@ -67,17 +67,10 @@ public class GeneticAlgorithm implements Algorithm {
     }
 
     public List<List<Integer>> rouletteSelection() {
-        double[] cumulativeFitnesses = Algorithm.makeCumulativeFitnesses(problem, generation);
-
         var parents = new ArrayList<List<Integer>>(2);
         for (int i = 0; i < 2; i++)
         {
-            double randomFitness = BaseController.randomGenerator.nextDouble() * cumulativeFitnesses[cumulativeFitnesses.length - 1];
-            int index = Arrays.binarySearch(cumulativeFitnesses, randomFitness);
-            if (index < 0)
-            {
-                index = Math.abs(index + 1);
-            }
+            int index = Algorithm.getCumulativeFitnessesIndex(generation.stream().mapToDouble(e -> problem.fitness(e)).boxed().collect(Collectors.toList()));
             parents.add(generation.get(index));
         }
         return makeChildrenWithCrossover(parents);

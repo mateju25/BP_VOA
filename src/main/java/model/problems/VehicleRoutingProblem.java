@@ -84,7 +84,6 @@ public class VehicleRoutingProblem implements Problem {
         ArrayList<List<Double>> matrix = new ArrayList<>();
         for (int i = 0; i < sizeOfTheProblem; i++) {
             matrix.add(new ArrayList<>(Collections.nCopies(sizeOfTheProblem, 0.0)));
-//            matrix.add(new ArrayList<>(matrixOfDistances.get(i).stream().mapToDouble(Double::valueOf).boxed().collect(Collectors.toList())));
         }
         return matrix;
     }
@@ -135,27 +134,30 @@ public class VehicleRoutingProblem implements Problem {
         Integer fromCity = 0;
         var needToVisitPlaces = IntStream.rangeClosed(1, sizeOfTheProblem-1).boxed().collect(Collectors.toList());
         while (needToVisitPlaces.size() > 0) {
-            var probList = new ArrayList<Double>();
-            for (int i = 0; i < needToVisitPlaces.size(); i++) {
-                probList.add(acs.getProbabilityOfEdgeToSelect(fromCity, needToVisitPlaces.get(i), new ArrayList<>(needToVisitPlaces)));
+            var probabilities = acs.getProbabilityOfEdges(fromCity, needToVisitPlaces);
+            var probList = probabilities.values().stream().mapToDouble(e -> e).boxed().collect(Collectors.toList());
+
+            int index = Algorithm.getCumulativeFitnessesIndex(probList);
+
+            Integer newIndex = 0;
+            for (Integer key : probabilities.keySet()) {
+                if (probabilities.get(key).equals(probList.get(index)))
+                    newIndex = key;
             }
 
-            var index = Algorithm.getCumulativeFitnessesIndex(probList);
+            needToVisitPlaces.remove(newIndex);
+            newIndividual.add(newIndex);
 
-            Integer toCity = needToVisitPlaces.remove(index);
-            newIndividual.add(toCity);
+            acs.localUpdateEdge(fromCity, newIndex);
 
-            acs.getMatrixOfPheromone().get(fromCity).set(toCity,
-                    acs.newProbValueDueToValue(fromCity, toCity, matrixOfDistances.get(fromCity).stream().filter(e -> e != 0).mapToDouble(Double::valueOf).boxed().collect(Collectors.toList())));
-
-            fromCity = toCity;
+            fromCity = newIndex;
         }
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
-        return matrixOfDistances.get(from).get(to) + 0.0;
+        return 1 / matrixOfDistances.get(from).get(to) + 0.0;
     }
 
 
