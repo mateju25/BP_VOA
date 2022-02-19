@@ -10,7 +10,6 @@ import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
-import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -59,6 +58,7 @@ public class TargetAssignmentProblem implements Problem {
         return matrix;
     }
 
+    @Override
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
         for (int i = 0; i < numOfWeapons; i++) {
@@ -76,11 +76,12 @@ public class TargetAssignmentProblem implements Problem {
     }
 
     @Override
-    public List<List<Double>> generateEdges(List<Integer> individual) {
+    public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         return null;
     }
 
-    public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
+    @Override
+    public List<List<Double>> generateEdges(List<Integer> individual) {
         return null;
     }
 
@@ -88,7 +89,6 @@ public class TargetAssignmentProblem implements Problem {
     public Double getHeuristicValue(Integer from, Integer to) {
         return null;
     }
-
 
     @Override
     public Double fitness(List<Integer> individual) {
@@ -108,6 +108,7 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         for (int i = 0; i < individual.size()*probChange; i++) {
             var index = BaseController.randomGenerator.nextInt((individual.size() - 1) / 2) * 2 + 1;

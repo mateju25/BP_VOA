@@ -55,7 +55,7 @@ public class KnapsackProblem implements Problem {
         return matrix;
     }
 
-    public Integer sumOfItems(List<Integer> items) {
+    private  Integer sumOfItems(List<Integer> items) {
         var sum = 0;
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i) == 1)
@@ -64,7 +64,7 @@ public class KnapsackProblem implements Problem {
         return sum;
     }
 
-    public Integer sumOfValues(List<Integer> items) {
+    private Integer sumOfValues(List<Integer> items) {
         var sum = 0;
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i) == 1)
@@ -73,7 +73,7 @@ public class KnapsackProblem implements Problem {
         return sum;
     }
 
-
+    @Override
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
         var threshold = 0.5;
@@ -91,6 +91,7 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    @Override
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         var freeItems = IntStream.range(0, numberOfItems).boxed().collect(Collectors.toList());
         var fromNode = freeItems.get(BaseController.randomGenerator.nextInt(freeItems.size()));
@@ -135,27 +136,28 @@ public class KnapsackProblem implements Problem {
     public List<List<Double>> generateEdges(List<Integer> individual) {
         var edges = initPheromoneMatrix();
         var fitness = fitness(individual);
-        var newindividual = new ArrayList<Integer>();
+        var newIndividual = new ArrayList<Integer>();
         for (int i = 0; i < individual.size(); i++) {
             if (individual.get(i) == 1)
-                newindividual.add(i);
+                newIndividual.add(i);
         }
-        for (int i = 0; i < newindividual.size() - 1; i++) {
-            edges.get(newindividual.get(i)).set(newindividual.get(i + 1), fitness);
+        for (int i = 0; i < newIndividual.size() - 1; i++) {
+            edges.get(newIndividual.get(i)).set(newIndividual.get(i + 1), fitness);
         }
         return edges;
     }
-
 
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
         return itemValue.get(to)*0.01;
     }
 
+    @Override
     public Double fitness(List<Integer> individual) {
         return 1.0 / (sumOfValues(individual) * 1.0) * numberOfItems;
     }
 
+    @Override
     public List<Integer> mutate(List<Integer> individual) {
         var tmpIndividual = new ArrayList<>(individual);
         do {
@@ -166,6 +168,7 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         var tmpIndividual = new ArrayList<>(individual);
         do {
@@ -182,6 +185,7 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
         var child2 = new ArrayList<Integer>();

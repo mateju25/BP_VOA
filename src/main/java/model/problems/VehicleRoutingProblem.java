@@ -17,7 +17,6 @@ import java.util.stream.IntStream;
 
 @Getter @Setter
 public class VehicleRoutingProblem implements Problem {
-    @Getter
     private static class Point {
         private final Integer xCor;
         private final Integer yCor;
@@ -131,6 +130,7 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(shuffledIndividual);
     }
 
+    @Override
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         var newIndividual = new ArrayList<Integer>();
         newIndividual.add(0);
@@ -173,6 +173,15 @@ public class VehicleRoutingProblem implements Problem {
         return 1 / matrixOfDistances.get(from).get(to) + 0.0;
     }
 
+    @Override
+    public Double fitness(List<Integer> individual) {
+        var currentFitness = 0.0;
+        for (int i = 0; i < individual.size() - 1; i++) {
+            currentFitness += matrixOfDistances.get(individual.get(i)).get(individual.get(i + 1));
+        }
+
+        return (currentFitness) * fitnessCoefficient;
+    }
 
     @Override
     public List<Integer> mutate(List<Integer> individual) {
@@ -184,6 +193,7 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
+    @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         List<Integer> newIndividual = new ArrayList<>();
         for (int i = 0; i < sizeOfTheProblem*probChange; i++) {
@@ -195,16 +205,6 @@ public class VehicleRoutingProblem implements Problem {
 
 
         return checkAnAddBaseTownToIndividual(newIndividual);
-    }
-
-    @Override
-    public Double fitness(List<Integer> individual) {
-        var currentFitness = 0.0;
-        for (int i = 0; i < individual.size() - 1; i++) {
-            currentFitness += matrixOfDistances.get(individual.get(i)).get(individual.get(i + 1));
-        }
-
-        return (currentFitness) * fitnessCoefficient;
     }
 
     @Override

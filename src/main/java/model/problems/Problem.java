@@ -11,17 +11,19 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public interface Problem {
+    //general
     void init(Map<String, String> parameters);
     List<Integer> makeOneIndividual();
     Double fitness(List<Integer> individual);
+
+    //GA
     List<Integer> mutate(List<Integer> individual);
     Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2);
 
+    //for frontend
     String nameForFaces();
     String nameOfFxmlFiles();
-
     void visualize(Canvas canvas, AlgorithmResults data);
-
     default List<Integer> presetProblems() {
         return IntStream.rangeClosed(0, 2).boxed().collect(Collectors.toList());
     };

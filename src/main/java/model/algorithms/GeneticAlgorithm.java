@@ -36,6 +36,7 @@ public class GeneticAlgorithm implements Algorithm {
         resetAlgorithm();
     }
 
+    @Override
     public void resetAlgorithm() {
         this.actualGeneration = 0;
         this.generation = new ArrayList<>();
@@ -43,6 +44,7 @@ public class GeneticAlgorithm implements Algorithm {
         BaseController.randomGenerator = new Random(1);
     }
 
+    @Override
     public void initFirstGeneration() {
         for (int i = 0; i < this.numOfIndividuals; i++) {
             generation.add(problem.makeOneIndividual());
@@ -57,7 +59,7 @@ public class GeneticAlgorithm implements Algorithm {
         return children;
     }
 
-    public List<List<Integer>> tournamentSelection() {
+    private  List<List<Integer>> tournamentSelection() {
         var tournamentMembers = new ArrayList<List<Integer>>();
         BaseController.randomGenerator.ints(0, generation.size()).limit(sizeTournament).forEach(index -> tournamentMembers.add(generation.get(index)));
 
@@ -66,7 +68,7 @@ public class GeneticAlgorithm implements Algorithm {
         return makeChildrenWithCrossover(parents);
     }
 
-    public List<List<Integer>> rouletteSelection() {
+    private List<List<Integer>> rouletteSelection() {
         var parents = new ArrayList<List<Integer>>(2);
         for (int i = 0; i < 2; i++)
         {
@@ -76,6 +78,7 @@ public class GeneticAlgorithm implements Algorithm {
         return makeChildrenWithCrossover(parents);
     }
 
+    @Override
     public AlgorithmResults nextGeneration() {
         if (actualGeneration < numOfGenerations) {
             generation = generation.stream().sorted(Comparator.comparing(problem::fitness)).collect(Collectors.toList());
