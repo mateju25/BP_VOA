@@ -174,6 +174,19 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
+    public List<Integer> localSearch(List<Integer> individual, Double probChange) {
+        List<Integer> newIndividual = new ArrayList<>();
+        for (int i = 0; i < sizeOfTheProblem*probChange; i++) {
+            newIndividual = individual.stream().filter(e -> e != 0).collect(Collectors.toList());
+
+            var index = BaseController.randomGenerator.nextInt(newIndividual.size() - 2) + 1;
+            Collections.swap(newIndividual, index, index + 1);
+        }
+
+
+        return checkAnAddBaseTownToIndividual(newIndividual);
+    }
+
     @Override
     public Double fitness(List<Integer> individual) {
         var currentFitness = 0.0;

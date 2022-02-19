@@ -43,7 +43,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     }
 
     private void takeBetterIndividual(Integer index, Integer oldCountIndex) {
-        var individual = problem.mutate(generation.get(index));
+        var individual = problem.localSearch(generation.get(index), 0.04 + (actualGeneration/numberOfIterations)*(0.12-0.04));
         if (problem.fitness(individual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
             bestIndividual = new ArrayList<>(individual);
 

@@ -49,7 +49,7 @@ public class KnapsackProblem implements Problem {
     public List<List<Double>> initPheromoneMatrix() {
         ArrayList<List<Double>> matrix = new ArrayList<>();
         for (int i = 0; i < numberOfItems; i++) {
-            ArrayList<Double> lst = new ArrayList<>(Collections.nCopies(numberOfItems, 0.0));
+            ArrayList<Double> lst = new ArrayList<>(Collections.nCopies(2, 0.0));
             matrix.add(lst);
         }
         return matrix;
@@ -57,23 +57,25 @@ public class KnapsackProblem implements Problem {
 
     public Integer sumOfItems(List<Integer> items) {
         var sum = 0;
-        for (Integer item : items) {
-            sum += itemWeight.get(item);
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) == 1)
+                sum += itemWeight.get(i);
         }
         return sum;
     }
 
     public Integer sumOfValues(List<Integer> items) {
         var sum = 0;
-        for (Integer item : items) {
-            sum += itemValue.get(item);
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) == 1)
+                sum += itemValue.get(i);
         }
         return sum;
     }
 
+
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
-        var newIndividual = new ArrayList<Integer>();
         var threshold = 0.5;
         if (this.itemWeight.size() * averageWeightOfItem > weightOfBackpack)
             threshold = weightOfBackpack / (this.itemWeight.size() * 1.0 * averageWeightOfItem);
@@ -85,23 +87,21 @@ public class KnapsackProblem implements Problem {
                 else
                     individual.add(0);
             }
-            newIndividual = new ArrayList<Integer>();
-            for (int i = 0; i < individual.size(); i++) {
-                if (individual.get(i) == 1)
-                    newIndividual.add(i);
-            }
-        } while (sumOfItems(newIndividual) > weightOfBackpack || sumOfItems(newIndividual) == 0);
-
-        return newIndividual;
+        } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
+        return individual;
     }
 
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
+        var needToVisitNodes = IntStream.range(0, 2).boxed().collect(Collectors.toList());
+        var freeItems = IntStream.range(0, numberOfItems).boxed().collect(Collectors.toList());
         var individual = new ArrayList<Integer>();
         individual.add(0);
-        var needToVisitNodes = IntStream.range(1, numberOfItems).boxed().collect(Collectors.toList());
         var currentWeight = itemWeight.get(0);
-        var fromNode = individual.get(individual.size() - 1);
+        Integer fromNode = 0;
         while (true) {
+            fromNode = freeItems.get(BaseController.randomGenerator.nextInt(freeItems.size()));
+            freeItems.remove(fromNode);
+
             var probabilities = acs.getProbabilityOfEdges(fromNode, needToVisitNodes);
             var probList = probabilities.values().stream().mapToDouble(e -> e).boxed().collect(Collectors.toList());
 
@@ -113,24 +113,24 @@ public class KnapsackProblem implements Problem {
                     newIndex = key;
             }
 
-            if (currentWeight + itemWeight.get(newIndex) > weightOfBackpack)
+            if (currentWeight + itemWeight.get(fromNode) > weightOfBackpack)
                 break;
 
-            currentWeight += itemWeight.get(newIndex);
+            currentWeight += itemWeight.get(fromNode);
 
-            needToVisitNodes.remove(newIndex);
-            individual.add(newIndex);
+            individual.add(fromNode);
 
             acs.localUpdateEdge(fromNode, newIndex);
-
-            fromNode = newIndex;
         }
         return individual;
     }
 
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
-        return itemValue.get(to)+0.0;
+        if (to.equals(0))
+            return 0.0;
+        else
+            return (itemValue.get(from)*1.0) / itemWeight.get(from);
     }
 
     public Double fitness(List<Integer> individual) {
@@ -139,46 +139,48 @@ public class KnapsackProblem implements Problem {
 
     public List<Integer> mutate(List<Integer> individual) {
         var tmpIndividual = new ArrayList<>(individual);
-        var notUsedPlaces = IntStream.range(0, numberOfItems).boxed().collect(Collectors.toList());
-        for (Integer number : tmpIndividual) {
-            notUsedPlaces.remove(number);
-        }
         do {
-            for (int i = 0; i < 5; i++) {
-                var value = BaseController.randomGenerator.nextInt(notUsedPlaces.size());
-                if (sumOfItems(individual) + itemWeight.get(notUsedPlaces.get(value)) < weightOfBackpack) {
-                    individual.add(notUsedPlaces.get(value));
-                    notUsedPlaces.remove(notUsedPlaces.get(value));
+            individual = new ArrayList<>(tmpIndividual);
+            var index = BaseController.randomGenerator.nextInt(this.itemWeight.size());
+            individual.set(index, ((individual.get(index)) + 1) % 2);
+        } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
+        return individual;
+    }
+
+    public List<Integer> localSearch(List<Integer> individual, Double probChange) {
+        var tmpIndividual = new ArrayList<>(individual);
+        do {
+            individual = new ArrayList<>(tmpIndividual);
+            for (int i = 0; i < numberOfItems*probChange; i++) {
+                var index = BaseController.randomGenerator.nextInt(this.itemWeight.size());
+                if (individual.get(index).equals(0)) {
+                    if (sumOfItems(individual) + itemWeight.get(index) > weightOfBackpack)
+                        continue;
                 }
-                individual = new ArrayList<>(tmpIndividual);
-                var index = BaseController.randomGenerator.nextInt(individual.size());
-                value = BaseController.randomGenerator.nextInt(notUsedPlaces.size());
-                individual.set(index, notUsedPlaces.get(value));
+                individual.set(index, ((individual.get(index)) + 1) % 2);
             }
         } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
         return individual;
     }
 
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
-        var limit = Math.min(parent1.size(), parent2.size());
-
         var child1 = new ArrayList<Integer>();
+        var child2 = new ArrayList<Integer>();
         do {
-            var newParent1 = new ArrayList<>(parent1);
-            var newParent2 = new ArrayList<>(parent2);
-            child1 = new ArrayList<Integer>();
-            var index = BaseController.randomGenerator.nextInt(limit);
-            for (int i = 0; i < parent1.size(); i++) {
+            var index = BaseController.randomGenerator.nextInt(itemWeight.size());
+            child1 = new ArrayList<>();
+            child2 = new ArrayList<>();
+            for (int i = 0; i < itemWeight.size(); i++) {
                 if (i < index) {
-                    child1.add(newParent1.get(i));
-                    newParent2.remove(newParent1.get(i));
+                    child1.add(parent1.get(i));
+                    child2.add(parent2.get(i));
                 } else {
-                    child1.addAll(newParent2);
-                    break;
+                    child2.add(parent1.get(i));
+                    child1.add(parent2.get(i));
                 }
             }
-        } while ((sumOfItems(child1) > weightOfBackpack) || sumOfItems(child1) == 0);
-        return new Pair<>(child1, null);
+        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack || sumOfItems(child1) == 0 || sumOfItems(child2) == 0));
+        return new Pair<>(child1, child2);
     }
 
     @Override

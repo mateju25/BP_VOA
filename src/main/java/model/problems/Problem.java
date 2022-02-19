@@ -27,6 +27,9 @@ public interface Problem {
     };
     void setPreset(Integer number);
 
+    //ABC algorithm
+    List<Integer> localSearch(List<Integer> individual, Double probChange);
+
     //ACS algorithm
     List<List<Double>> initPheromoneMatrix();
     List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs);

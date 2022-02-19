@@ -3,6 +3,7 @@ package model.algorithms;
 import controllers.base.BaseController;
 import lombok.Getter;
 import lombok.Setter;
+import model.problems.KnapsackProblem;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
@@ -79,6 +80,10 @@ public class AntColonySystemAlgorithm implements Algorithm {
             var edges = problem.initPheromoneMatrix();
             var fitness = problem.fitness(generationBest);
             for (int i = 0; i < generationBest.size()-1; i++) {
+                if (problem instanceof KnapsackProblem) {
+                    edges.get(generationBest.get(i)).set(1, fitness);
+                    continue;
+                }
                 edges.get(generationBest.get(i)).set(generationBest.get(i+1), fitness);
             }
 

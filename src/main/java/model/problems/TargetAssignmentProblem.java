@@ -103,6 +103,14 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    public List<Integer> localSearch(List<Integer> individual, Double probChange) {
+        for (int i = 0; i < individual.size()*probChange; i++) {
+            var index = BaseController.randomGenerator.nextInt((individual.size() - 1) / 2) * 2 + 1;
+            Collections.swap(individual, index, index + 2);
+        }
+        return individual;
+    }
+
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
