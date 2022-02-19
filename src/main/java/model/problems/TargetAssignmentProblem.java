@@ -75,6 +75,11 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    @Override
+    public List<List<Double>> generateEdges(List<Integer> individual) {
+        return null;
+    }
+
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         return null;
     }

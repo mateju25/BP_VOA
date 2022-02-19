@@ -77,15 +77,7 @@ public class AntColonySystemAlgorithm implements Algorithm {
 
 
             //update best
-            var edges = problem.initPheromoneMatrix();
-            var fitness = problem.fitness(generationBest);
-            for (int i = 0; i < generationBest.size()-1; i++) {
-                if (problem instanceof KnapsackProblem) {
-                    edges.get(generationBest.get(i)).set(1, fitness);
-                    continue;
-                }
-                edges.get(generationBest.get(i)).set(generationBest.get(i+1), fitness);
-            }
+            var edges = problem.generateEdges(generationBest);
 
             for (int i = 0; i < matrixOfPheromone.size(); i++) {
                 for (int j = 0; j < matrixOfPheromone.get(i).size(); j++) {

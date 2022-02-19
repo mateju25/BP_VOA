@@ -159,6 +159,16 @@ public class VehicleRoutingProblem implements Problem {
     }
 
     @Override
+    public List<List<Double>> generateEdges(List<Integer> individual) {
+        var edges = initPheromoneMatrix();
+        var fitness = fitness(individual);
+            for (int i = 0; i < individual.size() - 1; i++) {
+                edges.get(individual.get(i)).set(individual.get(i + 1), fitness);
+            }
+        return edges;
+    }
+
+    @Override
     public Double getHeuristicValue(Integer from, Integer to) {
         return 1 / matrixOfDistances.get(from).get(to) + 0.0;
     }

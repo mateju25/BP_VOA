@@ -156,6 +156,7 @@ public class MainPageController extends MenuController {
                     loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles());
                     BaseController.chosenProblem = selectedProblem;
 
+                    presetProblems.getItems().clear();
                     for (Integer number : BaseController.chosenProblem.presetProblems()) {
                         presetProblems.getItems().add("Preset " + BaseController.chosenProblem.nameForFaces() + " " + number);
                     }

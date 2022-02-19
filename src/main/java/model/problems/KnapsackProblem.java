@@ -49,7 +49,7 @@ public class KnapsackProblem implements Problem {
     public List<List<Double>> initPheromoneMatrix() {
         ArrayList<List<Double>> matrix = new ArrayList<>();
         for (int i = 0; i < numberOfItems; i++) {
-            ArrayList<Double> lst = new ArrayList<>(Collections.nCopies(2, 0.0));
+            ArrayList<Double> lst = new ArrayList<>(Collections.nCopies(numberOfItems, 0.0));
             matrix.add(lst);
         }
         return matrix;
@@ -92,17 +92,15 @@ public class KnapsackProblem implements Problem {
     }
 
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
-        var needToVisitNodes = IntStream.range(0, 2).boxed().collect(Collectors.toList());
         var freeItems = IntStream.range(0, numberOfItems).boxed().collect(Collectors.toList());
-        var individual = new ArrayList<Integer>();
-        individual.add(0);
-        var currentWeight = itemWeight.get(0);
-        Integer fromNode = 0;
-        while (true) {
-            fromNode = freeItems.get(BaseController.randomGenerator.nextInt(freeItems.size()));
-            freeItems.remove(fromNode);
+        var fromNode = freeItems.get(BaseController.randomGenerator.nextInt(freeItems.size()));
+        freeItems.remove(fromNode);
 
-            var probabilities = acs.getProbabilityOfEdges(fromNode, needToVisitNodes);
+        var newIndividual = new ArrayList<Integer>();
+        newIndividual.add(fromNode);
+        var currentWeight = itemWeight.get(fromNode);
+        while (freeItems.size() > 0) {
+            var probabilities = acs.getProbabilityOfEdges(fromNode, freeItems);
             var probList = probabilities.values().stream().mapToDouble(e -> e).boxed().collect(Collectors.toList());
 
             int index = Algorithm.getCumulativeFitnessesIndex(probList);
@@ -113,24 +111,45 @@ public class KnapsackProblem implements Problem {
                     newIndex = key;
             }
 
-            if (currentWeight + itemWeight.get(fromNode) > weightOfBackpack)
+            if (currentWeight + itemWeight.get(newIndex) > weightOfBackpack) {
                 break;
+            }
+            currentWeight += itemWeight.get(newIndex);
 
-            currentWeight += itemWeight.get(fromNode);
-
-            individual.add(fromNode);
+            freeItems.remove(newIndex);
+            newIndividual.add(newIndex);
 
             acs.localUpdateEdge(fromNode, newIndex);
+            acs.localUpdateEdge(newIndex, fromNode);
+
+            fromNode = newIndex;
+        }
+        var individual = new ArrayList<>(Collections.nCopies(numberOfItems, 0));
+        for (Integer number : newIndividual) {
+            individual.set(number, 1);
         }
         return individual;
     }
 
     @Override
+    public List<List<Double>> generateEdges(List<Integer> individual) {
+        var edges = initPheromoneMatrix();
+        var fitness = fitness(individual);
+        var newindividual = new ArrayList<Integer>();
+        for (int i = 0; i < individual.size(); i++) {
+            if (individual.get(i) == 1)
+                newindividual.add(i);
+        }
+        for (int i = 0; i < newindividual.size() - 1; i++) {
+            edges.get(newindividual.get(i)).set(newindividual.get(i + 1), fitness);
+        }
+        return edges;
+    }
+
+
+    @Override
     public Double getHeuristicValue(Integer from, Integer to) {
-        if (to.equals(0))
-            return 0.0;
-        else
-            return (itemValue.get(from)*1.0) / itemWeight.get(from);
+        return itemValue.get(to)*0.01;
     }
 
     public Double fitness(List<Integer> individual) {

@@ -34,4 +34,5 @@ public interface Problem {
     List<List<Double>> initPheromoneMatrix();
     List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs);
     Double getHeuristicValue(Integer from, Integer to);
+    List<List<Double>> generateEdges(List<Integer> individual);
 }
