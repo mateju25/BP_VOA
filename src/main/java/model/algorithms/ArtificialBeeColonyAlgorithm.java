@@ -21,6 +21,8 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     private Integer numberOfIterations;
     private Integer forgetCount;
     private Double percentageEmployed;
+    private Double mutationUpper;
+    private Double mutationLower;
 
 
     @Override
@@ -29,6 +31,8 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
         this.numberOfIterations = Integer.parseInt(parameters.get("numberOfIterations"));
         this.forgetCount = Integer.parseInt(parameters.get("forgetCount"));
         this.percentageEmployed = Double.parseDouble(parameters.get("employedBees"));
+        this.mutationUpper = Double.parseDouble(parameters.get("mutationUpper"));
+        this.mutationLower = Double.parseDouble(parameters.get("mutationLower"));
         resetAlgorithm();
     }
     @Override
@@ -43,7 +47,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     }
 
     private void takeBetterIndividual(Integer index, Integer oldCountIndex) {
-        var individual = problem.localSearch(generation.get(index), 0.04 + (actualGeneration/numberOfIterations)*(0.12-0.04));
+        var individual = problem.localSearch(generation.get(index),  mutationLower+ (actualGeneration/numberOfIterations)*(mutationUpper-mutationLower));
         if (problem.fitness(individual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
             bestIndividual = new ArrayList<>(individual);
 

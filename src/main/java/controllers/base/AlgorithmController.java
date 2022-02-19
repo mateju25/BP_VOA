@@ -48,6 +48,10 @@ public class AlgorithmController extends MenuController {
     public TextField employedBees;
     public TextField onlookerBees;
     public TextField forgetCount;
+    public TextField mutationUpper;
+    public TextField mutationLower;
+    public ImageView toolMutationUpper;
+    public ImageView toolMutationLower;
     public ImageView toolSize;
     public ImageView toolIterations;
     public ImageView toolEmployed;
@@ -93,12 +97,16 @@ public class AlgorithmController extends MenuController {
             numberOfIterations.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             forgetCount.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             employedBees.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
+            mutationLower.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
+            mutationUpper.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             employedBees.textProperty().addListener((observable, oldValue, newValue) -> onlookerBees.setText((1 - Double.parseDouble(newValue)) + ""));
             BaseController.makeTooltip(toolSize, "Size of bee hive (number of exploited solutions to the problem)");
             BaseController.makeTooltip(toolIterations, "Number of iterations of the algorithm");
             BaseController.makeTooltip(toolEmployed, "Percentage of total bees in hive that are employed and assigned to source");
             BaseController.makeTooltip(toolOnlooker, "Percentage of total bees in hive that are onlooker and follow employed bees (together with percentage employed should be 1)");
             BaseController.makeTooltip(toolForget, "Number of iterations after which source that remained unchanged is replaced with new source");
+            BaseController.makeTooltip(toolMutationUpper, "Strength of local search calculated by function where this parameter is upper bound");
+            BaseController.makeTooltip(toolMutationLower, "Strength of local search calculated by function where this parameter is lower bound");
         }
         if (numberOfAnts != null) {
             numberOfAnts.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
@@ -145,6 +153,8 @@ public class AlgorithmController extends MenuController {
                 numberOfIterations.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations()+"");
                 employedBees.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
                 forgetCount.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getForgetCount()+"");
+                mutationLower.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationLower()+"");
+                mutationUpper.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationUpper()+"");
                 if (((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() != null)
                     onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
             }
@@ -171,6 +181,10 @@ public class AlgorithmController extends MenuController {
                 warning.setText("Sum of percentages for roulette, tournament and elitism should not exceed 1");
                 return;
             }
+            if (mutationLower != null && mutationUpper != null && Double.parseDouble(mutationLower.getText()) >= Double.parseDouble(mutationUpper.getText())) {
+                warning.setText("Mutation strength lower should not be higher than upper bound!");
+                return;
+            }
 
             var map = new HashMap<String, String>();
             if (numberIndividuals != null) map.put(numberIndividuals.getId(), numberIndividuals.getText());
@@ -189,6 +203,8 @@ public class AlgorithmController extends MenuController {
             if (parameterB != null) map.put(parameterB.getId(), parameterB.getText());
             if (parameterA != null) map.put(parameterA.getId(), parameterA.getText());
             if (parameterQ != null) map.put(parameterQ.getId(), parameterQ.getText());
+            if (mutationLower != null) map.put(mutationLower.getId(), mutationLower.getText());
+            if (mutationUpper != null) map.put(mutationUpper.getId(), mutationUpper.getText());
 
             BaseController.chosenAlgorithm.init(map);
 
