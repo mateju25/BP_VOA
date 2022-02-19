@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
+import model.algorithms.Algorithm;
 import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
@@ -77,17 +78,46 @@ public class TargetAssignmentProblem implements Problem {
 
     @Override
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
-        return null;
+        var individual = new ArrayList<Integer>();
+        for (int i = 0; i < numOfWeapons; i++) {
+            var targetIndexes = Arrays.stream(IntStream.range(0, numOfTargets).toArray()).boxed().collect(Collectors.toList());
+            for (int j = 0; j < BaseController.randomGenerator.nextInt(maximumAssignedTargets) + 1; j++) {
+                if (targetIndexes.size() == 0)
+                    break;
+
+                var probabilities = acs.getProbabilityOfEdges(i, targetIndexes);
+                var probList = probabilities.values().stream().mapToDouble(e -> e).boxed().collect(Collectors.toList());
+
+                int index = Algorithm.getCumulativeFitnessesIndex(probList);
+
+                Integer newIndex = 0;
+                for (Integer key : probabilities.keySet()) {
+                    if (probabilities.get(key).equals(probList.get(index)))
+                        newIndex = key;
+                }
+
+                individual.add(i);
+                individual.add(newIndex);
+                acs.localUpdateEdge(i, newIndex);
+                targetIndexes.remove(newIndex);
+            }
+        }
+        return individual;
     }
 
     @Override
     public List<List<Double>> generateEdges(List<Integer> individual) {
-        return null;
+        var edges = initPheromoneMatrix();
+        var fitness = fitness(individual);
+        for (int i = 0; i < individual.size() - 1; i+=2) {
+            edges.get(individual.get(i)).set(individual.get(i + 1), fitness);
+        }
+        return edges;
     }
 
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
-        return null;
+        return matrixOfProbabilities.get(from).get(to);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class GeneticAlgorithm implements Algorithm {
         return children;
     }
 
-    private  List<List<Integer>> tournamentSelection() {
+    private List<List<Integer>> tournamentSelection() {
         var tournamentMembers = new ArrayList<List<Integer>>();
         BaseController.randomGenerator.ints(0, generation.size()).limit(sizeTournament).forEach(index -> tournamentMembers.add(generation.get(index)));
 
