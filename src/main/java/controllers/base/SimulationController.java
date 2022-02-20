@@ -181,13 +181,42 @@ public class SimulationController extends MenuController {
             try {
                 var file = fileChooser.showSaveDialog(BaseController.mainStage);
                 if (file != null) {
-                    results.writeToCsv(file);
+                    results.writeToCsv(file, yAxis.getUpperBound(), yAxis.getLowerBound());
                     BaseController.showInfo(infoBox, infoBoxLabel, "Simulation saved!");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void scaleEverything(XYChart.Series<Integer, Double> seriesBest, XYChart.Series<Integer, Double> seriesAverage) {
+        XYChart.Series<Integer, Double> newSeriesBest = new XYChart.Series<>();
+        newSeriesBest.setName("Best");
+        XYChart.Series<Integer, Double> newSeriesAverage = new XYChart.Series<>();
+        newSeriesAverage.setName("Average");
+
+        var highBound = yAxis.getUpperBound();
+        var lowBound = yAxis.getLowerBound();
+
+        for (XYChart.Data<Integer, Double> data : seriesBest.getData()) {
+            var newValue = (((100 - 0)*(data.getYValue() - lowBound))/(highBound-lowBound)) + 0;
+            newSeriesBest.getData().add(new XYChart.Data<>(data.getXValue(), newValue));
+        }
+
+        for (XYChart.Data<Integer, Double> data : seriesAverage.getData()) {
+            var newValue = (((100 - 0)*(data.getYValue() - lowBound))/(highBound-lowBound)) + 0;
+            newSeriesAverage.getData().add(new XYChart.Data<>(data.getXValue(), newValue));
+        }
+
+        chart.getData().clear();
+        chart.getData().add(newSeriesBest);
+        chart.getData().add(newSeriesAverage);
+
+        yAxis.setUpperBound(100);
+        yAxis.setLowerBound(0);
+        yAxis.setTickUnit(10);
+
     }
 
     public void goBack() throws IOException {
@@ -231,6 +260,8 @@ public class SimulationController extends MenuController {
         if (BaseController.savedDatasets == null)
             BaseController.savedDatasets = new ArrayList<>();
 
+        results.setUpperBound(yAxis.getUpperBound());
+        results.setLowerBound(yAxis.getLowerBound());
         BaseController.savedDatasets.add(results);
         BaseController.showInfo(infoBox, infoBoxLabel, "Simulation results added to visualization page!");
     }

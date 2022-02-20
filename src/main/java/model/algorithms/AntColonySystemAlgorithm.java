@@ -78,7 +78,6 @@ public class AntColonySystemAlgorithm implements Algorithm {
 
             //update best
             var edges = problem.generateEdges(generationBest);
-
             for (int i = 0; i < matrixOfPheromone.size(); i++) {
                 for (int j = 0; j < matrixOfPheromone.get(i).size(); j++) {
                     matrixOfPheromone.get(i).set(j, matrixOfPheromone.get(i).get(j)*(1-pheromoneVapor) + pheromoneVapor * edges.get(i).get(j));

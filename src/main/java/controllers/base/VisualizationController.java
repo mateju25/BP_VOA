@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,31 +44,31 @@ public class VisualizationController extends MenuController {
     public Button btnExportPic;
     public Pane infoBox;
     public Label infoBoxLabel;
+    public Double upperBound = 0.0;
+    public Double lowerBound = 1000000.0;
 
     public void initialize() {
         BaseController.visualizationController = this;
 
 
         yAxis.setAutoRanging(false);
-        yAxis.setLowerBound(10000);
-        yAxis.setUpperBound(1);
+        yAxis.setUpperBound(100);
+        yAxis.setLowerBound(0);
+        yAxis.setTickUnit(10);
         chart.setAnimated(false);
 
         if (BaseController.savedDatasets != null) {
+            setUpBounds(BaseController.savedDatasets);
             for (SimulationResults simulationResults: BaseController.savedDatasets) {
                 listView.getItems().add(simulationResults);
 
                 simulationResults.setNumberOfDataset(listView.getItems().size());
 
-                addDataToChart(simulationResults.getBestFitness(), "Best " + simulationResults.getNumberOfDataset());
-                addDataToChart(simulationResults.getAverageFitness(), "Average " + simulationResults.getNumberOfDataset());
-
+                scaleEverythingAndAdd(simulationResults, true, true);
 
                 simulationResults.setShowBest(true);
                 simulationResults.setShowAverage(true);
                 simulationResults.setDeleted(false);
-
-                yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
             }
             BaseController.savedDatasets = null;
         }
@@ -108,45 +109,58 @@ public class VisualizationController extends MenuController {
                 return;
             }
             listView.getItems().add(results);
+            setUpBounds(Collections.singletonList(results));
             results.setNumberOfDataset(listView.getItems().size());
 
-            addDataToChart(results.getBestFitness(), "Best " + results.getNumberOfDataset());
-            addDataToChart(results.getAverageFitness(), "Average " + results.getNumberOfDataset());
+            scaleEverythingAndAdd(results, true, true);
 
             yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
         }
     }
 
-    private void addDataToChart(List<Double> data, String message) {
-        XYChart.Series<Integer, Double> series = new XYChart.Series<>();
-        series.setName(message);
-        for (int i = 0; i < data.size(); i++) {
-            var highBound = yAxis.getUpperBound();
-            if (highBound < data.get(i) + 0.5) {
-                yAxis.setUpperBound(data.get(i) + 0.5);
-            }
-            var lowBound = yAxis.getLowerBound();
-            if (lowBound > data.get(i) - 0.5) {
-                yAxis.setLowerBound(data.get(i) - 0.5);
-            }
-            series.getData().add(new XYChart.Data<>(i, data.get(i)));
+    private void setUpBounds(List<SimulationResults> results) {
+        for (SimulationResults simulationResults: results) {
+            if (simulationResults.getLowerBound() < lowerBound)
+                lowerBound = simulationResults.getLowerBound();
+            if (simulationResults.getUpperBound() > upperBound)
+                upperBound = simulationResults.getUpperBound();
         }
-        chart.getData().add(series);
+    }
 
+    private void scaleEverythingAndAdd(SimulationResults simulationResults, Boolean useBest, Boolean useAverage) {
+        XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
+        seriesBest.setName("Best " + simulationResults.getNumberOfDataset());
+        XYChart.Series<Integer, Double> seriesAverage = new XYChart.Series<>();
+        seriesAverage.setName("Average " + simulationResults.getNumberOfDataset());
+
+        for (int i = 0; i < simulationResults.getBestFitness().size(); i++) {
+            var newValue = (((100 - 0)*(simulationResults.getBestFitness().get(i) - lowerBound))/(upperBound-lowerBound)) + 0;
+            seriesBest.getData().add(new XYChart.Data<>(i, newValue));
+        }
+
+        for (int i = 0; i < simulationResults.getAverageFitness().size(); i++) {
+            var newValue = (((100 - 0)*(simulationResults.getAverageFitness().get(i) - lowerBound))/(upperBound-lowerBound)) + 0;
+            seriesAverage.getData().add(new XYChart.Data<>(i, newValue));
+        }
+        if (useBest)
+            chart.getData().add(seriesBest);
+        if (useAverage)
+            chart.getData().add(seriesAverage);
     }
 
     public void somethingChanged() {
         chart.getData().clear();
         var list = new ArrayList<SimulationResults>();
+        setUpBounds(listView.getItems());
         for (SimulationResults simRes : listView.getItems()) {
             if (simRes.getDeleted()) {
                 continue;
             }
             if (simRes.getShowAverage()) {
-                addDataToChart(simRes.getAverageFitness(), "Average " + simRes.getNumberOfDataset());
+                scaleEverythingAndAdd(simRes, false, true);
             }
             if (simRes.getShowBest()) {
-                addDataToChart(simRes.getBestFitness(), "Best " + simRes.getNumberOfDataset());
+                scaleEverythingAndAdd(simRes, true, false);
             }
             list.add(simRes);
         }

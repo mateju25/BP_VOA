@@ -39,7 +39,7 @@
             </LineChart>
         </Pane>
         <Button layoutX="1042.0" layoutY="37.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="65.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
-        <Button fx:id="btnAdd" layoutX="37.0" layoutY="37.0" mnemonicParsing="false" onAction="#addDataset" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Add dataset" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+        <Button fx:id="btnAdd" layoutX="37.0" layoutY="37.0" mnemonicParsing="false" onAction="#addDataset" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Add datasets" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
         <ListView fx:id="listView" focusTraversable="false" layoutX="110.0" layoutY="628.0" prefHeight="200.0" prefWidth="918.0" />
         <Button fx:id="btnExportPic" layoutX="197.0" layoutY="37.0" mnemonicParsing="false" onAction="#exportPicture" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Export picture" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
       <Pane fx:id="infoBox" layoutX="878.0" layoutY="139.0" opacity="0.0" prefHeight="71.0" prefWidth="219.0" styleClass="info-pane">

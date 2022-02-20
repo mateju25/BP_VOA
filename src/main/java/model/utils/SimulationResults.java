@@ -18,6 +18,8 @@ public class SimulationResults {
     private final List<Double> bestFitness;
     private String nameOfDataset;
     private Integer numberOfDataset;
+    private Double lowerBound;
+    private Double upperBound;
     private Boolean showBest;
     private Boolean showAverage;
     private Boolean deleted;
@@ -39,9 +41,9 @@ public class SimulationResults {
         bestFitness.add(best);
     }
 
-    public void writeToCsv(File file) throws IOException {
+    public void writeToCsv(File file, Double upperBound, Double lowerBound) throws IOException {
         List<String> lines = new ArrayList<>();
-        lines.add(this.nameOfDataset);
+        lines.add(this.nameOfDataset + CSV_SEPARATOR + upperBound + CSV_SEPARATOR + lowerBound);
         for (int i = 0; i < averageFitness.size(); i++) {
             lines.add(averageFitness.get(i) + CSV_SEPARATOR + bestFitness.get(i));
         }
@@ -54,10 +56,15 @@ public class SimulationResults {
         while (sc.hasNextLine()) {
             if (line == null) {
                 line = sc.nextLine();
-                this.nameOfDataset = line;
+                var parts = line.split(CSV_SEPARATOR);
+                if (parts.length != 3)
+                    throw new FileNotFoundException();
+                this.nameOfDataset = parts[0];
+                this.upperBound = Double.valueOf(parts[1]);
+                this.lowerBound = Double.valueOf(parts[2]);
             } else {
                 line = sc.nextLine();
-                var parts = line.split(",");
+                var parts = line.split(CSV_SEPARATOR);
                 if (parts.length != 2)
                     throw new FileNotFoundException();
                 averageFitness.add(Double.parseDouble(parts[0]));

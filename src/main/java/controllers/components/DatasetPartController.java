@@ -7,9 +7,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import model.utils.SimulationResults;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DatasetPartController extends ListCell<SimulationResults> {
     public AnchorPane pane;
@@ -18,6 +21,7 @@ public class DatasetPartController extends ListCell<SimulationResults> {
     public CheckBox checkBest;
     public CheckBox checkAverage;
     public Button btnDelete;
+    public Button btnSave;
     private FXMLLoader mLLoader;
 
     @Override
@@ -54,6 +58,22 @@ public class DatasetPartController extends ListCell<SimulationResults> {
             controller.checkBest.setOnAction(event -> {
                 emp.setShowBest(controller.checkBest.isSelected());
                 BaseController.visualizationController.somethingChanged();
+            });
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.csv"));
+            controller.btnSave.setOnAction(event -> {
+                var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
+                fileChooser.setInitialFileName(BaseController.chosenAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
+                try {
+                    var file = fileChooser.showSaveDialog(BaseController.mainStage);
+                    if (file != null) {
+                        emp.writeToCsv(file, emp.getUpperBound(), emp.getLowerBound());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
             setText(null);
             setGraphic(controller.pane);
