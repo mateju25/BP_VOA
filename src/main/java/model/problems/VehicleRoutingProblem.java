@@ -135,6 +135,7 @@ public class VehicleRoutingProblem implements Problem {
         var newIndividual = new ArrayList<Integer>();
         newIndividual.add(0);
         Integer fromCity = 0;
+        var currDemand = 0;
         var needToVisitPlaces = IntStream.rangeClosed(1, sizeOfTheProblem-1).boxed().collect(Collectors.toList());
         while (needToVisitPlaces.size() > 0) {
             var probabilities = acs.getProbabilityOfEdges(fromCity, needToVisitPlaces);
@@ -148,13 +149,22 @@ public class VehicleRoutingProblem implements Problem {
                     newIndex = key;
             }
 
-            needToVisitPlaces.remove(newIndex);
-            newIndividual.add(newIndex);
+            if (currDemand + points.get(newIndex).demand <= vehicleCapacity) {
+                currDemand += points.get(newIndex).demand;
 
-            acs.localUpdateEdge(fromCity, newIndex);
+                needToVisitPlaces.remove(newIndex);
+                newIndividual.add(newIndex);
 
-            fromCity = newIndex;
+                acs.localUpdateEdge(fromCity, newIndex);
+                acs.localUpdateEdge(newIndex, fromCity);
+
+                fromCity = newIndex;
+            } else {
+                newIndividual.add(0);
+                currDemand = 0;
+            }
         }
+        newIndividual.add(0);
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 

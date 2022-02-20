@@ -39,7 +39,7 @@
                     <NumberAxis label="Generations" side="BOTTOM" fx:id="xAxis" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yAxis" label="Fitness" lowerBound="1000.0" minorTickCount="8" side="LEFT" tickUnit="0.1" upperBound="1.0" />
+                    <NumberAxis fx:id="yAxis" label="Fitness" lowerBound="100000.0" minorTickCount="8" side="LEFT" tickUnit="0.1" upperBound="1.0" />
                 </yAxis>
             </LineChart>
         </Pane>

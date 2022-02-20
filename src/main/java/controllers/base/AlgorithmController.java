@@ -182,7 +182,7 @@ public class AlgorithmController extends MenuController {
                 return;
             }
             if (mutationLower != null && mutationUpper != null && Double.parseDouble(mutationLower.getText()) >= Double.parseDouble(mutationUpper.getText())) {
-                warning.setText("Mutation strength lower should not be higher than upper bound!");
+                warning.setText("Mutation strength lower should not be higher or the same than upper bound!");
                 return;
             }
 

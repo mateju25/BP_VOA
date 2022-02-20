@@ -150,6 +150,7 @@ public class SimulationController extends MenuController {
                 BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
+                    scaleEverything(seriesBest, seriesAverage);
                     btnSave.setDisable(false);
                     btnSaveD.setDisable(false);
                 }
@@ -188,6 +189,35 @@ public class SimulationController extends MenuController {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void scaleEverything(XYChart.Series<Integer, Double> seriesBest, XYChart.Series<Integer, Double> seriesAverage) {
+        XYChart.Series<Integer, Double> newSeriesBest = new XYChart.Series<>();
+        newSeriesBest.setName("Best");
+        XYChart.Series<Integer, Double> newSeriesAverage = new XYChart.Series<>();
+        newSeriesAverage.setName("Average");
+
+        var highBound = yAxis.getUpperBound();
+        var lowBound = yAxis.getLowerBound();
+
+        for (XYChart.Data<Integer, Double> data : seriesBest.getData()) {
+            var newValue = (((100 - 0)*(data.getYValue() - lowBound))/(highBound-lowBound)) + 0;
+            newSeriesBest.getData().add(new XYChart.Data<>(data.getXValue(), newValue));
+        }
+
+        for (XYChart.Data<Integer, Double> data : seriesAverage.getData()) {
+            var newValue = (((100 - 0)*(data.getYValue() - lowBound))/(highBound-lowBound)) + 0;
+            newSeriesAverage.getData().add(new XYChart.Data<>(data.getXValue(), newValue));
+        }
+
+        chart.getData().clear();
+        chart.getData().add(newSeriesBest);
+        chart.getData().add(newSeriesAverage);
+
+        yAxis.setUpperBound(100);
+        yAxis.setLowerBound(0);
+        yAxis.setTickUnit(10);
+
     }
 
     public void goBack() throws IOException {
