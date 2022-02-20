@@ -150,6 +150,7 @@ public class SimulationController extends MenuController {
                 BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
+                    scaleEverything(seriesBest, seriesAverage);
                     btnSave.setDisable(false);
                     btnSaveD.setDisable(false);
                 }
