@@ -29,6 +29,7 @@
          </items></Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
+      <Button layoutX="310.0" layoutY="247.0" mnemonicParsing="false" text="Button" />
         <ChoiceBox fx:id="probChoiceBox" focusTraversable="false" layoutX="167.0" layoutY="108.0" prefHeight="30.0" prefWidth="288.0" />
         <Label layoutX="194.0" layoutY="49.0" styleClass="label-underline" text="Choose optimization problem" />
         <Label layoutX="718.0" layoutY="49.0" styleClass="label-underline" text="Choose optimization algorithm" />

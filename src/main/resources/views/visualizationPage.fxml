@@ -7,25 +7,26 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<?import javafx.scene.control.MenuItem?>
 <VBox prefHeight="881.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.VisualizationController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
             <items>
-                <MenuItem mnemonicParsing="false" text="Close" onAction="#closeApp"/>
+                <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
             </items></Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
             <items>
-                <MenuItem mnemonicParsing="false" text="Documentation" onAction="#openDoc"/>
-                <MenuItem mnemonicParsing="false" text="About program" onAction="#about"/>
+                <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
+                <MenuItem mnemonicParsing="false" onAction="#about" text="About program" />
             </items></Menu>
     </MenuBar>
     <AnchorPane prefHeight="850.0" prefWidth="1139.0" styleClass="main" VBox.vgrow="ALWAYS">
+        <Button layoutX="537.0" layoutY="9.0" mnemonicParsing="false" opacity="0.0" text="Button" />
         <Label fx:id="heading" alignment="CENTER" contentDisplay="CENTER" layoutX="227.0" layoutY="10.0" prefHeight="22.0" prefWidth="685.0" textAlignment="CENTER" />
         <Line endX="44.0" endY="383.0" layoutX="29.0" layoutY="-304.0" startX="1036.0" startY="383.0" styleClass="divider" />
         <Pane fx:id="algoPane" layoutX="35.0" layoutY="77.0" prefHeight="527.0" prefWidth="1031.0">
@@ -47,5 +48,6 @@
             <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="57.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
          </children>
       </Pane>
+
     </AnchorPane>
 </VBox>

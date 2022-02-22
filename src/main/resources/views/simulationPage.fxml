@@ -7,26 +7,27 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<?import javafx.scene.control.MenuItem?>
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.SimulationController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
             <items>
-                <MenuItem mnemonicParsing="false" text="Close" onAction="#closeApp"/>
+                <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
             </items></Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
             <items>
-                <MenuItem mnemonicParsing="false" text="Documentation" onAction="#openDoc"/>
-                <MenuItem mnemonicParsing="false" text="About program" onAction="#about"/>
+                <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
+                <MenuItem mnemonicParsing="false" onAction="#about" text="About program" />
             </items></Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
+        <Button layoutX="543.0" layoutY="13.0" mnemonicParsing="false" opacity="0.0" text="Button" />
         <Label fx:id="heading" alignment="CENTER" contentDisplay="CENTER" layoutX="227.0" layoutY="14.0" prefHeight="22.0" prefWidth="685.0" textAlignment="CENTER" />
         <Button fx:id="btnContinue" focusTraversable="false" layoutX="686.0" layoutY="650.0" mnemonicParsing="false" onAction="#continueSim" prefHeight="34.0" prefWidth="34.0" styleClass="button-black" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
         <Button fx:id="btnPause" focusTraversable="false" layoutX="743.0" layoutY="650.0" mnemonicParsing="false" onAction="#pauseSim" prefHeight="34.0" prefWidth="34.0" styleClass="button-black" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
@@ -54,5 +55,6 @@
             <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="57.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
          </children>
       </Pane>
+
     </AnchorPane>
 </VBox>

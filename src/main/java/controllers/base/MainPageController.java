@@ -77,7 +77,7 @@ public class MainPageController extends MenuController {
 //            BaseController.isFirstLoad = false;
 //            animationPic.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_animation.png"))));
 //            FadeTransition ft = new FadeTransition(Duration.millis(2000), animationPic);
-//            ft.setDelay(Duration.millis(1500));
+//            ft.setDelay(Duration.millis(2500));
 //            ft.setFromValue(1.0);
 //            ft.setToValue(0.0);
 //            ft.play();
