@@ -20,12 +20,12 @@ import java.util.Objects;
 
 public class MenuController {
 
-    public void closeApp(ActionEvent actionEvent) {
+    public void closeApp() {
         Platform.exit();
         System.exit(0);
     }
 
-    public void openDoc(ActionEvent actionEvent) {
+    public void openDoc() {
         if (Desktop.isDesktopSupported()) {
             try {
                 URL url = getClass().getResource("/pdfs/blank.pdf");
@@ -36,7 +36,7 @@ public class MenuController {
         }
     }
 
-    public void about(ActionEvent actionEvent) throws IOException {
+    public void about() throws IOException {
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/components/aboutProgram.fxml")));
         stage.setScene(new Scene(root));

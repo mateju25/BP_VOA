@@ -11,16 +11,15 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.shape.Line;
 
 //this code is inspired by https://stackoverflow.com/questions/56222474/how-to-fix-the-location-of-my-linecharts-crosshair
-public class CrossHairLineChart<X, Y> extends LineChart {
+public class CrossHairLineChart<X, Y> extends LineChart<Integer, Double> {
 
     private final Line vLine;
     private final Line hLine;
     private Group plotArea;
-    private double tickSize = 5;
-    private ToggleButton toggleButton;
-    private BooleanProperty showCrossHair = new SimpleBooleanProperty();
+    private final double tickSize = 5;
+    private final BooleanProperty showCrossHair = new SimpleBooleanProperty();
 
-    public CrossHairLineChart(Axis<X> xAxis, Axis<Y> yAxis, ToggleButton toggleButton) {
+    public CrossHairLineChart(Axis<Integer> xAxis, Axis<Double> yAxis, ToggleButton toggleButton) {
         super(xAxis, yAxis);
         vLine = new Line();
         vLine.setStrokeWidth(2);
@@ -28,8 +27,6 @@ public class CrossHairLineChart<X, Y> extends LineChart {
         hLine.setStrokeWidth(2);
         toggleButton.setOnAction(event ->
                 showCrossHair.set(toggleButton.isSelected()));
-
-        this.toggleButton = toggleButton;
 
         hLine.endYProperty().bind(hLine.startYProperty());
         vLine.endXProperty().bind(vLine.startXProperty());

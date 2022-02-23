@@ -17,14 +17,12 @@
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.SimulationController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
-            <items>
-                <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close" />
-            </items></Menu>
+            <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close"/>
+        </Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
-            <items>
-                <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
-                <MenuItem mnemonicParsing="false" onAction="#about" text="About program" />
-            </items></Menu>
+            <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation"/>
+            <MenuItem mnemonicParsing="false" onAction="#about" text="About program"/>
+        </Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
         <Button layoutX="543.0" layoutY="13.0" mnemonicParsing="false" opacity="0.0" text="Button" />
@@ -50,11 +48,11 @@
         <Label layoutX="269.0" layoutY="659.0" styleClass="label-small-text" text="Simulation speed:" />
         <Button fx:id="btnSave" layoutX="864.0" layoutY="60.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="143.0" styleClass="button-black" text="Save to csv" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
       <Button fx:id="btnSaveD" layoutX="706.0" layoutY="60.0" mnemonicParsing="false" onAction="#addToVisualization" prefHeight="34.0" prefWidth="143.0" styleClass="button-black" text="Add dataset" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
-      <Pane fx:id="infoBox" layoutX="889.0" layoutY="160.0" opacity="0.0" prefHeight="71.0" prefWidth="219.0" styleClass="info-pane">
-         <children>
-            <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="57.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
-         </children>
-      </Pane>
+        <Pane fx:id="infoBox" layoutX="889.0" layoutY="160.0" opacity="0.0" prefHeight="71.0" prefWidth="219.0"
+              styleClass="info-pane">
+            <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="57.0"
+                   prefWidth="200.0" textAlignment="CENTER" wrapText="true"/>
+        </Pane>
 
     </AnchorPane>
 </VBox>

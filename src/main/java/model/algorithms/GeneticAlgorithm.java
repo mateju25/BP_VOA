@@ -7,10 +7,14 @@ import lombok.Setter;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-@Setter @Getter
+@Setter
+@Getter
 public class GeneticAlgorithm implements Algorithm {
     private List<List<Integer>> generation = new ArrayList<>();
     private List<Integer> bestIndividual = new ArrayList<>();
@@ -44,7 +48,6 @@ public class GeneticAlgorithm implements Algorithm {
         this.actualGeneration = 0;
         this.generation = new ArrayList<>();
         this.bestIndividual = new ArrayList<>();
-        BaseController.randomGenerator = new Random(1);
     }
 
     @Override
@@ -78,8 +81,7 @@ public class GeneticAlgorithm implements Algorithm {
 
     private List<List<Integer>> rouletteSelection() {
         var parents = new ArrayList<List<Integer>>(2);
-        for (int i = 0; i < 2; i++)
-        {
+        for (int i = 0; i < 2; i++) {
             int index = Algorithm.getCumulativeFitnessesIndex(generation.stream().mapToDouble(e -> problem.fitness(e)).boxed().collect(Collectors.toList()));
             parents.add(generation.get(index));
         }

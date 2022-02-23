@@ -3,14 +3,14 @@ package model.algorithms;
 import controllers.base.BaseController;
 import lombok.Getter;
 import lombok.Setter;
-import model.problems.KnapsackProblem;
 import model.problems.Problem;
 import model.utils.AlgorithmResults;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Getter @Setter
+@Getter
+@Setter
 public class AntColonySystemAlgorithm implements Algorithm {
     private Problem problem;
     private List<List<Integer>> generation = new ArrayList<>();
@@ -54,9 +54,8 @@ public class AntColonySystemAlgorithm implements Algorithm {
         return map;
     }
 
-
     public void localUpdateEdge(Integer fromCity, Integer newIndex) {
-        var newVal = matrixOfPheromone.get(fromCity).get(newIndex) * (1-pheromoneVapor) + pheromoneVapor * 0;
+        var newVal = matrixOfPheromone.get(fromCity).get(newIndex) * (1 - pheromoneVapor) + pheromoneVapor * 0;
         matrixOfPheromone.get(fromCity).set(newIndex, newVal);
     }
 
@@ -80,7 +79,7 @@ public class AntColonySystemAlgorithm implements Algorithm {
             var edges = problem.generateEdges(generationBest);
             for (int i = 0; i < matrixOfPheromone.size(); i++) {
                 for (int j = 0; j < matrixOfPheromone.get(i).size(); j++) {
-                    matrixOfPheromone.get(i).set(j, matrixOfPheromone.get(i).get(j)*(1-pheromoneVapor) + pheromoneVapor * edges.get(i).get(j));
+                    matrixOfPheromone.get(i).set(j, matrixOfPheromone.get(i).get(j) * (1 - pheromoneVapor) + pheromoneVapor * edges.get(i).get(j));
                 }
             }
 
@@ -105,7 +104,6 @@ public class AntColonySystemAlgorithm implements Algorithm {
         this.actualGeneration = 0;
         this.generation = new ArrayList<>();
         this.bestIndividual = new ArrayList<>();
-        BaseController.randomGenerator = new Random(1);
     }
 
     @Override

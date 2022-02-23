@@ -13,5 +13,4 @@
     <CheckBox fx:id="checkBest" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Best" />
     <CheckBox fx:id="checkAverage" layoutX="754.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Average" />
     <Button fx:id="btnDelete" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="31.0" styleClass="button-black" text="X" />
-<!--   <Button fx:id="btnSave" layoutX="550.0" layoutY="5.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="68.0" styleClass="button-black" text="Save" />-->
 </AnchorPane>

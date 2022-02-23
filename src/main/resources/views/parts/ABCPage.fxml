@@ -8,10 +8,10 @@
 
 <Pane prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
     <Pane layoutX="38.0" layoutY="25.0" prefHeight="133.0" prefWidth="808.0" styleClass="pane-around">
-        <Label focusTraversable="false" layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm" />
-        <Label focusTraversable="false" layoutX="205.0" layoutY="51.0" styleClass="label-small-text" text="Size of bee hive:" />
+        <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm" />
+        <Label layoutX="205.0" layoutY="51.0" styleClass="label-small-text" text="Size of bee hive:" />
         <TextField fx:id="sizeBeeHive" layoutX="381.0" layoutY="45.0" prefHeight="28.0" prefWidth="189.0" text="40" />
-        <Label focusTraversable="false" layoutX="205.0" layoutY="87.0" styleClass="label-small-text" text="Number of iterations:" />
+        <Label layoutX="205.0" layoutY="87.0" styleClass="label-small-text" text="Number of iterations:" />
         <TextField fx:id="numberOfIterations" layoutX="381.0" layoutY="81.0" prefHeight="28.0" prefWidth="189.0" text="100" />
         <ImageView fx:id="toolSize" fitHeight="20.0" fitWidth="20.0" layoutX="572.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../../images/tooltip.png" />
@@ -41,15 +41,13 @@
       <TextField fx:id="mutationUpper" layoutX="563.0" layoutY="101.0" prefHeight="25.0" prefWidth="189.0" text="0.12" />
       <Label layoutX="380.0" layoutY="173.0" styleClass="label-small-text" text="Mutation strength lower:" />
       <TextField fx:id="mutationLower" layoutX="563.0" layoutY="168.0" prefHeight="28.0" prefWidth="189.0" text="0.04" />
-      <ImageView fx:id="toolMutationUpper" fitHeight="20.0" fitWidth="20.0" layoutX="755.0" layoutY="105.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/tooltip.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="toolMutationLower" fitHeight="20.0" fitWidth="20.0" layoutX="755.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../images/tooltip.png" />
-         </image>
-      </ImageView>
+        <ImageView fx:id="toolMutationUpper" fitHeight="20.0" fitWidth="20.0" layoutX="755.0" layoutY="105.0"
+                   pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../images/tooltip.png"/>
+        </ImageView>
+        <ImageView fx:id="toolMutationLower" fitHeight="20.0" fitWidth="20.0" layoutX="755.0" layoutY="171.0"
+                   pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../images/tooltip.png"/>
+        </ImageView>
     </Pane>
 </Pane>

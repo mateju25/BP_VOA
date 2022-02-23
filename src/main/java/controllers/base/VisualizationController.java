@@ -3,19 +3,18 @@ package controllers.base;
 import controllers.components.CrossHairLineChart;
 import controllers.components.DatasetPartController;
 import controllers.components.MenuController;
-import javafx.beans.value.ObservableListValue;
-import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.Axis;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
@@ -37,60 +36,44 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class VisualizationController extends MenuController {
-
-
+    @FXML
     public Label heading;
+    @FXML
     public Pane algoPane;
     public CrossHairLineChart<Integer, Double> chart;
-    public NumberAxis xAxis = new NumberAxis();;
-    public NumberAxis yAxis = new NumberAxis();;
+    public NumberAxis xAxis = new NumberAxis();
+    ;
+    public NumberAxis yAxis = new NumberAxis();
+    ;
+    @FXML
     public Button btnAdd;
+    @FXML
     public ListView<SimulationResults> listView;
+    @FXML
     public Button btnExportPic;
+    @FXML
     public Pane infoBox;
+    @FXML
     public Label infoBoxLabel;
-    public Double upperBound = 0.0;
-    public Double lowerBound = 1000000.0;
+    @FXML
     public AnchorPane anchorPane;
+
+    public Double upperBound;
+    public Double lowerBound;
 
     public void initialize() {
         BaseController.visualizationController = this;
-
-        ToggleButton toggleButton = new ToggleButton();
-        toggleButton.setLayoutX(359.0);
-        toggleButton.setLayoutY(37.0);
-        toggleButton.setPrefHeight(32);
-        toggleButton.setPrefWidth(32);
-        toggleButton.getStyleClass().add("button-black");
-        toggleButton.setFocusTraversable(false);
-        toggleButton.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ruler.png")))));
-        anchorPane.getChildren().add(toggleButton);
         listView.getItems().clear();
 
-        chart = new CrossHairLineChart<Integer, Double>((Axis) xAxis,(Axis) yAxis, toggleButton);
-        chart.setLayoutY(11);
-        chart.setPrefHeight(527.0);
-        chart.setPrefWidth(1031.0);
-        chart.setAnimated(false);
-        algoPane.getChildren().add(chart);
-
+        ToggleButton toggleButton = createToggleButton();
+        createChart(toggleButton);
 
         upperBound = 0.0;
         lowerBound = 1000000.0;
 
-        yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(100);
-        yAxis.setLowerBound(0);
-        yAxis.setTickUnit(10);
-        yAxis.setMinorTickCount(8);
-        yAxis.setSide(Side.LEFT);
-        yAxis.setLabel("Fitness");
-
-        xAxis.setSide(Side.BOTTOM);
-        xAxis.setLabel("Generations");
+        setupAxises();
 
         if (BaseController.savedDatasets != null) {
             setUpBounds(BaseController.savedDatasets);
@@ -107,6 +90,19 @@ public class VisualizationController extends MenuController {
             }
         }
 
+        addTooltipForNodesInChart();
+
+
+        listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                Platform.runLater(() -> listView.getSelectionModel().select(-1));
+            }
+        });
+        listView.setCellFactory(param -> new DatasetPartController());
+    }
+
+    private void addTooltipForNodesInChart() {
         for (XYChart.Series<Integer, Double> s : (ObservableList<XYChart.Series<Integer, Double>>) chart.getData()) {
             for (XYChart.Data<Integer, Double> d : s.getData()) {
                 var tooltip = new Tooltip(
@@ -124,15 +120,40 @@ public class VisualizationController extends MenuController {
                         d.getNode().getStyleClass().remove("onHover"));
             }
         }
+    }
 
+    private void setupAxises() {
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(100);
+        yAxis.setLowerBound(0);
+        yAxis.setTickUnit(10);
+        yAxis.setMinorTickCount(8);
+        yAxis.setSide(Side.LEFT);
+        yAxis.setLabel("Fitness");
+        xAxis.setSide(Side.BOTTOM);
+        xAxis.setLabel("Generations");
+    }
 
-        listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                Platform.runLater(() -> listView.getSelectionModel().select(-1));
-            }
-        });
-        listView.setCellFactory(param -> new DatasetPartController());
+    private void createChart(ToggleButton toggleButton) {
+        chart = new CrossHairLineChart<Integer, Double>((Axis) xAxis, (Axis) yAxis, toggleButton);
+        chart.setLayoutY(11);
+        chart.setPrefHeight(527.0);
+        chart.setPrefWidth(1031.0);
+        chart.setAnimated(false);
+        algoPane.getChildren().add(chart);
+    }
+
+    private ToggleButton createToggleButton() {
+        ToggleButton toggleButton = new ToggleButton();
+        toggleButton.setLayoutX(359.0);
+        toggleButton.setLayoutY(37.0);
+        toggleButton.setPrefHeight(32);
+        toggleButton.setPrefWidth(32);
+        toggleButton.getStyleClass().add("button-black");
+        toggleButton.setFocusTraversable(false);
+        toggleButton.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ruler.png")))));
+        anchorPane.getChildren().add(toggleButton);
+        return toggleButton;
     }
 
     public void goBack() throws IOException {
@@ -171,23 +192,7 @@ public class VisualizationController extends MenuController {
 
             yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
         }
-        for (XYChart.Series<Integer, Double> s : (ObservableList<XYChart.Series<Integer, Double>>) chart.getData()) {
-            for (XYChart.Data<Integer, Double> d : s.getData()) {
-                var tooltip = new Tooltip(
-                        "Generation: " + d.getXValue().toString() + "\n" +
-                                "Fitness : " + d.getYValue());
-                tooltip.setShowDelay(Duration.millis(10));
-                Tooltip.install(d.getNode(), tooltip);
-
-                //Adding class on hover
-                d.getNode().setOnMouseEntered(event ->
-                        d.getNode().getStyleClass().add("onHover"));
-
-                //Removing class on exit
-                d.getNode().setOnMouseExited(event ->
-                        d.getNode().getStyleClass().remove("onHover"));
-            }
-        }
+        addTooltipForNodesInChart();
     }
 
     private void setUpBounds(List<SimulationResults> results) {

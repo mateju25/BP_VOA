@@ -21,7 +21,7 @@ public class AlgorithmResults {
         this.bestIndividualInGen = new ArrayList<>(bestIndividualInGen);
         this.bestFitnessInGen = problem.fitness(bestIndividualInGen);
         this.averageFitnessInGen = averageFitnessInGen;
-        this.bestIndividual =  new ArrayList<>(bestIndividual);
+        this.bestIndividual = new ArrayList<>(bestIndividual);
         this.bestFitness = problem.fitness(bestIndividual);
         this.actualGeneration = actualGeneration;
         this.maxGeneration = maxGeneration;

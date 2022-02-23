@@ -8,7 +8,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.algorithms.Algorithm;
+import model.algorithms.AntColonySystemAlgorithm;
+import model.algorithms.ArtificialBeeColonyAlgorithm;
+import model.algorithms.GeneticAlgorithm;
+import model.problems.KnapsackProblem;
 import model.problems.Problem;
+import model.problems.TargetAssignmentProblem;
+import model.problems.VehicleRoutingProblem;
 import model.utils.SimulationResults;
 
 import java.util.ArrayList;
@@ -27,9 +33,22 @@ public class BaseController {
     public static Stage mainStage;
     public static VisualizationController visualizationController;
 
-    public static Boolean isFirstLoad = true;
-
     public static ArrayList<SimulationResults> savedDatasets;
+
+    public static void init() {
+        if (BaseController.algorithms == null) {
+            BaseController.algorithms = new ArrayList<>();
+            BaseController.algorithms.add(new AntColonySystemAlgorithm());
+            BaseController.algorithms.add(new ArtificialBeeColonyAlgorithm());
+            BaseController.algorithms.add(new GeneticAlgorithm());
+        }
+        if (BaseController.problems == null) {
+            BaseController.problems = new ArrayList<>();
+            BaseController.problems.add(new VehicleRoutingProblem());
+            BaseController.problems.add(new TargetAssignmentProblem());
+            BaseController.problems.add(new KnapsackProblem());
+        }
+    }
 
     public static void makeTooltip(Node component, String message) {
         var t = new Tooltip(message);

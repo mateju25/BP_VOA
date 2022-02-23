@@ -1,10 +1,8 @@
 package controllers.base;
 
 import controllers.components.MenuController;
-import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,16 +10,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import model.algorithms.Algorithm;
-import model.algorithms.AntColonySystemAlgorithm;
-import model.algorithms.ArtificialBeeColonyAlgorithm;
-import model.algorithms.GeneticAlgorithm;
 import model.problems.KnapsackProblem;
 import model.problems.Problem;
 import model.problems.TargetAssignmentProblem;
@@ -29,26 +22,18 @@ import model.problems.VehicleRoutingProblem;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
 public class MainPageController extends MenuController {
-    public Label warning;
-    public ImageView animationPic;
-    public ChoiceBox<String> presetProblems;
-    public Label infoBoxLabel;
-    public Pane infoBox;
-    private Boolean controllerLoaded = false;
+    @FXML public Label warning;
+    @FXML public ImageView animationPic;
+    @FXML public ChoiceBox<String> presetProblems;
+    @FXML public ChoiceBox<Algorithm> algChoiceBox;
+    @FXML public ChoiceBox<Problem> probChoiceBox;
+    @FXML public Pane probPane;
 
-    @FXML
-    public ChoiceBox<Algorithm> algChoiceBox;
-    @FXML
-    public ChoiceBox<Problem> probChoiceBox;
-    @FXML
-    public Pane probPane;
     //knapsack
     public TextField numberOfItems;
     public TextField backpackCapacity;
@@ -71,38 +56,16 @@ public class MainPageController extends MenuController {
     public ImageView toolMaximum;
     public ImageView toolNumberOfTargets;
 
+    private Boolean controllerLoaded = false;
+
     public void initialize() {
         if (controllerLoaded)
             return;
-
-//        if (BaseController.isFirstLoad) {
-//            BaseController.isFirstLoad = false;
-//            animationPic.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_animation.png"))));
-//            FadeTransition ft = new FadeTransition(Duration.millis(2000), animationPic);
-//            ft.setDelay(Duration.millis(2500));
-//            ft.setFromValue(1.0);
-//            ft.setToValue(0.0);
-//            ft.play();
-//            ft.setOnFinished(event -> animationPic.setMouseTransparent(true));
-//
-//        }
-        animationPic.setMouseTransparent(true);
-
-
-        BaseController.randomGenerator = new Random(1);
         controllerLoaded = true;
-        if (BaseController.algorithms == null) {
-            BaseController.algorithms = new ArrayList<>();
-            BaseController.algorithms.add(new AntColonySystemAlgorithm());
-            BaseController.algorithms.add(new ArtificialBeeColonyAlgorithm());
-            BaseController.algorithms.add(new GeneticAlgorithm());
-        }
-        if (BaseController.problems == null) {
-            BaseController.problems = new ArrayList<>();
-            BaseController.problems.add(new VehicleRoutingProblem());
-            BaseController.problems.add(new TargetAssignmentProblem());
-            BaseController.problems.add(new KnapsackProblem());
-        }
+
+        makeAnimation();
+
+        BaseController.init();
 
         if (algChoiceBox != null) {
             algChoiceBox.getItems().setAll(BaseController.algorithms);
@@ -126,9 +89,6 @@ public class MainPageController extends MenuController {
             if (BaseController.chosenAlgorithm != null) {
                 algChoiceBox.getSelectionModel().select(BaseController.algorithms.indexOf(BaseController.chosenAlgorithm));
             }
-            else
-                algChoiceBox.getSelectionModel().select(0);
-
         }
         if (probChoiceBox != null) {
             probChoiceBox.getItems().setAll(BaseController.problems);
@@ -170,8 +130,6 @@ public class MainPageController extends MenuController {
                     presetProblems.getItems().add("Preset " + BaseController.chosenProblem.nameForFaces() + " " + number);
                 }
             }
-            else
-                probChoiceBox.getSelectionModel().select(2);
         }
 
         presetProblems.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
@@ -180,6 +138,22 @@ public class MainPageController extends MenuController {
                 actualizeTextEdits();
             }
         });
+    }
+
+    private void makeAnimation() {
+        //        if (BaseController.isFirstLoad) {
+//            BaseController.isFirstLoad = false;
+//            animationPic.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_animation.png"))));
+//            FadeTransition ft = new FadeTransition(Duration.millis(2000), animationPic);
+//            ft.setDelay(Duration.millis(2500));
+//            ft.setFromValue(1.0);
+//            ft.setToValue(0.0);
+//            ft.play();
+//            ft.setOnFinished(event -> animationPic.setMouseTransparent(true));
+//
+//        }
+        animationPic.setMouseTransparent(true);
+
     }
 
     private void loadSpecificFxmlPart(String part) {
@@ -197,49 +171,49 @@ public class MainPageController extends MenuController {
             averageWeight.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(800));
             numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            BaseController.makeTooltip(toolNumberOfItems,"Number of items that can be put into backpack (each will have a random generated size)");
-            BaseController.makeTooltip(toolCapacity,"Maximum load that can be put into backpack");
-            BaseController.makeTooltip(toolAverage,"Average size of item that will be put into backpack");
+            BaseController.makeTooltip(toolNumberOfItems, "Number of items that can be put into backpack (each will have a random generated size)");
+            BaseController.makeTooltip(toolCapacity, "Maximum load that can be put into backpack");
+            BaseController.makeTooltip(toolAverage, "Average size of item that will be put into backpack");
         }
         if (sizeOfProblem != null) {
             sizeOfProblem.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             vehicleCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             averageDemand.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
-            BaseController.makeTooltip(toolSizeProblem,"Number of cities that will be generated (each will have a random value of demand)");
-            BaseController.makeTooltip(toolAverageDemand,"Average demand for cities");
-            BaseController.makeTooltip(toolVehicleCapacity,"Maximum capacity of vehicle (sum of city demands of one trip must not exceed the vehicle capacity)");
+            BaseController.makeTooltip(toolSizeProblem, "Number of cities that will be generated (each will have a random value of demand)");
+            BaseController.makeTooltip(toolAverageDemand, "Average demand for cities");
+            BaseController.makeTooltip(toolVehicleCapacity, "Maximum capacity of vehicle (sum of city demands of one trip must not exceed the vehicle capacity)");
         }
         if (numberOfWeapons != null) {
             numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
-            BaseController.makeTooltip(toolNumberOfWeapons,"Number of weapons that will be generated (each will have a random probability to destroy each target)");
-            BaseController.makeTooltip(toolMaximum,"Maximum number of assigned targets to one weapon");
-            BaseController.makeTooltip(toolNumberOfTargets,"Number of targets that will be generated (each will have a destruction level 1 - 5)");
+            BaseController.makeTooltip(toolNumberOfWeapons, "Number of weapons that will be generated (each will have a random probability to destroy each target)");
+            BaseController.makeTooltip(toolMaximum, "Maximum number of assigned targets to one weapon");
+            BaseController.makeTooltip(toolNumberOfTargets, "Number of targets that will be generated (each will have a destruction level 1 - 5)");
         }
         actualizeTextEdits();
     }
 
-    private  void actualizeTextEdits() {
+    private void actualizeTextEdits() {
         if (averageWeight != null) {
             if (BaseController.chosenProblem instanceof KnapsackProblem) {
-                averageWeight.setText(((KnapsackProblem) BaseController.chosenProblem).getAverageWeightOfItem()+"");
-                backpackCapacity.setText(((KnapsackProblem) BaseController.chosenProblem).getWeightOfBackpack()+"");
-                numberOfItems.setText(((KnapsackProblem) BaseController.chosenProblem).getNumberOfItems()+"");
+                averageWeight.setText(((KnapsackProblem) BaseController.chosenProblem).getAverageWeightOfItem() + "");
+                backpackCapacity.setText(((KnapsackProblem) BaseController.chosenProblem).getWeightOfBackpack() + "");
+                numberOfItems.setText(((KnapsackProblem) BaseController.chosenProblem).getNumberOfItems() + "");
             }
         }
         if (sizeOfProblem != null) {
             if (BaseController.chosenProblem instanceof VehicleRoutingProblem) {
-                sizeOfProblem.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getSizeOfTheProblem()+"");
-                vehicleCapacity.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getVehicleCapacity()+"");
-                averageDemand.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getAverageDemand()+"");
+                sizeOfProblem.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getSizeOfTheProblem() + "");
+                vehicleCapacity.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getVehicleCapacity() + "");
+                averageDemand.setText(((VehicleRoutingProblem) BaseController.chosenProblem).getAverageDemand() + "");
             }
         }
         if (numberOfWeapons != null) {
             if (BaseController.chosenProblem instanceof TargetAssignmentProblem) {
-                numberOfWeapons.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getNumOfWeapons()+"");
-                numberOfTargets.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getNumOfTargets()+"");
-                maxAssignedTargets.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getMaximumAssignedTargets()+"");
+                numberOfWeapons.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getNumOfWeapons() + "");
+                numberOfTargets.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getNumOfTargets() + "");
+                maxAssignedTargets.setText(((TargetAssignmentProblem) BaseController.chosenProblem).getMaximumAssignedTargets() + "");
             }
         }
     }
@@ -250,7 +224,6 @@ public class MainPageController extends MenuController {
                 warning.setText("Average demand should not be higher than vehicle capacity!");
                 return;
             }
-
 
             var map = new HashMap<String, String>();
             if (numberOfItems != null) map.put(numberOfItems.getId(), numberOfItems.getText());
@@ -263,6 +236,7 @@ public class MainPageController extends MenuController {
             if (numberOfWeapons != null) map.put(numberOfWeapons.getId(), numberOfWeapons.getText());
             if (maxAssignedTargets != null) map.put(maxAssignedTargets.getId(), maxAssignedTargets.getText());
 
+            BaseController.randomGenerator = new Random(1);
             BaseController.chosenProblem.init(map);
 
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));

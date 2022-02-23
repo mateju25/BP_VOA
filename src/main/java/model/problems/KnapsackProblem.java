@@ -55,7 +55,7 @@ public class KnapsackProblem implements Problem {
         return matrix;
     }
 
-    private  Integer sumOfItems(List<Integer> items) {
+    private Integer sumOfItems(List<Integer> items) {
         var sum = 0;
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i) == 1)
@@ -149,7 +149,7 @@ public class KnapsackProblem implements Problem {
 
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
-        return itemValue.get(to)*0.01;
+        return itemValue.get(to) * 0.01;
     }
 
     @Override
@@ -173,7 +173,7 @@ public class KnapsackProblem implements Problem {
         var tmpIndividual = new ArrayList<>(individual);
         do {
             individual = new ArrayList<>(tmpIndividual);
-            for (int i = 0; i < numberOfItems*probChange; i++) {
+            for (int i = 0; i < numberOfItems * probChange; i++) {
                 var index = BaseController.randomGenerator.nextInt(this.itemWeight.size());
                 if (individual.get(index).equals(0)) {
                     if (sumOfItems(individual) + itemWeight.get(index) > weightOfBackpack)

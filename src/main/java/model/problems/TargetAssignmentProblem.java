@@ -15,7 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Getter @Setter
+@Getter
+@Setter
 public class TargetAssignmentProblem implements Problem {
     private List<List<Double>> matrixOfProbabilities;
     private List<Double> targetValues;
@@ -109,7 +110,7 @@ public class TargetAssignmentProblem implements Problem {
     public List<List<Double>> generateEdges(List<Integer> individual) {
         var edges = initPheromoneMatrix();
         var fitness = fitness(individual);
-        for (int i = 0; i < individual.size() - 1; i+=2) {
+        for (int i = 0; i < individual.size() - 1; i += 2) {
             edges.get(individual.get(i)).set(individual.get(i + 1), fitness);
         }
         return edges;
@@ -140,7 +141,7 @@ public class TargetAssignmentProblem implements Problem {
 
     @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
-        for (int i = 0; i < individual.size()*probChange; i++) {
+        for (int i = 0; i < individual.size() * probChange; i++) {
             var index = BaseController.randomGenerator.nextInt((individual.size() - 1) / 2) * 2 + 1;
             Collections.swap(individual, index, index + 2);
         }

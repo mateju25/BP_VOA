@@ -15,7 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Getter @Setter
+@Getter
+@Setter
 public class VehicleRoutingProblem implements Problem {
     private static class Point {
         private final Integer xCor;
@@ -48,9 +49,9 @@ public class VehicleRoutingProblem implements Problem {
         colorsOfItems = new ArrayList<>();
         points.add(new Point(250, 250, 0));
         for (int i = 0; i < sizeOfTheProblem - 1; i++) {
-            var demand = BaseController.randomGenerator.nextInt(2*averageDemand - 2) + 1;
+            var demand = BaseController.randomGenerator.nextInt(2 * averageDemand - 2) + 1;
             while (demand > vehicleCapacity)
-                demand = BaseController.randomGenerator.nextInt(2*averageDemand - 2) + 1;
+                demand = BaseController.randomGenerator.nextInt(2 * averageDemand - 2) + 1;
             var tmp = new Point(BaseController.randomGenerator.nextInt(500), BaseController.randomGenerator.nextInt(500), demand);
             points.add(tmp);
         }
@@ -136,7 +137,7 @@ public class VehicleRoutingProblem implements Problem {
         newIndividual.add(0);
         Integer fromCity = 0;
         var currDemand = 0;
-        var needToVisitPlaces = IntStream.rangeClosed(1, sizeOfTheProblem-1).boxed().collect(Collectors.toList());
+        var needToVisitPlaces = IntStream.rangeClosed(1, sizeOfTheProblem - 1).boxed().collect(Collectors.toList());
         while (needToVisitPlaces.size() > 0) {
             var probabilities = acs.getProbabilityOfEdges(fromCity, needToVisitPlaces);
             var probList = probabilities.values().stream().mapToDouble(e -> e).boxed().collect(Collectors.toList());
@@ -172,9 +173,9 @@ public class VehicleRoutingProblem implements Problem {
     public List<List<Double>> generateEdges(List<Integer> individual) {
         var edges = initPheromoneMatrix();
         var fitness = fitness(individual);
-            for (int i = 0; i < individual.size() - 1; i++) {
-                edges.get(individual.get(i)).set(individual.get(i + 1), fitness);
-            }
+        for (int i = 0; i < individual.size() - 1; i++) {
+            edges.get(individual.get(i)).set(individual.get(i + 1), fitness);
+        }
         return edges;
     }
 
@@ -206,7 +207,7 @@ public class VehicleRoutingProblem implements Problem {
     @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         List<Integer> newIndividual = new ArrayList<>();
-        for (int i = 0; i < sizeOfTheProblem*probChange; i++) {
+        for (int i = 0; i < sizeOfTheProblem * probChange; i++) {
             newIndividual = individual.stream().filter(e -> e != 0).collect(Collectors.toList());
 
             var index = BaseController.randomGenerator.nextInt(newIndividual.size() - 2) + 1;
@@ -277,14 +278,14 @@ public class VehicleRoutingProblem implements Problem {
 
             for (int i = 0; i < best.size() - 1; i++) {
                 if (points.get(best.get(i)).demand == 0) {
-                        gc.setStroke(colorsOfItems.get(best.get(i+1)));
-                        usedColors.add(colorsOfItems.get(best.get(i+1)));
+                    gc.setStroke(colorsOfItems.get(best.get(i + 1)));
+                    usedColors.add(colorsOfItems.get(best.get(i + 1)));
                 }
                 gc.setLineWidth(2);
-                gc.strokeLine(points.get(best.get(i)).xCor  + LEFT_OFFSET + 3,
+                gc.strokeLine(points.get(best.get(i)).xCor + LEFT_OFFSET + 3,
                         points.get(best.get(i)).yCor + UP_OFFSET + 3,
-                        points.get(best.get(i+1)).xCor  + LEFT_OFFSET + 3,
-                        points.get(best.get(i+1)).yCor + UP_OFFSET + 3);
+                        points.get(best.get(i + 1)).xCor + LEFT_OFFSET + 3,
+                        points.get(best.get(i + 1)).yCor + UP_OFFSET + 3);
             }
 
             gc.setStroke(Color.BLACK);
@@ -294,10 +295,10 @@ public class VehicleRoutingProblem implements Problem {
             for (int i = 0; i < usedColors.size(); i++) {
                 gc.setStroke(Color.BLACK);
                 gc.setLineWidth(1);
-                gc.strokeText(i+"", LEFT_OFFSET + 560, 110 + i*20);
+                gc.strokeText(i + "", LEFT_OFFSET + 560, 110 + i * 20);
                 gc.setStroke(usedColors.get(i));
                 gc.setLineWidth(4);
-                gc.strokeLine(LEFT_OFFSET + 575, 105+i*20, LEFT_OFFSET + 595, 105+i*20);
+                gc.strokeLine(LEFT_OFFSET + 575, 105 + i * 20, LEFT_OFFSET + 595, 105 + i * 20);
             }
 
 
@@ -309,7 +310,7 @@ public class VehicleRoutingProblem implements Problem {
                 }
                 gc.setFill(Color.BLACK);
                 gc.fillRect(points.get(i).xCor + LEFT_OFFSET, points.get(i).yCor + UP_OFFSET, 6, 6);
-                gc.fillText(this.points.get(i).demand+"", points.get(i).xCor + LEFT_OFFSET - 1, points.get(i).yCor + UP_OFFSET - 1);
+                gc.fillText(this.points.get(i).demand + "", points.get(i).xCor + LEFT_OFFSET - 1, points.get(i).yCor + UP_OFFSET - 1);
             }
         }
     }

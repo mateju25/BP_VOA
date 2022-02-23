@@ -1,6 +1,5 @@
 package model.algorithms;
 
-import controllers.base.BaseController;
 import lombok.Getter;
 import lombok.Setter;
 import model.problems.Problem;
@@ -11,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Setter
 @Getter
-public class ArtificialBeeColonyAlgorithm implements Algorithm{
+public class ArtificialBeeColonyAlgorithm implements Algorithm {
     private List<List<Integer>> generation = new ArrayList<>();
     private List<Integer> oldCount = new ArrayList<>();
     private List<Integer> bestIndividual = new ArrayList<>();
@@ -35,6 +34,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
         this.mutationLower = Double.parseDouble(parameters.get("mutationLower"));
         resetAlgorithm();
     }
+
     @Override
     public void initFirstGeneration() {
         for (int i = 0; i < this.sizeBeeHive * percentageEmployed; i++) {
@@ -47,15 +47,14 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
     }
 
     private void takeBetterIndividual(Integer index, Integer oldCountIndex) {
-        var individual = problem.localSearch(generation.get(index),  mutationLower+ (actualGeneration/numberOfIterations)*(mutationUpper-mutationLower));
+        var individual = problem.localSearch(generation.get(index), mutationLower + (actualGeneration / numberOfIterations) * (mutationUpper - mutationLower));
         if (problem.fitness(individual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
             bestIndividual = new ArrayList<>(individual);
 
         if (problem.fitness(generation.get(index)) > problem.fitness(individual)) {
             generation.set(index, individual);
             oldCount.set(oldCountIndex, 0);
-        }
-        else
+        } else
             oldCount.set(index, oldCount.get(index) + 1);
     }
 
@@ -72,7 +71,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
             }
 
             //ONLOOKER BEES PHASE
-            for (int i = 0; i < generation.size()*(1-percentageEmployed); i++) {
+            for (int i = 0; i < generation.size() * (1 - percentageEmployed); i++) {
                 var index = rouletteSelection();
                 takeBetterIndividual(index, i);
             }
@@ -100,8 +99,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm{
         this.actualGeneration = 0;
         this.generation = new ArrayList<>();
         this.bestIndividual = new ArrayList<>();
-        this.oldCount = new ArrayList<>(Collections.nCopies((int) Math.round(sizeBeeHive*percentageEmployed), 0));
-        BaseController.randomGenerator = new Random(1);
+        this.oldCount = new ArrayList<>(Collections.nCopies((int) Math.round(sizeBeeHive * percentageEmployed), 0));
     }
 
     @Override

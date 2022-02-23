@@ -2,16 +2,13 @@ package controllers.base;
 
 import controllers.components.MenuController;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -37,25 +34,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SimulationController extends MenuController {
-    @FXML
-    public Label heading;
-    @FXML
-    public Pane algoPane;
-    @FXML
-    public LineChart<Integer, Double> chart;
-    @FXML
-    public Button btnContinue;
-    @FXML
-    public Button btnPause;
-    public Slider speedChanger;
-    public Canvas canvas;
-    public NumberAxis yAxis;
-    public Button btnSave;
-    public Button btnRestart;
-    public Button btnSaveD;
-    public NumberAxis xAxis;
-    public Pane infoBox;
-    public Label infoBoxLabel;
+    @FXML public Label heading;
+    @FXML public Pane algoPane;
+    @FXML public LineChart<Integer, Double> chart;
+    @FXML public Button btnContinue;
+    @FXML public Button btnPause;
+    @FXML public Slider speedChanger;
+    @FXML public Canvas canvas;
+    @FXML public NumberAxis yAxis;
+    @FXML public Button btnSave;
+    @FXML public Button btnRestart;
+    @FXML public Button btnSaveD;
+    @FXML public NumberAxis xAxis;
+    @FXML public Pane infoBox;
+    @FXML public Label infoBoxLabel;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
@@ -70,20 +62,13 @@ public class SimulationController extends MenuController {
         simulationRestart = false;
         btnSave.setDisable(true);
         btnSaveD.setDisable(true);
-        btnRestart.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/restart.png")))));
-        btnPause.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pause.png")))));
-        btnContinue.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/play.png")))));
 
-        BaseController.makeTooltip(btnRestart, "Restart");
-        BaseController.makeTooltip(btnPause, "Pause");
-        BaseController.makeTooltip(btnContinue, "Continue");
+        prepareControlButtons();
 
-        BaseController.randomGenerator = new Random(1);
         results = new SimulationResults(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
-        btnContinue.setDisable(true);
-        canvas.setVisible(!simulationChart);
-
         heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
+
+        canvas.setVisible(!simulationChart);
 
         XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
         seriesBest.setName("Best");
@@ -97,6 +82,7 @@ public class SimulationController extends MenuController {
         chart.getData().add(seriesBest);
         chart.getData().add(seriesAverage);
 
+        BaseController.randomGenerator = new Random(1);
         BaseController.chosenAlgorithm.setProblem(BaseController.chosenProblem);
         BaseController.chosenAlgorithm.resetAlgorithm();
         BaseController.chosenAlgorithm.initFirstGeneration();
@@ -123,11 +109,10 @@ public class SimulationController extends MenuController {
                         if (!simulationRestart)
                             executorService.execute(this);
                     }
-                } catch (InterruptedException ex) {
+                } catch (InterruptedException ignored) {
                 }
             }
         }
-        simulationRestart = false;
         executorService.execute(new AddToQueue());
 
         animationTimer = new AnimationTimer() {
@@ -150,7 +135,6 @@ public class SimulationController extends MenuController {
                 BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
-//                    scaleEverything(seriesBest, seriesAverage);
                     btnSave.setDisable(false);
                     btnSaveD.setDisable(false);
                 }
@@ -191,33 +175,15 @@ public class SimulationController extends MenuController {
         });
     }
 
-    private void scaleEverything(XYChart.Series<Integer, Double> seriesBest, XYChart.Series<Integer, Double> seriesAverage) {
-        XYChart.Series<Integer, Double> newSeriesBest = new XYChart.Series<>();
-        newSeriesBest.setName("Best");
-        XYChart.Series<Integer, Double> newSeriesAverage = new XYChart.Series<>();
-        newSeriesAverage.setName("Average");
+    private void prepareControlButtons() {
+        btnRestart.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/restart.png")))));
+        btnPause.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pause.png")))));
+        btnContinue.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/play.png")))));
+        btnContinue.setDisable(true);
 
-        var highBound = yAxis.getUpperBound();
-        var lowBound = yAxis.getLowerBound();
-
-        for (XYChart.Data<Integer, Double> data : seriesBest.getData()) {
-            var newValue = (((100 - 0)*(data.getYValue() - lowBound))/(highBound-lowBound)) + 0;
-            newSeriesBest.getData().add(new XYChart.Data<>(data.getXValue(), newValue));
-        }
-
-        for (XYChart.Data<Integer, Double> data : seriesAverage.getData()) {
-            var newValue = (((100 - 0)*(data.getYValue() - lowBound))/(highBound-lowBound)) + 0;
-            newSeriesAverage.getData().add(new XYChart.Data<>(data.getXValue(), newValue));
-        }
-
-        chart.getData().clear();
-        chart.getData().add(newSeriesBest);
-        chart.getData().add(newSeriesAverage);
-
-        yAxis.setUpperBound(100);
-        yAxis.setLowerBound(0);
-        yAxis.setTickUnit(10);
-
+        BaseController.makeTooltip(btnRestart, "Restart");
+        BaseController.makeTooltip(btnPause, "Pause");
+        BaseController.makeTooltip(btnContinue, "Continue");
     }
 
     public void goBack() throws IOException {
@@ -256,7 +222,7 @@ public class SimulationController extends MenuController {
         chart.setVisible(simulationChart);
     }
 
-    public void addToVisualization(ActionEvent actionEvent) {
+    public void addToVisualization() {
         btnSaveD.setDisable(true);
         if (BaseController.savedDatasets == null)
             BaseController.savedDatasets = new ArrayList<>();

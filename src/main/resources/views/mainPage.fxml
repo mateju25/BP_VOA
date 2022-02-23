@@ -16,17 +16,16 @@
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
-         <items>
             <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close">
-               <accelerator>
-                  <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-               </accelerator></MenuItem>
-         </items></Menu>
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP"/>
+                </accelerator>
+            </MenuItem>
+        </Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
-         <items>
-            <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
-            <MenuItem mnemonicParsing="false" onAction="#about" text="About program" />
-         </items></Menu>
+            <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation"/>
+            <MenuItem mnemonicParsing="false" onAction="#about" text="About program"/>
+        </Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
       <Button layoutX="310.0" layoutY="247.0" mnemonicParsing="false" text="Button" />

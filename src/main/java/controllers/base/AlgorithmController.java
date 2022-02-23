@@ -1,6 +1,7 @@
 package controllers.base;
 
 import controllers.components.MenuController;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +14,6 @@ import model.algorithms.AntColonySystemAlgorithm;
 import model.algorithms.ArtificialBeeColonyAlgorithm;
 import model.algorithms.GeneticAlgorithm;
 import model.problems.KnapsackProblem;
-import model.problems.TargetAssignmentProblem;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
@@ -22,10 +22,12 @@ import java.util.Objects;
 import java.util.Random;
 
 public class AlgorithmController extends MenuController {
-    public Label warning;
-    public Pane infoBox;
-    public Label infoBoxLabel;
-    private Boolean controllerLoaded = false;
+    @FXML public Label warning;
+    @FXML public Pane infoBox;
+    @FXML public Label infoBoxLabel;
+    @FXML public Label heading;
+    @FXML public Pane algoPane;
+
 
     //GA
     public TextField numberIndividuals;
@@ -73,8 +75,7 @@ public class AlgorithmController extends MenuController {
     public ImageView toolParamA;
     public ImageView toolParamB;
 
-    public Label heading;
-    public Pane algoPane;
+    private Boolean controllerLoaded = false;
 
     public void initialize() throws IOException {
 
@@ -82,7 +83,6 @@ public class AlgorithmController extends MenuController {
             BaseController.showInfo(infoBox, infoBoxLabel, "Be aware that this combination of algorithm and problem sometimes does not generate good results!");
         }
 
-        BaseController.randomGenerator = new Random(1);
         if (percentageRoulette != null) {
             typeCrossover.getItems().add("Single point crossover");
             typeCrossover.getItems().add("Double point crossover");
@@ -145,40 +145,40 @@ public class AlgorithmController extends MenuController {
         }
     }
 
-    private  void actualizeTextEdits() {
+    private void actualizeTextEdits() {
         if (percentageRoulette != null) {
             if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm) {
                 if (((GeneticAlgorithm) BaseController.chosenAlgorithm).getTypeOfCrossover() != null)
                     typeCrossover.getSelectionModel().select(((GeneticAlgorithm) BaseController.chosenAlgorithm).getTypeOfCrossover());
-                percentageRoulette.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageRoulette()+"");
-                percentageTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageTournament()+"");
-                percentageElitism.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageElitism()+"");
-                percentageMutation.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageMutation()+"");
-                numberIndividuals.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getNumOfIndividuals()+"");
-                numberGenerations.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getNumOfGenerations()+"");
-                sizeTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getSizeTournament()+"");
+                percentageRoulette.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageRoulette() + "");
+                percentageTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageTournament() + "");
+                percentageElitism.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageElitism() + "");
+                percentageMutation.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageMutation() + "");
+                numberIndividuals.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getNumOfIndividuals() + "");
+                numberGenerations.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getNumOfGenerations() + "");
+                sizeTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getSizeTournament() + "");
             }
         }
         if (sizeBeeHive != null) {
             if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm) {
-                sizeBeeHive.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getSizeBeeHive()+"");
-                numberOfIterations.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations()+"");
-                employedBees.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
-                forgetCount.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getForgetCount()+"");
-                mutationLower.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationLower()+"");
-                mutationUpper.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationUpper()+"");
+                sizeBeeHive.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getSizeBeeHive() + "");
+                numberOfIterations.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations() + "");
+                employedBees.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() + "");
+                forgetCount.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getForgetCount() + "");
+                mutationLower.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationLower() + "");
+                mutationUpper.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationUpper() + "");
                 if (((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() != null)
-                    onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed()+"");
+                    onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() + "");
             }
         }
         if (numberOfAnts != null) {
             if (BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm) {
-                numberOfAnts.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getNumberOfAnts()+"");
-                numberOfIterations.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations()+"");
-                parameterB.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterBeta()+"");
-                parameterA.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterAlpha()+"");
-                pheromone.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getPheromoneVapor()+"");
-                parameterQ.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterQ()+"");
+                numberOfAnts.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getNumberOfAnts() + "");
+                numberOfIterations.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getNumberOfIterations() + "");
+                parameterB.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterBeta() + "");
+                parameterA.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterAlpha() + "");
+                pheromone.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getPheromoneVapor() + "");
+                parameterQ.setText(((AntColonySystemAlgorithm) BaseController.chosenAlgorithm).getParameterQ() + "");
             }
         }
     }
@@ -221,8 +221,10 @@ public class AlgorithmController extends MenuController {
             if (parameterQ != null) map.put(parameterQ.getId(), parameterQ.getText());
             if (mutationLower != null) map.put(mutationLower.getId(), mutationLower.getText());
             if (mutationUpper != null) map.put(mutationUpper.getId(), mutationUpper.getText());
-            if (typeCrossover != null) map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex()+"");
+            if (typeCrossover != null)
+                map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex() + "");
 
+            BaseController.randomGenerator = new Random(1);
             BaseController.chosenAlgorithm.init(map);
 
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));

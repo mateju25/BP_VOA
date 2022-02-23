@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Getter @Setter
+@Getter
+@Setter
 public class SimulationResults {
     private final List<Double> averageFitness;
     private final List<Double> bestFitness;
