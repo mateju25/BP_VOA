@@ -27,7 +27,8 @@ public interface Problem {
     void visualize(Canvas canvas, AlgorithmResults data);
     default List<Integer> presetProblems() {
         return IntStream.rangeClosed(0, 2).boxed().collect(Collectors.toList());
-    };
+    }
+
     void setPreset(Integer number);
 
     //ABC algorithm

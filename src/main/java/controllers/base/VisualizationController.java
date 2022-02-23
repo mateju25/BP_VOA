@@ -6,7 +6,6 @@ import controllers.components.MenuController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,9 +43,7 @@ public class VisualizationController extends MenuController {
     public Pane algoPane;
     public CrossHairLineChart<Integer, Double> chart;
     public NumberAxis xAxis = new NumberAxis();
-    ;
     public NumberAxis yAxis = new NumberAxis();
-    ;
     @FXML
     public Button btnAdd;
     @FXML
@@ -103,7 +100,7 @@ public class VisualizationController extends MenuController {
     }
 
     private void addTooltipForNodesInChart() {
-        for (XYChart.Series<Integer, Double> s : (ObservableList<XYChart.Series<Integer, Double>>) chart.getData()) {
+        for (XYChart.Series<Integer, Double> s : chart.getData()) {
             for (XYChart.Data<Integer, Double> d : s.getData()) {
                 var tooltip = new Tooltip(
                         "Generation: " + d.getXValue().toString() + "\n" +

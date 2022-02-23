@@ -218,7 +218,7 @@ public class TargetAssignmentProblem implements Problem {
             for (int i = 0; i < best.size(); i += 2) {
                 gc.setStroke(colorsOfItems.get(best.get(i)));
                 gc.setLineWidth(matrixOfProbabilities.get(best.get(i)).get(best.get(i + 1)) * 6 + 1);
-                gc.strokeLine(offsetW * (best.get(i) + 1) + (int) (SIZE / 2), 360, offsetT * (best.get(i + 1) + 1) + (int) (SIZE / 2), 100 + (int) (SIZE / 2));
+                gc.strokeLine(offsetW * (best.get(i) + 1) + (SIZE / 2), 360, offsetT * (best.get(i + 1) + 1) + (SIZE / 2), 100 + (SIZE / 2));
             }
 
             gc.setLineWidth(2);
@@ -232,7 +232,7 @@ public class TargetAssignmentProblem implements Problem {
                 var scale = 5 - targetValues.get(i - 1).intValue();
                 gc.setFill(Color.rgb((50 * scale), (50 * scale), (50 * scale)));
                 gc.fillOval(offsetT * i, 100, SIZE, SIZE);
-                gc.fillText(targetValues.get(i - 1).intValue() + "", offsetT * i + (int) (SIZE / 3), 100 - (int) (SIZE / 3));
+                gc.fillText(targetValues.get(i - 1).intValue() + "", offsetT * i + (SIZE / 3), 100 - (SIZE / 3));
             }
 
             gc.setLineWidth(1);

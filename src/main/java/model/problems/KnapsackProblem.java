@@ -261,7 +261,7 @@ public class KnapsackProblem implements Problem {
             var best = data.getBestIndividual();
 
             gc.setLineWidth(1);
-            gc.strokeText("Capacity: " + (int) (sumOfItems(best) / (weightOfBackpack * 1.0) * 100) + "%" + " Value: " + (int) ((sumOfValues(best) * 1.0) / itemValue.stream().mapToInt(e -> e).sum() * 100) + "%", (int) (80 + WIDTH_OF_CONTAINER / 2), HEIGHT_OF_CONTAINER + 40);
+            gc.strokeText("Capacity: " + (int) (sumOfItems(best) / (weightOfBackpack * 1.0) * 100) + "%" + " Value: " + (int) ((sumOfValues(best) * 1.0) / itemValue.stream().mapToInt(e -> e).sum() * 100) + "%", 80 + WIDTH_OF_CONTAINER / 2, HEIGHT_OF_CONTAINER + 40);
 
             var level = 0;
             for (int i = 0; i < best.size(); i++) {

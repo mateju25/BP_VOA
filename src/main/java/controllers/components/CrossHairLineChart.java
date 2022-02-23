@@ -4,7 +4,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.ToggleButton;
@@ -51,7 +50,7 @@ public class CrossHairLineChart<X, Y> extends LineChart<Integer, Double> {
     protected void layoutPlotChildren() {
         super.layoutPlotChildren();
         if (plotArea == null && !getPlotChildren().isEmpty()) {
-            Group plotContent = (Group) ((Node) getPlotChildren().get(0)).getParent();
+            Group plotContent = (Group) getPlotChildren().get(0).getParent();
             plotArea = (Group) plotContent.getParent();
         }
         if (!getPlotChildren().contains(vLine)) {
