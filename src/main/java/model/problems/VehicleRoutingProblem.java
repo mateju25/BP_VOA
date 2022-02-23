@@ -236,6 +236,23 @@ public class VehicleRoutingProblem implements Problem {
     }
 
     @Override
+    public Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2) {
+        var newParent1 = parent1.stream().filter(e -> e != 0).collect(Collectors.toList());
+        var newParent2 = parent2.stream().filter(e -> e != 0).collect(Collectors.toList());
+        var child1 = new ArrayList<Integer>();
+        var index = BaseController.randomGenerator.nextInt(newParent1.size() - 2) + 1;
+        var indexSecond = BaseController.randomGenerator.nextInt(newParent1.size() - index) + index;
+        for (int i = 0; i < newParent1.size(); i++) {
+            if (i < index || i > indexSecond) {
+                child1.add(newParent1.get(i));
+                newParent2.remove(newParent1.get(i));
+            }
+        }
+        child1.addAll(newParent2);
+        return new Pair<>(checkAnAddBaseTownToIndividual(child1), null);
+    }
+
+    @Override
     public String nameForFaces() {
         return "Vehicle Routing Problem";
     }

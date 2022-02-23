@@ -207,6 +207,33 @@ public class KnapsackProblem implements Problem {
     }
 
     @Override
+    public Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2) {
+        var child1 = new ArrayList<Integer>();
+        var child2 = new ArrayList<Integer>();
+        do {
+            var index = BaseController.randomGenerator.nextInt(itemWeight.size());
+            var indexSecond = BaseController.randomGenerator.nextInt(itemWeight.size() - index) + index;
+            child1 = new ArrayList<>();
+            child2 = new ArrayList<>();
+            for (int i = 0; i < itemWeight.size(); i++) {
+                if (i < index) {
+                    child1.add(parent1.get(i));
+                    child2.add(parent2.get(i));
+                } else {
+                    if (i < indexSecond) {
+                        child2.add(parent1.get(i));
+                        child1.add(parent2.get(i));
+                    } else {
+                        child1.add(parent1.get(i));
+                        child2.add(parent2.get(i));
+                    }
+                }
+            }
+        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack || sumOfItems(child1) == 0 || sumOfItems(child2) == 0));
+        return new Pair<>(child1, child2);
+    }
+
+    @Override
     public String nameForFaces() {
         return "Knapsack Problem";
     }

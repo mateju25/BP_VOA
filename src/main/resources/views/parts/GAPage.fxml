@@ -41,7 +41,7 @@
         <TextField fx:id="percentageElitism" layoutX="567.0" layoutY="67.0" prefHeight="28.0" prefWidth="189.0"
                    text="0.3"/>
         <Label layoutX="412.0" layoutY="139.0" styleClass="label-small-text" text="Type of crossover:"/>
-        <ChoiceBox fx:id="typeCrossover" disable="true" layoutX="567.0" layoutY="132.0" prefHeight="30.0"
+        <ChoiceBox fx:id="typeCrossover" layoutX="567.0" layoutY="132.0" prefHeight="30.0"
                    prefWidth="189.0"/>
         <Label layoutX="412.0" layoutY="208.0" styleClass="label-small-text" text="Percentage mutation:"/>
         <TextField fx:id="percentageMutation" layoutX="567.0" layoutY="203.0" prefHeight="28.0" prefWidth="189.0"

@@ -19,6 +19,7 @@ public interface Problem {
     //GA
     List<Integer> mutate(List<Integer> individual);
     Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2);
+    Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2);
 
     //for frontend
     String nameForFaces();

@@ -1,24 +1,31 @@
 package controllers.base;
 
+import controllers.components.CrossHairLineChart;
 import controllers.components.DatasetPartController;
 import controllers.components.MenuController;
+import javafx.beans.value.ObservableListValue;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import model.utils.SimulationResults;
 
 import javax.imageio.ImageIO;
@@ -30,15 +37,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class VisualizationController extends MenuController {
 
 
     public Label heading;
     public Pane algoPane;
-    public LineChart<Integer, Double> chart;
-    public NumberAxis xAxis;
-    public NumberAxis yAxis;
+    public CrossHairLineChart<Integer, Double> chart;
+    public NumberAxis xAxis = new NumberAxis();;
+    public NumberAxis yAxis = new NumberAxis();;
     public Button btnAdd;
     public ListView<SimulationResults> listView;
     public Button btnExportPic;
@@ -46,9 +54,29 @@ public class VisualizationController extends MenuController {
     public Label infoBoxLabel;
     public Double upperBound = 0.0;
     public Double lowerBound = 1000000.0;
+    public AnchorPane anchorPane;
 
     public void initialize() {
         BaseController.visualizationController = this;
+
+        ToggleButton toggleButton = new ToggleButton();
+        toggleButton.setLayoutX(359.0);
+        toggleButton.setLayoutY(37.0);
+        toggleButton.setPrefHeight(32);
+        toggleButton.setPrefWidth(32);
+        toggleButton.getStyleClass().add("button-black");
+        toggleButton.setFocusTraversable(false);
+        toggleButton.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ruler.png")))));
+        anchorPane.getChildren().add(toggleButton);
+        listView.getItems().clear();
+
+        chart = new CrossHairLineChart<Integer, Double>((Axis) xAxis,(Axis) yAxis, toggleButton);
+        chart.setLayoutY(11);
+        chart.setPrefHeight(527.0);
+        chart.setPrefWidth(1031.0);
+        chart.setAnimated(false);
+        algoPane.getChildren().add(chart);
+
 
         upperBound = 0.0;
         lowerBound = 1000000.0;
@@ -57,11 +85,16 @@ public class VisualizationController extends MenuController {
         yAxis.setUpperBound(100);
         yAxis.setLowerBound(0);
         yAxis.setTickUnit(10);
-        chart.setAnimated(false);
+        yAxis.setMinorTickCount(8);
+        yAxis.setSide(Side.LEFT);
+        yAxis.setLabel("Fitness");
+
+        xAxis.setSide(Side.BOTTOM);
+        xAxis.setLabel("Generations");
 
         if (BaseController.savedDatasets != null) {
             setUpBounds(BaseController.savedDatasets);
-            for (SimulationResults simulationResults: BaseController.savedDatasets) {
+            for (SimulationResults simulationResults : BaseController.savedDatasets) {
                 listView.getItems().add(simulationResults);
 
                 simulationResults.setNumberOfDataset(listView.getItems().size());
@@ -72,7 +105,24 @@ public class VisualizationController extends MenuController {
                 simulationResults.setShowAverage(true);
                 simulationResults.setDeleted(false);
             }
-            BaseController.savedDatasets = null;
+        }
+
+        for (XYChart.Series<Integer, Double> s : (ObservableList<XYChart.Series<Integer, Double>>) chart.getData()) {
+            for (XYChart.Data<Integer, Double> d : s.getData()) {
+                var tooltip = new Tooltip(
+                        "Generation: " + d.getXValue().toString() + "\n" +
+                                "Fitness : " + d.getYValue());
+                tooltip.setShowDelay(Duration.millis(10));
+                Tooltip.install(d.getNode(), tooltip);
+
+                //Adding class on hover
+                d.getNode().setOnMouseEntered(event ->
+                        d.getNode().getStyleClass().add("onHover"));
+
+                //Removing class on exit
+                d.getNode().setOnMouseExited(event ->
+                        d.getNode().getStyleClass().remove("onHover"));
+            }
         }
 
 
@@ -91,7 +141,7 @@ public class VisualizationController extends MenuController {
         BaseController.mainStage.show();
     }
 
-    public void addDataset(){
+    public void addDataset() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
@@ -111,6 +161,9 @@ public class VisualizationController extends MenuController {
                 return;
             }
             listView.getItems().add(results);
+            if (BaseController.savedDatasets == null)
+                BaseController.savedDatasets = new ArrayList<>();
+            BaseController.savedDatasets.add(results);
             setUpBounds(Collections.singletonList(results));
             results.setNumberOfDataset(listView.getItems().size());
 
@@ -118,10 +171,27 @@ public class VisualizationController extends MenuController {
 
             yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
         }
+        for (XYChart.Series<Integer, Double> s : (ObservableList<XYChart.Series<Integer, Double>>) chart.getData()) {
+            for (XYChart.Data<Integer, Double> d : s.getData()) {
+                var tooltip = new Tooltip(
+                        "Generation: " + d.getXValue().toString() + "\n" +
+                                "Fitness : " + d.getYValue());
+                tooltip.setShowDelay(Duration.millis(10));
+                Tooltip.install(d.getNode(), tooltip);
+
+                //Adding class on hover
+                d.getNode().setOnMouseEntered(event ->
+                        d.getNode().getStyleClass().add("onHover"));
+
+                //Removing class on exit
+                d.getNode().setOnMouseExited(event ->
+                        d.getNode().getStyleClass().remove("onHover"));
+            }
+        }
     }
 
     private void setUpBounds(List<SimulationResults> results) {
-        for (SimulationResults simulationResults: results) {
+        for (SimulationResults simulationResults : results) {
             if (simulationResults.getLowerBound() < lowerBound)
                 lowerBound = simulationResults.getLowerBound();
             if (simulationResults.getUpperBound() > upperBound)
@@ -136,14 +206,16 @@ public class VisualizationController extends MenuController {
         seriesAverage.setName("Average " + simulationResults.getNumberOfDataset());
 
         for (int i = 0; i < simulationResults.getBestFitness().size(); i++) {
-            var newValue = (((100 - 0)*(simulationResults.getBestFitness().get(i) - lowerBound))/(upperBound-lowerBound)) + 0;
-            seriesBest.getData().add(new XYChart.Data<>(i, newValue));
+            var newValue = (((100 - 0) * (simulationResults.getBestFitness().get(i) - lowerBound)) / (upperBound - lowerBound)) + 0;
+            var data = new XYChart.Data<>(i, newValue);
+            seriesBest.getData().add(data);
         }
 
         for (int i = 0; i < simulationResults.getAverageFitness().size(); i++) {
-            var newValue = (((100 - 0)*(simulationResults.getAverageFitness().get(i) - lowerBound))/(upperBound-lowerBound)) + 0;
+            var newValue = (((100 - 0) * (simulationResults.getAverageFitness().get(i) - lowerBound)) / (upperBound - lowerBound)) + 0;
             seriesAverage.getData().add(new XYChart.Data<>(i, newValue));
         }
+
         if (useBest)
             chart.getData().add(seriesBest);
         if (useAverage)
@@ -166,6 +238,7 @@ public class VisualizationController extends MenuController {
             }
             list.add(simRes);
         }
+        BaseController.savedDatasets = list;
         listView.getItems().setAll(list);
     }
 

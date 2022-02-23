@@ -84,6 +84,8 @@ public class AlgorithmController extends MenuController {
 
         BaseController.randomGenerator = new Random(1);
         if (percentageRoulette != null) {
+            typeCrossover.getItems().add("Single point crossover");
+            typeCrossover.getItems().add("Double point crossover");
             percentageRoulette.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             percentageTournament.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             percentageElitism.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
@@ -146,6 +148,8 @@ public class AlgorithmController extends MenuController {
     private  void actualizeTextEdits() {
         if (percentageRoulette != null) {
             if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm) {
+                if (((GeneticAlgorithm) BaseController.chosenAlgorithm).getTypeOfCrossover() != null)
+                    typeCrossover.getSelectionModel().select(((GeneticAlgorithm) BaseController.chosenAlgorithm).getTypeOfCrossover());
                 percentageRoulette.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageRoulette()+"");
                 percentageTournament.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageTournament()+"");
                 percentageElitism.setText(((GeneticAlgorithm) BaseController.chosenAlgorithm).getPercentageElitism()+"");
@@ -193,6 +197,10 @@ public class AlgorithmController extends MenuController {
                 warning.setText("Mutation strength lower should not be higher or the same than upper bound!");
                 return;
             }
+            if (typeCrossover != null && typeCrossover.getSelectionModel().getSelectedItem() == null) {
+                warning.setText("You need to choose type of crossover!");
+                return;
+            }
 
             var map = new HashMap<String, String>();
             if (numberIndividuals != null) map.put(numberIndividuals.getId(), numberIndividuals.getText());
@@ -213,6 +221,7 @@ public class AlgorithmController extends MenuController {
             if (parameterQ != null) map.put(parameterQ.getId(), parameterQ.getText());
             if (mutationLower != null) map.put(mutationLower.getId(), mutationLower.getText());
             if (mutationUpper != null) map.put(mutationUpper.getId(), mutationUpper.getText());
+            if (typeCrossover != null) map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex()+"");
 
             BaseController.chosenAlgorithm.init(map);
 

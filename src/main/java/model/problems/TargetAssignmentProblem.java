@@ -169,6 +169,28 @@ public class TargetAssignmentProblem implements Problem {
     }
 
     @Override
+    public Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2) {
+        var child1 = new ArrayList<Integer>();
+        var index = BaseController.randomGenerator.nextInt(numOfWeapons - 2) + 1;
+        var indexSecond = BaseController.randomGenerator.nextInt(numOfWeapons - index) + index;
+        for (int i = 0; i < parent1.size() - 1; i += 2) {
+            if (parent1.get(i) < index || parent1.get(i) > indexSecond) {
+                child1.add(parent1.get(i));
+                child1.add(parent1.get(i + 1));
+            } else {
+                for (int j = 0; j < parent2.size(); j += 2) {
+                    if (parent2.get(j) >= index) {
+                        child1.add(parent2.get(j));
+                        child1.add(parent2.get(j + 1));
+                    }
+                }
+                break;
+            }
+        }
+        return new Pair<>(child1, null);
+    }
+
+    @Override
     public String nameForFaces() {
         return "Target Assignment Problem";
     }

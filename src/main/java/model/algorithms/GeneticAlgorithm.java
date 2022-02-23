@@ -1,6 +1,7 @@
 package model.algorithms;
 
 import controllers.base.BaseController;
+import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import model.problems.Problem;
@@ -22,6 +23,7 @@ public class GeneticAlgorithm implements Algorithm {
     private Integer sizeTournament;
     private Double percentageElitism;
     private Double percentageMutation;
+    private Integer typeOfCrossover;
 
 
     @Override
@@ -33,6 +35,7 @@ public class GeneticAlgorithm implements Algorithm {
         this.sizeTournament = Integer.parseInt(parameters.get("sizeTournament"));
         this.percentageElitism = Double.parseDouble(parameters.get("percentageElitism"));
         this.percentageMutation = Double.parseDouble(parameters.get("percentageMutation"));
+        this.typeOfCrossover = Integer.parseInt(parameters.get("typeCrossover"));
         resetAlgorithm();
     }
 
@@ -53,7 +56,12 @@ public class GeneticAlgorithm implements Algorithm {
 
     private List<List<Integer>> makeChildrenWithCrossover(List<List<Integer>> parents) {
         var children = new ArrayList<List<Integer>>(2);
-        var resCrossover = problem.simpleCrossover(parents.get(0), parents.get(1));
+        Pair<List<Integer>, List<Integer>> resCrossover;
+        if (typeOfCrossover == 0)
+            resCrossover = problem.simpleCrossover(parents.get(0), parents.get(1));
+        else
+            resCrossover = problem.doubleCrossover(parents.get(0), parents.get(1));
+
         children.add(resCrossover.getKey());
         children.add(resCrossover.getValue());
         return children;

@@ -51,7 +51,7 @@
     -fx-border-radius: 2px;
 }
 
-.button-black:hover, .button-black:focused {
+.button-black:hover, .button-black:focused, .button-black:selected {
     -fx-background-color: -fx-black;
     -fx-cursor: hand;
 }
@@ -95,6 +95,9 @@
     -fx-background-color: -fx-white;
 }
 
+.onHover{
+    -fx-background-color: -fx-black;
+}
 
 /*.default-color0.chart-line-symbol { -fx-background-color: #d08b6e; }*/
 /*.default-color1.chart-line-symbol { -fx-background-color: #d9d081; }*/
