@@ -1,9 +1,15 @@
 package controllers.components;
 
+import controllers.base.BaseController;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -16,6 +22,27 @@ import java.net.URL;
 import java.util.Objects;
 
 public class MenuController {
+    @FXML public Slider speedChangerMenu;
+    @FXML public TextField randomSeed;
+
+    public void initMenu() {
+        if (speedChangerMenu != null) {
+            speedChangerMenu.valueProperty().addListener(new ChangeListener<>() {
+                @Override
+                public void changed(
+                        ObservableValue<? extends Number> observableValue,
+                        Number oldValue,
+                        Number newValue) {
+
+                    BaseController.simulationSpeed = newValue.intValue();
+                }
+
+            });
+            randomSeed.textProperty().addListener((observable, oldValue, newValue) -> {
+                BaseController.randomSeed = Integer.valueOf(newValue);
+            });
+        }
+    }
 
     public void closeApp() {
         Platform.exit();

@@ -78,6 +78,8 @@ public class AlgorithmController extends MenuController {
     private Boolean controllerLoaded = false;
 
     public void initialize() throws IOException {
+        speedChangerMenu.adjustValue(BaseController.simulationSpeed);
+        initMenu();
 
         if (BaseController.chosenProblem instanceof KnapsackProblem && BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm) {
             BaseController.showInfo(infoBox, infoBoxLabel, "Be aware that this combination of algorithm and problem sometimes does not generate good results!");
@@ -224,7 +226,7 @@ public class AlgorithmController extends MenuController {
             if (typeCrossover != null)
                 map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex() + "");
 
-            BaseController.randomGenerator = new Random(1);
+            BaseController.randomGenerator = new Random(BaseController.randomSeed);
             BaseController.chosenAlgorithm.init(map);
 
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));

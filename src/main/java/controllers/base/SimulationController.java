@@ -54,11 +54,15 @@ public class SimulationController extends MenuController {
     private Boolean simulationRunning = true;
     private Boolean simulationRestart = false;
     private Boolean simulationChart = true;
-    private Integer simulationSpeed = 200;
+    private Integer simulationSpeed = BaseController.simulationSpeed;
     private SimulationResults results;
 
 
     public void initialize() {
+        speedChangerMenu.adjustValue(BaseController.simulationSpeed);
+        speedChanger.adjustValue(BaseController.simulationSpeed);
+        initMenu();
+
         simulationRestart = false;
         btnSave.setDisable(true);
         btnSaveD.setDisable(true);
@@ -82,7 +86,7 @@ public class SimulationController extends MenuController {
         chart.getData().add(seriesBest);
         chart.getData().add(seriesAverage);
 
-        BaseController.randomGenerator = new Random(1);
+        BaseController.randomGenerator = new Random(BaseController.randomSeed);
         BaseController.chosenAlgorithm.setProblem(BaseController.chosenProblem);
         BaseController.chosenAlgorithm.resetAlgorithm();
         BaseController.chosenAlgorithm.initFirstGeneration();

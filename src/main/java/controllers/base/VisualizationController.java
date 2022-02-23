@@ -61,6 +61,9 @@ public class VisualizationController extends MenuController {
     public Double lowerBound;
 
     public void initialize() {
+        speedChangerMenu.adjustValue(BaseController.simulationSpeed);
+        initMenu();
+
         BaseController.visualizationController = this;
         listView.getItems().clear();
 

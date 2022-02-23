@@ -62,7 +62,11 @@ public class MainPageController extends MenuController {
         if (controllerLoaded)
             return;
         controllerLoaded = true;
+        speedChangerMenu.adjustValue(BaseController.simulationSpeed);
 
+        BaseController.simulationSpeed = 200;
+        BaseController.randomGenerator = new Random(BaseController.randomSeed);
+        initMenu();
         makeAnimation();
 
         BaseController.init();
@@ -236,7 +240,7 @@ public class MainPageController extends MenuController {
             if (numberOfWeapons != null) map.put(numberOfWeapons.getId(), numberOfWeapons.getText());
             if (maxAssignedTargets != null) map.put(maxAssignedTargets.getId(), maxAssignedTargets.getText());
 
-            BaseController.randomGenerator = new Random(1);
+            BaseController.randomGenerator = new Random(BaseController.randomSeed);
             BaseController.chosenProblem.init(map);
 
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));

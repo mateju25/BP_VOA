@@ -14,10 +14,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.control.TextField?>
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.SimulationController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
-            <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close"/>
+            <MenuItem mnemonicParsing="false" text="Random seed">
+                <graphic>
+                    <TextField fx:id="randomSeed" prefHeight="10.0" prefWidth="135.0" text="1" />
+                </graphic>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Default sim. speed">
+                <graphic>
+                    <Slider fx:id="speedChangerMenu" blockIncrement="100.0" max="1000.0" value="200.0" />
+                </graphic>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
         </Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
             <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation"/>
