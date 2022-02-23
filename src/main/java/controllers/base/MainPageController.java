@@ -39,6 +39,8 @@ public class MainPageController extends MenuController {
     public Label warning;
     public ImageView animationPic;
     public ChoiceBox<String> presetProblems;
+    public Label infoBoxLabel;
+    public Pane infoBox;
     private Boolean controllerLoaded = false;
 
     @FXML
@@ -248,6 +250,8 @@ public class MainPageController extends MenuController {
                 warning.setText("Average demand should not be higher than vehicle capacity!");
                 return;
             }
+
+
             var map = new HashMap<String, String>();
             if (numberOfItems != null) map.put(numberOfItems.getId(), numberOfItems.getText());
             if (averageWeight != null) map.put(averageWeight.getId(), averageWeight.getText());

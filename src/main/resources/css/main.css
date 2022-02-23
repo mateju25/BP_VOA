@@ -84,6 +84,8 @@
     -fx-background-radius: 3px;
     -fx-padding: 3px;
     -fx-background-color: -fx-light-blue;
+    -fx-border-color: -fx-black;
+    -fx-border-width: 2;
 }
 
 .text-area *.text {

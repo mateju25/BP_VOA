@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import model.algorithms.AntColonySystemAlgorithm;
 import model.algorithms.ArtificialBeeColonyAlgorithm;
 import model.algorithms.GeneticAlgorithm;
+import model.problems.KnapsackProblem;
 import model.problems.TargetAssignmentProblem;
 import model.utils.TextFormattersFactory;
 
@@ -22,6 +23,8 @@ import java.util.Random;
 
 public class AlgorithmController extends MenuController {
     public Label warning;
+    public Pane infoBox;
+    public Label infoBoxLabel;
     private Boolean controllerLoaded = false;
 
     //GA
@@ -74,6 +77,11 @@ public class AlgorithmController extends MenuController {
     public Pane algoPane;
 
     public void initialize() throws IOException {
+
+        if (BaseController.chosenProblem instanceof KnapsackProblem && BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm) {
+            BaseController.showInfo(infoBox, infoBoxLabel, "Be aware that this combination of algorithm and problem sometimes does not generate good results!");
+        }
+
         BaseController.randomGenerator = new Random(1);
         if (percentageRoulette != null) {
             percentageRoulette.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());

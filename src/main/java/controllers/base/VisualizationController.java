@@ -50,6 +50,8 @@ public class VisualizationController extends MenuController {
     public void initialize() {
         BaseController.visualizationController = this;
 
+        upperBound = 0.0;
+        lowerBound = 1000000.0;
 
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(100);

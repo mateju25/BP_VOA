@@ -150,7 +150,7 @@ public class SimulationController extends MenuController {
                 BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
-                    scaleEverything(seriesBest, seriesAverage);
+//                    scaleEverything(seriesBest, seriesAverage);
                     btnSave.setDisable(false);
                     btnSaveD.setDisable(false);
                 }
@@ -261,8 +261,8 @@ public class SimulationController extends MenuController {
         if (BaseController.savedDatasets == null)
             BaseController.savedDatasets = new ArrayList<>();
 
-        results.setUpperBound(yAxis.getUpperBound());
-        results.setLowerBound(yAxis.getLowerBound());
+        results.setUpperBound(yAxis.getUpperBound() - 0.5);
+        results.setLowerBound(yAxis.getLowerBound() + 0.5);
         BaseController.savedDatasets.add(results);
         BaseController.showInfo(infoBox, infoBoxLabel, "Simulation results added to visualization page!");
     }

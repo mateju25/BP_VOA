@@ -28,5 +28,10 @@
         <Pane fx:id="algoPane" layoutX="127.0" layoutY="103.0" onMouseEntered="#removeWarning" prefHeight="495.0" prefWidth="886.0" />
         <Button layoutX="1005.0" layoutY="60.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="102.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
         <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="600.0" layoutY="617.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
+        <Pane fx:id="infoBox" layoutX="878.0" layoutY="139.0" opacity="0.0" prefHeight="111.0" prefWidth="219.0" styleClass="info-pane">
+            <children>
+                <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="97.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
+            </children>
+        </Pane>
     </AnchorPane>
 </VBox>

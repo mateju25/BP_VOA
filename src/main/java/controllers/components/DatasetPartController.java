@@ -59,22 +59,22 @@ public class DatasetPartController extends ListCell<SimulationResults> {
                 emp.setShowBest(controller.checkBest.isSelected());
                 BaseController.visualizationController.somethingChanged();
             });
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Save");
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.csv"));
-            controller.btnSave.setOnAction(event -> {
-                var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
-                fileChooser.setInitialFileName(BaseController.chosenAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
-                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
-                try {
-                    var file = fileChooser.showSaveDialog(BaseController.mainStage);
-                    if (file != null) {
-                        emp.writeToCsv(file, emp.getUpperBound(), emp.getLowerBound());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.setTitle("Save");
+//            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.csv"));
+//            controller.btnSave.setOnAction(event -> {
+//                var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
+//                fileChooser.setInitialFileName(BaseController.chosenAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
+//                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString() + "_" + LocalDateTime.now().format(formatter));
+//                try {
+//                    var file = fileChooser.showSaveDialog(BaseController.mainStage);
+//                    if (file != null) {
+//                        emp.writeToCsv(file, emp.getUpperBound(), emp.getLowerBound());
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
             setText(null);
             setGraphic(controller.pane);
         }
