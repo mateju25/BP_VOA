@@ -209,7 +209,7 @@ public class TargetAssignmentProblem implements Problem {
     public void visualize(Canvas canvas, AlgorithmResults data) {
         if (data != null) {
             var gc = canvas.getGraphicsContext2D();
-            gc.setFill(Color.web("#F7EDE2"));
+            gc.setFill(Color.web("#faf4ee"));
             gc.fillRect(-5, -5, canvas.getWidth() + 5, canvas.getHeight() + 5);
 
 

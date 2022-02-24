@@ -5,13 +5,13 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextField?>
 <VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.AlgorithmController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
@@ -32,21 +32,19 @@
             </MenuItem>
         </Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
-            <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation"/>
-            <MenuItem mnemonicParsing="false" onAction="#about" text="About program"/>
+            <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
+            <MenuItem mnemonicParsing="false" onAction="#about" text="About program" />
         </Menu>
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
-        <Label fx:id="heading" alignment="CENTER" layoutX="379.0" layoutY="55.0" prefHeight="22.0" prefWidth="382.0" styleClass="label-underline" text="Algorithm parameters" />
+        <Label fx:id="heading" alignment="CENTER" layoutX="379.0" layoutY="42.0" prefHeight="22.0" prefWidth="382.0" styleClass="label-underline" text="Algorithm parameters" />
       <Button layoutX="535.0" layoutY="14.0" mnemonicParsing="false" opacity="0.0" text="Button" />
         <Button layoutX="895.0" layoutY="612.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Proceed" />
-        <Pane fx:id="algoPane" layoutX="127.0" layoutY="103.0" onMouseEntered="#removeWarning" prefHeight="495.0" prefWidth="886.0" />
-        <Button layoutX="1005.0" layoutY="60.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="102.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+        <Pane fx:id="algoPane" layoutX="127.0" layoutY="89.0" onMouseEntered="#removeWarning" prefHeight="495.0" prefWidth="886.0" />
+        <Button layoutX="1045.0" layoutY="42.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="65.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
         <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="600.0" layoutY="617.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
-        <Pane fx:id="infoBox" layoutX="878.0" layoutY="139.0" opacity="0.0" prefHeight="111.0" prefWidth="219.0"
-              styleClass="info-pane">
-            <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="97.0"
-                   prefWidth="200.0" textAlignment="CENTER" wrapText="true"/>
+        <Pane fx:id="infoBox" layoutX="878.0" layoutY="139.0" opacity="0.0" prefHeight="111.0" prefWidth="219.0" styleClass="info-pane">
+            <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="97.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
         </Pane>
     </AnchorPane>
 </VBox>

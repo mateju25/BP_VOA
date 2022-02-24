@@ -1,5 +1,7 @@
 package controllers.base;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers.components.CrossHairLineChart;
 import controllers.components.DatasetPartController;
 import controllers.components.MenuController;
@@ -60,7 +62,7 @@ public class VisualizationController extends MenuController {
     public Double upperBound;
     public Double lowerBound;
 
-    public void initialize() {
+    public void initialize() throws JsonProcessingException {
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
         initMenu();
 
@@ -87,6 +89,9 @@ public class VisualizationController extends MenuController {
                 simulationResults.setShowBest(true);
                 simulationResults.setShowAverage(true);
                 simulationResults.setDeleted(false);
+                ObjectMapper mapper = new ObjectMapper();
+                simulationResults.setUsedAlgorithmInJson(mapper.writeValueAsString(BaseController.chosenAlgorithm));
+                simulationResults.setUsedProblemInJson(mapper.writeValueAsString(BaseController.chosenProblem));
             }
         }
 
