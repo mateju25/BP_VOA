@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.utils.TextFormattersFactory;
 
 import java.awt.*;
 import java.io.File;
@@ -38,8 +39,10 @@ public class MenuController {
                 }
 
             });
+            randomSeed.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             randomSeed.textProperty().addListener((observable, oldValue, newValue) -> {
-                BaseController.randomSeed = Integer.valueOf(newValue);
+                if (!newValue.equals(""))
+                    BaseController.randomSeed = Integer.valueOf(newValue);
             });
         }
     }

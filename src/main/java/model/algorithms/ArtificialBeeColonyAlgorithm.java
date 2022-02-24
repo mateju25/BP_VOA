@@ -1,5 +1,6 @@
 package model.algorithms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import model.problems.Problem;
@@ -11,10 +12,15 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 public class ArtificialBeeColonyAlgorithm implements Algorithm {
+    @JsonIgnore
     private List<List<Integer>> generation = new ArrayList<>();
+    @JsonIgnore
     private List<Integer> oldCount = new ArrayList<>();
+    @JsonIgnore
     private List<Integer> bestIndividual = new ArrayList<>();
+    @JsonIgnore
     private Problem problem;
+    @JsonIgnore
     private Integer actualGeneration = 0;
     private Integer sizeBeeHive;
     private Integer numberOfIterations;

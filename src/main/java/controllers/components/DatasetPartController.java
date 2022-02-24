@@ -2,11 +2,9 @@ package controllers.components;
 
 import controllers.base.BaseController;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 import model.utils.SimulationResults;
 
 import java.io.IOException;
@@ -18,6 +16,7 @@ public class DatasetPartController extends ListCell<SimulationResults> {
     public CheckBox checkBest;
     public CheckBox checkAverage;
     public Button btnDelete;
+    public Tooltip tooltip;
     private FXMLLoader mLLoader;
 
     @Override
@@ -43,6 +42,11 @@ public class DatasetPartController extends ListCell<SimulationResults> {
             DatasetPartController controller = mLLoader.getController();
             controller.lblNumber.setText(emp.getNumberOfDataset() + "");
             controller.lblName.setText(emp.getNameOfDataset());
+            controller.tooltip.setText("Algorithm parameters: " + emp.getUsedAlgorithmInJson() + "\n\n" +
+                    "Problem parameters: " + emp.getUsedProblemInJson());
+            controller.tooltip.setShowDelay(Duration.millis(10));
+            controller.tooltip.setShowDuration(Duration.minutes(1));
+
             controller.btnDelete.setOnAction(event -> {
                 emp.setDeleted(true);
                 BaseController.visualizationController.somethingChanged();

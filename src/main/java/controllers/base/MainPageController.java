@@ -92,7 +92,8 @@ public class MainPageController extends MenuController {
             algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosenAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
             if (BaseController.chosenAlgorithm != null) {
                 algChoiceBox.getSelectionModel().select(BaseController.algorithms.indexOf(BaseController.chosenAlgorithm));
-            }
+            } else
+                algChoiceBox.getSelectionModel().select(0);
         }
         if (probChoiceBox != null) {
             probChoiceBox.getItems().setAll(BaseController.problems);
@@ -133,7 +134,8 @@ public class MainPageController extends MenuController {
                 for (Integer number : BaseController.chosenProblem.presetProblems()) {
                     presetProblems.getItems().add("Preset " + BaseController.chosenProblem.nameForFaces() + " " + number);
                 }
-            }
+            } else
+                probChoiceBox.getSelectionModel().select(0);
         }
 
         presetProblems.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {

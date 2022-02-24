@@ -1,5 +1,6 @@
 package model.algorithms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.base.BaseController;
 import javafx.util.Pair;
 import lombok.Getter;
@@ -16,9 +17,13 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 public class GeneticAlgorithm implements Algorithm {
+    @JsonIgnore
     private List<List<Integer>> generation = new ArrayList<>();
+    @JsonIgnore
     private List<Integer> bestIndividual = new ArrayList<>();
+    @JsonIgnore
     private Problem problem;
+    @JsonIgnore
     private Integer actualGeneration = 0;
     private Integer numOfIndividuals;
     private Integer numOfGenerations;

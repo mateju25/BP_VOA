@@ -1,5 +1,6 @@
 package model.problems;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.base.BaseController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -11,6 +12,7 @@ import model.algorithms.AntColonySystemAlgorithm;
 import model.utils.AlgorithmResults;
 import model.utils.DistinctColors;
 
+import java.beans.Transient;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -18,9 +20,12 @@ import java.util.stream.IntStream;
 @Getter
 @Setter
 public class KnapsackProblem implements Problem {
+    @JsonIgnore
     private List<Integer> itemWeight;
+    @JsonIgnore
     private List<Integer> itemValue;
     private Integer weightOfBackpack;
+    @JsonIgnore
     private List<Color> colorsOfItems;
     private Integer averageWeightOfItem;
     private Integer numberOfItems;

@@ -1,5 +1,6 @@
 package model.problems;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.base.BaseController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -29,13 +30,16 @@ public class VehicleRoutingProblem implements Problem {
             this.demand = demand;
         }
     }
-
+    @JsonIgnore
     private List<Point> points;
+    @JsonIgnore
     private List<List<Integer>> matrixOfDistances;
     private Integer vehicleCapacity;
     private Integer sizeOfTheProblem;
     private Integer averageDemand;
+    @JsonIgnore
     private Double fitnessCoefficient;
+    @JsonIgnore
     private List<Color> colorsOfItems;
 
 

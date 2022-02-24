@@ -1,5 +1,6 @@
 package model.algorithms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.base.BaseController;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +13,15 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class AntColonySystemAlgorithm implements Algorithm {
+    @JsonIgnore
     private Problem problem;
+    @JsonIgnore
     private List<List<Integer>> generation = new ArrayList<>();
+    @JsonIgnore
     private List<Integer> bestIndividual = new ArrayList<>();
+    @JsonIgnore
     private Integer actualGeneration = 0;
+    @JsonIgnore
     private List<List<Double>> matrixOfPheromone;
     private Integer numberOfAnts;
     private Integer numberOfIterations;

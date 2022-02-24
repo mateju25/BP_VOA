@@ -145,10 +145,10 @@ public class VisualizationController extends MenuController {
 
     private ToggleButton createToggleButton() {
         ToggleButton toggleButton = new ToggleButton();
-        toggleButton.setLayoutX(359.0);
-        toggleButton.setLayoutY(37.0);
-        toggleButton.setPrefHeight(32);
-        toggleButton.setPrefWidth(32);
+        toggleButton.setLayoutX(347.0);
+        toggleButton.setLayoutY(20.0);
+        toggleButton.setPrefHeight(34);
+        toggleButton.setPrefWidth(34);
         toggleButton.getStyleClass().add("button-black");
         toggleButton.setFocusTraversable(false);
         toggleButton.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/ruler.png")))));
@@ -165,7 +165,7 @@ public class VisualizationController extends MenuController {
     public void addDataset() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
 
         var files = fileChooser.showOpenMultipleDialog(BaseController.mainStage.getOwner());
         if (files == null) {
@@ -176,7 +176,8 @@ public class VisualizationController extends MenuController {
             var results = new SimulationResults();
 
             try {
-                results.loadFromCsv(file);
+//                results.loadFromCsv(file);
+                results.loadFromJson(file);
             } catch (Exception e) {
                 BaseController.showInfo(infoBox, infoBoxLabel, "There was an error loading file!");
                 return;

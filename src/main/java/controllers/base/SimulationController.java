@@ -162,7 +162,7 @@ public class SimulationController extends MenuController {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.csv"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
         btnSave.setOnAction(event -> {
             var formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm");
             fileChooser.setInitialFileName(BaseController.chosenAlgorithm.nameForFaces().chars().filter(Character::isUpperCase)
@@ -170,7 +170,8 @@ public class SimulationController extends MenuController {
             try {
                 var file = fileChooser.showSaveDialog(BaseController.mainStage);
                 if (file != null) {
-                    results.writeToCsv(file, yAxis.getUpperBound(), yAxis.getLowerBound());
+//                    results.writeToCsv(file, yAxis.getUpperBound(), yAxis.getLowerBound());
+                    results.writeToJson(file, yAxis.getUpperBound(), yAxis.getLowerBound(), BaseController.chosenProblem, BaseController.chosenAlgorithm);
                     BaseController.showInfo(infoBox, infoBoxLabel, "Simulation saved!");
                 }
             } catch (IOException e) {

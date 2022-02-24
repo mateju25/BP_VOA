@@ -46,7 +46,7 @@
         <Label layoutX="718.0" layoutY="49.0" styleClass="label-underline" text="Choose optimization algorithm" />
         <Line endX="44.0" endY="383.0" layoutX="525.0" layoutY="231.0" startX="44.0" startY="-177.0" styleClass="divider" />
         <ChoiceBox fx:id="algChoiceBox" focusTraversable="false" layoutX="696.0" layoutY="299.0" prefHeight="30.0" prefWidth="288.0" />
-        <Button layoutX="863.0" layoutY="517.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Proceed" />
+        <Button layoutX="864.0" layoutY="517.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Proceed" />
         <Button layoutX="684.0" layoutY="517.0" mnemonicParsing="false" onAction="#visualizeData" prefHeight="52.0" prefWidth="134.0" styleClass="button-black" text="Data visualization" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
         <Pane layoutX="103.0" layoutY="159.0" onMouseEntered="#removeWarning" prefHeight="200.0" prefWidth="414.0" styleClass="pane-around">
             <Label layoutX="14.0" layoutY="14.0" text="Parameters" />
@@ -58,6 +58,6 @@
             <ChoiceBox fx:id="presetProblems" focusTraversable="false" layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0" />
         </Pane>
         <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="700.0" layoutY="463.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
-      <ImageView fx:id="animationPic" fitHeight="701.0" fitWidth="1145.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="animationPic" fitHeight="701.0" fitWidth="1145.0" layoutX="-3.0" pickOnBounds="true" preserveRatio="true" />
     </AnchorPane>
 </VBox>

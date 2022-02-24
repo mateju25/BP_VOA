@@ -1,5 +1,6 @@
 package model.problems;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.base.BaseController;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -18,11 +19,14 @@ import java.util.stream.IntStream;
 @Getter
 @Setter
 public class TargetAssignmentProblem implements Problem {
+    @JsonIgnore
     private List<List<Double>> matrixOfProbabilities;
+    @JsonIgnore
     private List<Double> targetValues;
     private Integer maximumAssignedTargets;
     private Integer numOfTargets;
     private Integer numOfWeapons;
+    @JsonIgnore
     private List<Color> colorsOfItems;
 
     @Override
