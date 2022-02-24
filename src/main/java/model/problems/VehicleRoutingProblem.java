@@ -53,9 +53,9 @@ public class VehicleRoutingProblem implements Problem {
         colorsOfItems = new ArrayList<>();
         points.add(new Point(250, 250, 0));
         for (int i = 0; i < sizeOfTheProblem - 1; i++) {
-            var demand = BaseController.randomGenerator.nextInt(2 * averageDemand - 2) + 1;
+            var demand = BaseController.randomGenerator.nextInt(2 * averageDemand - 1) + 1;
             while (demand > vehicleCapacity)
-                demand = BaseController.randomGenerator.nextInt(2 * averageDemand - 2) + 1;
+                demand = BaseController.randomGenerator.nextInt(2 * averageDemand - 1) + 1;
             var tmp = new Point(BaseController.randomGenerator.nextInt(500), BaseController.randomGenerator.nextInt(500), demand);
             points.add(tmp);
         }
@@ -185,7 +185,7 @@ public class VehicleRoutingProblem implements Problem {
 
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
-        return 1 / matrixOfDistances.get(from).get(to) + 0.0;
+        return 1 / (matrixOfDistances.get(from).get(to) + 0.001);
     }
 
     @Override
@@ -281,6 +281,15 @@ public class VehicleRoutingProblem implements Problem {
             var usedColors = new ArrayList<Color>();
 
             for (int i = 0; i < best.size() - 1; i++) {
+                var strokeBefore = gc.getStroke();
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(2.2);
+                gc.strokeLine(points.get(best.get(i)).xCor + LEFT_OFFSET + 3,
+                        points.get(best.get(i)).yCor + UP_OFFSET + 3,
+                        points.get(best.get(i + 1)).xCor + LEFT_OFFSET + 3,
+                        points.get(best.get(i + 1)).yCor + UP_OFFSET + 3);
+                gc.setStroke(strokeBefore);
+
                 if (points.get(best.get(i)).demand == 0) {
                     gc.setStroke(colorsOfItems.get(best.get(i + 1)));
                     usedColors.add(colorsOfItems.get(best.get(i + 1)));
@@ -290,19 +299,32 @@ public class VehicleRoutingProblem implements Problem {
                         points.get(best.get(i)).yCor + UP_OFFSET + 3,
                         points.get(best.get(i + 1)).xCor + LEFT_OFFSET + 3,
                         points.get(best.get(i + 1)).yCor + UP_OFFSET + 3);
+
             }
 
             gc.setStroke(Color.BLACK);
             gc.setLineWidth(1);
             gc.strokeText("Vehicle capacity: " + this.vehicleCapacity, LEFT_OFFSET + 550, 70);
-            gc.strokeText("Trails:", LEFT_OFFSET + 550, 90);
+            gc.strokeText("Trails: " + usedColors.size(), LEFT_OFFSET + 550, 90);
+
+            var offsetX = 0;
             for (int i = 0; i < usedColors.size(); i++) {
+                offsetX = i / 20;
                 gc.setStroke(Color.BLACK);
                 gc.setLineWidth(1);
-                gc.strokeText(i + "", LEFT_OFFSET + 560, 110 + i * 20);
+                gc.strokeText(i + "", LEFT_OFFSET + 560 + offsetX*80, 110 + (i % 20) * 20);
                 gc.setStroke(usedColors.get(i));
+
+                var strokeBefore = gc.getStroke();
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(4.2);
+                gc.strokeLine(LEFT_OFFSET + 590 + offsetX*80, 105 + (i % 20) * 20, LEFT_OFFSET + 610 + offsetX*80, 105 + (i % 20) * 20);
+                gc.setStroke(strokeBefore);
+
                 gc.setLineWidth(4);
-                gc.strokeLine(LEFT_OFFSET + 575, 105 + i * 20, LEFT_OFFSET + 595, 105 + i * 20);
+                gc.strokeLine(LEFT_OFFSET + 590  + offsetX*80, 105 + (i % 20) * 20, LEFT_OFFSET + 610 + offsetX*80, 105 + (i % 20) * 20);
+
+
             }
 
 
