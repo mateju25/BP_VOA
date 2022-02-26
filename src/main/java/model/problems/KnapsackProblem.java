@@ -35,6 +35,10 @@ public class KnapsackProblem implements Problem {
         this.numberOfItems = Integer.parseInt(parameters.get("numberOfItems"));
         this.averageWeightOfItem = Integer.parseInt(parameters.get("averageWeight"));
         this.weightOfBackpack = Integer.parseInt(parameters.get("backpackCapacity"));
+    }
+
+    @Override
+    public void regenerate() {
         this.itemWeight = new ArrayList<>();
         this.itemValue = new ArrayList<>();
         this.colorsOfItems = new ArrayList<>();

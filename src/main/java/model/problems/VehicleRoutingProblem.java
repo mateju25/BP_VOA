@@ -48,7 +48,10 @@ public class VehicleRoutingProblem implements Problem {
         this.sizeOfTheProblem = Integer.parseInt(parameters.get("sizeOfProblem"));
         this.vehicleCapacity = Integer.parseInt(parameters.get("vehicleCapacity"));
         this.averageDemand = Integer.parseInt(parameters.get("averageDemand"));
+    }
 
+    @Override
+    public void regenerate() {
         points = new ArrayList<>();
         colorsOfItems = new ArrayList<>();
         points.add(new Point(250, 250, 0));

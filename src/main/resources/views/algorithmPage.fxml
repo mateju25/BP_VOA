@@ -17,12 +17,17 @@
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
             <MenuItem mnemonicParsing="false" text="Random seed">
                 <graphic>
-                    <TextField fx:id="randomSeed" prefHeight="10.0" prefWidth="135.0" text="1" />
+                    <Pane prefHeight="30.0" prefWidth="150.0">
+                        <children>
+                            <TextField fx:id="randomSeed" prefHeight="10.0" prefWidth="110.0" text="1" />
+                            <Button layoutX="110.0" mnemonicParsing="false" onAction="#randomSeed" text="R" />
+                        </children>
+                    </Pane>
                 </graphic>
             </MenuItem>
             <MenuItem mnemonicParsing="false" text="Default sim. speed">
                 <graphic>
-                    <Slider fx:id="speedChangerMenu" blockIncrement="100.0" max="1000.0" value="200.0" />
+                    <Slider fx:id="speedChangerMenu" blockIncrement="100.0" max="1000.0" value="0.0" />
                 </graphic>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close">

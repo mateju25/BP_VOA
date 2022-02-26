@@ -4,10 +4,12 @@ import controllers.base.BaseController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -25,6 +27,7 @@ import java.util.Objects;
 public class MenuController {
     @FXML public Slider speedChangerMenu;
     @FXML public TextField randomSeed;
+    @FXML public MenuItem customMenu;
 
     public void initMenu() {
         if (speedChangerMenu != null) {
@@ -70,5 +73,9 @@ public class MenuController {
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_blank.png"))));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+    }
+
+    public void randomSeed() {
+        randomSeed.setText(BaseController.randomGenerator.nextInt(100000)+"");
     }
 }

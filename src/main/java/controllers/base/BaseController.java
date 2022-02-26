@@ -24,16 +24,18 @@ import java.util.Random;
 public class BaseController {
     public static Algorithm chosenAlgorithm;
     public static Problem chosenProblem;
+    public static Boolean isProblemGenerated = false;
 
     public static List<Problem> problems;
     public static List<Algorithm> algorithms;
 
     public static Random randomGenerator;
-    public static Integer simulationSpeed = 200;
+    public static Integer simulationSpeed = 0;
     public static Integer randomSeed = 1;
 
     public static Stage mainStage;
     public static VisualizationController visualizationController;
+    public static Boolean simulationChart;
 
     public static ArrayList<SimulationResults> savedDatasets;
 

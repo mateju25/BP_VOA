@@ -2,8 +2,10 @@ package controllers.base;
 
 import controllers.components.MenuController;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,34 +28,55 @@ import model.utils.SimulationResults;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 public class SimulationController extends MenuController {
-    @FXML public Label heading;
-    @FXML public Pane algoPane;
-    @FXML public LineChart<Integer, Double> chart;
-    @FXML public Button btnContinue;
-    @FXML public Button btnPause;
-    @FXML public Slider speedChanger;
-    @FXML public Canvas canvas;
-    @FXML public NumberAxis yAxis;
-    @FXML public Button btnSave;
-    @FXML public Button btnRestart;
-    @FXML public Button btnSaveD;
-    @FXML public NumberAxis xAxis;
-    @FXML public Pane infoBox;
-    @FXML public Label infoBoxLabel;
+    @FXML
+    public Label heading;
+    @FXML
+    public Pane algoPane;
+    @FXML
+    public LineChart<Integer, Double> chart;
+    @FXML
+    public Button btnContinue;
+    @FXML
+    public Button btnPause;
+    @FXML
+    public Slider speedChanger;
+    @FXML
+    public Canvas canvas;
+    @FXML
+    public NumberAxis yAxis;
+    @FXML
+    public Button btnSave;
+    @FXML
+    public Button btnRestart;
+    @FXML
+    public Button btnSaveD;
+    @FXML
+    public NumberAxis xAxis;
+    @FXML
+    public Pane infoBox;
+    @FXML
+    public Label infoBoxLabel;
+    public Button btnRandomize;
+    public Label lblBest;
+    public Label lblAverage;
+    public Pane moreSimsPane;
+    public Label lblSimulationNumber;
+    public Button btnMoreSims;
+    public Button btnSwitch;
+    public Button btnBack;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
     private Boolean simulationRunning = true;
+    private Boolean moreSimulationRunning = true;
     private Boolean simulationRestart = false;
-    private Boolean simulationChart = true;
     private Integer simulationSpeed = BaseController.simulationSpeed;
     private SimulationResults results;
 
@@ -64,6 +87,8 @@ public class SimulationController extends MenuController {
         initMenu();
 
         simulationRestart = false;
+        moreSimsPane.setVisible(false);
+        btnMoreSims.setDisable(true);
         btnSave.setDisable(true);
         btnSaveD.setDisable(true);
 
@@ -72,7 +97,10 @@ public class SimulationController extends MenuController {
         results = new SimulationResults(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
         heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
 
-        canvas.setVisible(!simulationChart);
+        if (BaseController.simulationChart == null)
+            BaseController.simulationChart = true;
+        canvas.setVisible(!BaseController.simulationChart);
+        chart.setVisible(BaseController.simulationChart);
 
         XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
         seriesBest.setName("Best");
@@ -141,7 +169,11 @@ public class SimulationController extends MenuController {
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
                     btnSave.setDisable(false);
                     btnSaveD.setDisable(false);
+                    btnRandomize.setDisable(false);
+                    btnMoreSims.setDisable(false);
                 }
+                lblAverage.setText(String.format("%,.4f", data.getAverageFitnessInGen()));
+                lblBest.setText(String.format("%,.4f", data.getBestFitness()));
             }
         };
 
@@ -184,11 +216,14 @@ public class SimulationController extends MenuController {
         btnRestart.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/restart.png")))));
         btnPause.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pause.png")))));
         btnContinue.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/play.png")))));
+        btnRandomize.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/shuffle.png")))));
         btnContinue.setDisable(true);
+        btnRandomize.setDisable(true);
 
-        BaseController.makeTooltip(btnRestart, "Restart");
-        BaseController.makeTooltip(btnPause, "Pause");
-        BaseController.makeTooltip(btnContinue, "Continue");
+        BaseController.makeTooltip(btnRestart, "Restart simulation");
+        BaseController.makeTooltip(btnPause, "Pause simulation");
+        BaseController.makeTooltip(btnContinue, "Continue simulation");
+        BaseController.makeTooltip(btnRandomize, "Generate new problem");
     }
 
     public void goBack() throws IOException {
@@ -222,9 +257,9 @@ public class SimulationController extends MenuController {
     }
 
     public void switchVisualization() {
-        simulationChart = !simulationChart;
-        canvas.setVisible(!simulationChart);
-        chart.setVisible(simulationChart);
+        BaseController.simulationChart = !BaseController.simulationChart;
+        canvas.setVisible(!BaseController.simulationChart);
+        chart.setVisible(BaseController.simulationChart);
     }
 
     public void addToVisualization() {
@@ -236,5 +271,135 @@ public class SimulationController extends MenuController {
         results.setLowerBound(yAxis.getLowerBound() + 0.5);
         BaseController.savedDatasets.add(results);
         BaseController.showInfo(infoBox, infoBoxLabel, "Simulation results added to visualization page!");
+    }
+
+    public void randomizeProblem() {
+        BaseController.chosenProblem.regenerate();
+        BaseController.showInfo(infoBox, infoBoxLabel, "Problem was regenerated!");
+    }
+
+    public void runSims() {
+        moreSimsPane.setVisible(true);
+
+        btnMoreSims.setDisable(true);
+        btnSwitch.setDisable(true);
+        btnSaveD.setDisable(true);
+        btnSave.setDisable(true);
+        btnBack.setDisable(true);
+        btnContinue.setDisable(true);
+        btnPause.setDisable(true);
+        btnRandomize.setDisable(true);
+        btnRestart.setDisable(true);
+        speedChanger.setDisable(true);
+
+        moreSimulationRunning = true;
+        var mapBest = new HashMap<Integer, List<Double>>();
+        var mapAverage = new HashMap<Integer, List<Double>>();
+
+        ConcurrentLinkedQueue<Integer> simNumber = new ConcurrentLinkedQueue<>();
+        ConcurrentLinkedQueue<XYChart.Series> series = new ConcurrentLinkedQueue<>();
+        ConcurrentLinkedQueue<AlgorithmResults> bestRes = new ConcurrentLinkedQueue<>();
+
+
+        executorService = Executors.newCachedThreadPool(r -> {
+            Thread thread = new Thread(r);
+            thread.setDaemon(true);
+            return thread;
+        });
+
+        class AddToQueue implements Runnable {
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    simNumber.add(i);
+
+                    BaseController.chosenAlgorithm.setProblem(BaseController.chosenProblem);
+                    BaseController.chosenAlgorithm.resetAlgorithm();
+                    BaseController.chosenAlgorithm.initFirstGeneration();
+
+                    if (!moreSimulationRunning)
+                        return;
+
+                    AlgorithmResults res = BaseController.chosenAlgorithm.nextGeneration();
+                    while (res != null) {
+                        if (!moreSimulationRunning)
+                            return;
+
+                        mapBest.computeIfAbsent(res.getActualGeneration(), k -> new ArrayList<>());
+                        mapAverage.computeIfAbsent(res.getActualGeneration(), k -> new ArrayList<>());
+
+                        mapBest.get(res.getActualGeneration()).add(res.getBestFitness());
+                        mapAverage.get(res.getActualGeneration()).add(res.getAverageFitnessInGen());
+
+                        if (bestRes.size() == 0)
+                            bestRes.add(res);
+                        else {
+                            if (bestRes.peek().getBestFitness() > res.getBestFitness()) {
+                                bestRes.clear();
+                                bestRes.add(res);
+                            }
+                        }
+
+                        res = BaseController.chosenAlgorithm.nextGeneration();
+                    }
+                }
+                moreSimsPane.setVisible(false);
+
+                XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
+                seriesBest.setName("Best");
+                XYChart.Series<Integer, Double> seriesAverage = new XYChart.Series<>();
+                seriesAverage.setName("Average");
+
+                for (Integer key : mapBest.keySet()) {
+                    seriesBest.getData().add(new XYChart.Data<>(key, mapBest.get(key).stream().mapToDouble(e -> e).average().getAsDouble()));
+                }
+                for (Integer key : mapAverage.keySet()) {
+                    seriesAverage.getData().add(new XYChart.Data<>(key, mapAverage.get(key).stream().mapToDouble(e -> e).average().getAsDouble()));
+                }
+
+                series.add(seriesBest);
+                series.add(seriesAverage);
+                simNumber.add(100);
+
+            }
+        }
+        executorService.execute(new AddToQueue());
+
+        animationTimer = new AnimationTimer() {
+            @SneakyThrows
+            @Override
+            public void handle(long now) {
+                if (simNumber.isEmpty()) return;
+                var data = simNumber.remove();
+                lblSimulationNumber.setText(data + "/100");
+
+                if (data == 100) {
+                    chart.getData().clear();
+                    chart.getData().add(series.remove());
+                    chart.getData().add(series.remove());
+
+                    var bestbest = bestRes.remove();
+                    BaseController.chosenAlgorithm.getProblem().visualize(canvas, bestbest);
+
+                    lblAverage.setText(String.format("%,.4f", bestbest.getAverageFitnessInGen()));
+                    lblBest.setText(String.format("%,.4f", bestbest.getBestFitness()));
+
+                    btnMoreSims.setDisable(false);
+                    btnSwitch.setDisable(false);
+                    btnSaveD.setDisable(false);
+                    btnSave.setDisable(false);
+                    btnBack.setDisable(false);
+                    btnPause.setDisable(false);
+                    btnRandomize.setDisable(false);
+                    btnRestart.setDisable(false);
+                    speedChanger.setDisable(false);
+                }
+            }
+        };
+        animationTimer.start();
+    }
+
+    public void cancelSimulations() {
+        moreSimulationRunning = false;
+        moreSimsPane.setVisible(false);
     }
 }

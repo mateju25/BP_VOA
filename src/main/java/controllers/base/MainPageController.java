@@ -3,12 +3,14 @@ package controllers.base;
 import controllers.components.MenuController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -64,7 +66,8 @@ public class MainPageController extends MenuController {
         controllerLoaded = true;
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
 
-        BaseController.simulationSpeed = 200;
+        BaseController.isProblemGenerated = false;
+        BaseController.simulationSpeed = 0;
         BaseController.randomGenerator = new Random(BaseController.randomSeed);
         initMenu();
         makeAnimation();

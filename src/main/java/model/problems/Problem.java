@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 public interface Problem {
     //general
     void init(Map<String, String> parameters);
+    void regenerate();
     List<Integer> makeOneIndividual();
     Double fitness(List<Integer> individual);
 

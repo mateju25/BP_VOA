@@ -34,7 +34,10 @@ public class TargetAssignmentProblem implements Problem {
         this.numOfTargets = Integer.parseInt(parameters.get("numberOfTargets"));
         this.numOfWeapons = Integer.parseInt(parameters.get("numberOfWeapons"));
         this.maximumAssignedTargets = Integer.parseInt(parameters.get("maxAssignedTargets"));
+    }
 
+    @Override
+    public void regenerate() {
         matrixOfProbabilities = new ArrayList<>(numOfWeapons);
         targetValues = new ArrayList<>(numOfTargets);
         colorsOfItems = new ArrayList<>();

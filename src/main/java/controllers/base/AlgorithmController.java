@@ -88,6 +88,7 @@ public class AlgorithmController extends MenuController {
         if (percentageRoulette != null) {
             typeCrossover.getItems().add("Single point crossover");
             typeCrossover.getItems().add("Double point crossover");
+            typeCrossover.getSelectionModel().select(0);
             percentageRoulette.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             percentageTournament.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             percentageElitism.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
@@ -228,7 +229,10 @@ public class AlgorithmController extends MenuController {
 
             BaseController.randomGenerator = new Random(BaseController.randomSeed);
             BaseController.chosenAlgorithm.init(map);
-
+            if (BaseController.isProblemGenerated == false) {
+                BaseController.isProblemGenerated = true;
+                BaseController.chosenProblem.regenerate();
+            }
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();
