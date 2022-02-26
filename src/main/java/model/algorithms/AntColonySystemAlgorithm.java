@@ -80,6 +80,13 @@ public class AntColonySystemAlgorithm implements Algorithm {
             if (problem.fitness(generationBest) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
                 bestIndividual = new ArrayList<>(generationBest);
 
+            //deamon actions
+            for (int i = 0; i < generationBest.size(); i++) {
+                var potentialBest = problem.mutate(generationBest);
+                if (problem.fitness(potentialBest) < problem.fitness(generationBest))
+                    generationBest = new ArrayList<>(potentialBest);
+            }
+
 
             //update best
             var edges = problem.generateEdges(generationBest);
