@@ -71,6 +71,7 @@ public class SimulationController extends MenuController {
     public Button btnMoreSims;
     public Button btnSwitch;
     public Button btnBack;
+    public Label lblTime;
 
     private ExecutorService executorService;
     private AnimationTimer animationTimer;
@@ -78,6 +79,7 @@ public class SimulationController extends MenuController {
     private Boolean moreSimulationRunning = true;
     private Boolean simulationRestart = false;
     private Integer simulationSpeed = BaseController.simulationSpeed;
+    private long elapsedTime = 0;
     private SimulationResults results;
 
 
@@ -128,7 +130,9 @@ public class SimulationController extends MenuController {
         class AddToQueue implements Runnable {
             public void run() {
                 try {
+                    long delta = System.currentTimeMillis();
                     AlgorithmResults res = BaseController.chosenAlgorithm.nextGeneration();
+                    elapsedTime += System.currentTimeMillis() - delta;
 
                     if (res != null) {
                         dataQ.add(res);
@@ -171,6 +175,7 @@ public class SimulationController extends MenuController {
                     btnSaveD.setDisable(false);
                     btnRandomize.setDisable(false);
                     btnMoreSims.setDisable(false);
+                    lblTime.setText(elapsedTime/1000.0+" s");
                 }
                 lblAverage.setText(String.format("%,.4f", data.getAverageFitnessInGen()));
                 lblBest.setText(String.format("%,.4f", data.getBestFitness()));
@@ -248,6 +253,7 @@ public class SimulationController extends MenuController {
 
     public void restartSim() throws IOException {
         executorService.shutdownNow();
+        elapsedTime = 0;
         simulationRestart = true;
         animationTimer.stop();
         chart.getData().clear();
@@ -310,19 +316,20 @@ public class SimulationController extends MenuController {
         class AddToQueue implements Runnable {
             public void run() {
                 for (int i = 0; i < 100; i++) {
+                    if (!moreSimulationRunning)
+                        break;
                     simNumber.add(i);
 
                     BaseController.chosenAlgorithm.setProblem(BaseController.chosenProblem);
                     BaseController.chosenAlgorithm.resetAlgorithm();
                     BaseController.chosenAlgorithm.initFirstGeneration();
 
-                    if (!moreSimulationRunning)
-                        return;
+
 
                     AlgorithmResults res = BaseController.chosenAlgorithm.nextGeneration();
                     while (res != null) {
                         if (!moreSimulationRunning)
-                            return;
+                            break;
 
                         mapBest.computeIfAbsent(res.getActualGeneration(), k -> new ArrayList<>());
                         mapAverage.computeIfAbsent(res.getActualGeneration(), k -> new ArrayList<>());
@@ -338,8 +345,9 @@ public class SimulationController extends MenuController {
                                 bestRes.add(res);
                             }
                         }
-
+                        long delta = System.currentTimeMillis();
                         res = BaseController.chosenAlgorithm.nextGeneration();
+                        elapsedTime += System.currentTimeMillis() - delta;
                     }
                 }
                 moreSimsPane.setVisible(false);
@@ -382,6 +390,7 @@ public class SimulationController extends MenuController {
 
                     lblAverage.setText(String.format("%,.4f", bestbest.getAverageFitnessInGen()));
                     lblBest.setText(String.format("%,.4f", bestbest.getBestFitness()));
+                    lblTime.setText(elapsedTime/1000.0+" s");
 
                     btnMoreSims.setDisable(false);
                     btnSwitch.setDisable(false);
@@ -401,5 +410,14 @@ public class SimulationController extends MenuController {
     public void cancelSimulations() {
         moreSimulationRunning = false;
         moreSimsPane.setVisible(false);
+        btnMoreSims.setDisable(false);
+        btnSwitch.setDisable(false);
+        btnSaveD.setDisable(false);
+        btnSave.setDisable(false);
+        btnBack.setDisable(false);
+        btnPause.setDisable(false);
+        btnRandomize.setDisable(false);
+        btnRestart.setDisable(false);
+        speedChanger.setDisable(false);
     }
 }
