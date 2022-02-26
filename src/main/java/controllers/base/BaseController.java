@@ -29,9 +29,9 @@ public class BaseController {
     public static List<Problem> problems;
     public static List<Algorithm> algorithms;
 
-    public static Random randomGenerator;
     public static Integer simulationSpeed = 0;
     public static Integer randomSeed = 1;
+    public static Random randomGenerator = new Random(BaseController.randomSeed);
 
     public static Stage mainStage;
     public static VisualizationController visualizationController;

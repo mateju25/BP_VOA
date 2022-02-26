@@ -1,19 +1,24 @@
 package controllers.base;
 
 import controllers.components.MenuController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.StringConverter;
+import model.algorithms.Algorithm;
 import model.algorithms.AntColonySystemAlgorithm;
 import model.algorithms.ArtificialBeeColonyAlgorithm;
 import model.algorithms.GeneticAlgorithm;
 import model.problems.KnapsackProblem;
+import model.problems.Problem;
 import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
@@ -25,8 +30,8 @@ public class AlgorithmController extends MenuController {
     @FXML public Label warning;
     @FXML public Pane infoBox;
     @FXML public Label infoBoxLabel;
-    @FXML public Label heading;
     @FXML public Pane algoPane;
+    @FXML public ChoiceBox<Algorithm> algChoiceBox;
 
 
     //GA
@@ -74,16 +79,68 @@ public class AlgorithmController extends MenuController {
     public ImageView toolParamQ;
     public ImageView toolParamA;
     public ImageView toolParamB;
-
     private Boolean controllerLoaded = false;
 
-    public void initialize() throws IOException {
+    public void initialize() {
+        if (controllerLoaded)
+            return;
+        controllerLoaded = true;
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
         initMenu();
 
-        if (BaseController.chosenProblem instanceof KnapsackProblem && BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm) {
-            BaseController.showInfo(infoBox, infoBoxLabel, "Be aware that this combination of algorithm and problem sometimes does not generate good results!");
+        actualizeTextEdits();
+
+//        if (!controllerLoaded) {
+//            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + BaseController.chosenAlgorithm.nameOfFxmlFiles()[0])));
+//            loader.setController(this);
+//            controllerLoaded = true;
+//            Parent root = loader.load();
+//            algoPane.getChildren().add(root);
+//        }
+
+        algChoiceBox.getSelectionModel().clearSelection();
+        if (algChoiceBox != null) {
+            algChoiceBox.getItems().setAll(BaseController.algorithms);
+            if (BaseController.chosenAlgorithm != null) {
+                var index = BaseController.algorithms.indexOf(BaseController.chosenAlgorithm);
+                algChoiceBox.getSelectionModel().clearAndSelect(index);
+            }
+            algChoiceBox.setConverter(
+                    new StringConverter<>() {
+                        @Override
+                        public String toString(Algorithm object) {
+                            return object.nameForFaces();
+                        }
+
+                        @Override
+                        public Algorithm fromString(String string) {
+                            return null;
+                        }
+                    });
+            algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+                BaseController.chosenAlgorithm = algChoiceBox.getItems().get(newValue.intValue());
+                Algorithm selectedAlgorithm = algChoiceBox.getItems().get(newValue.intValue());
+                loadSpecificFxmlPart(selectedAlgorithm.nameOfFxmlFiles()[0]);
+                BaseController.chosenAlgorithm = selectedAlgorithm;
+            });
+            if (BaseController.chosenAlgorithm != null) {
+                algChoiceBox.getSelectionModel().select(BaseController.algorithms.indexOf(BaseController.chosenAlgorithm));
+                loadSpecificFxmlPart(BaseController.chosenAlgorithm.nameOfFxmlFiles()[0]);
+            } else
+                algChoiceBox.getSelectionModel().select(0);
         }
+    }
+
+    private void loadSpecificFxmlPart(String part) {
+         Parent newPane = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + part)));
+            loader.setController(this);
+            newPane = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        algoPane.getChildren().add(newPane);
 
         if (percentageRoulette != null) {
             typeCrossover.getItems().add("Single point crossover");
@@ -137,16 +194,8 @@ public class AlgorithmController extends MenuController {
         }
 
         actualizeTextEdits();
-
-        if (!controllerLoaded) {
-            heading.setText(BaseController.chosenAlgorithm.nameForFaces() + " parameters");
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + BaseController.chosenAlgorithm.nameOfFxmlFiles()[0])));
-            loader.setController(this);
-            controllerLoaded = true;
-            Parent root = loader.load();
-            algoPane.getChildren().add(root);
-        }
     }
+
 
     private void actualizeTextEdits() {
         if (percentageRoulette != null) {
@@ -229,13 +278,12 @@ public class AlgorithmController extends MenuController {
 
             BaseController.randomGenerator = new Random(BaseController.randomSeed);
             BaseController.chosenAlgorithm.init(map);
-            if (BaseController.isProblemGenerated == false) {
-                BaseController.isProblemGenerated = true;
-                BaseController.chosenProblem.regenerate();
-            }
+
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();
+        } else {
+            warning.setText("Please select an algorithm!");
         }
 
     }

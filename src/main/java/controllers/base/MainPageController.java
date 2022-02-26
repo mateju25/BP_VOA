@@ -32,7 +32,6 @@ public class MainPageController extends MenuController {
     @FXML public Label warning;
     @FXML public ImageView animationPic;
     @FXML public ChoiceBox<String> presetProblems;
-    @FXML public ChoiceBox<Algorithm> algChoiceBox;
     @FXML public ChoiceBox<Problem> probChoiceBox;
     @FXML public Pane probPane;
 
@@ -66,38 +65,13 @@ public class MainPageController extends MenuController {
         controllerLoaded = true;
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
 
-        BaseController.isProblemGenerated = false;
         BaseController.simulationSpeed = 0;
-        BaseController.randomGenerator = new Random(BaseController.randomSeed);
         initMenu();
         makeAnimation();
 
         BaseController.init();
 
-        if (algChoiceBox != null) {
-            algChoiceBox.getItems().setAll(BaseController.algorithms);
-            if (BaseController.chosenAlgorithm != null) {
-                var index = BaseController.algorithms.indexOf(BaseController.chosenAlgorithm);
-                algChoiceBox.getSelectionModel().clearAndSelect(index);
-            }
-            algChoiceBox.setConverter(
-                    new StringConverter<>() {
-                        @Override
-                        public String toString(Algorithm object) {
-                            return object.nameForFaces();
-                        }
 
-                        @Override
-                        public Algorithm fromString(String string) {
-                            return null;
-                        }
-                    });
-            algChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> BaseController.chosenAlgorithm = algChoiceBox.getItems().get(newValue.intValue()));
-            if (BaseController.chosenAlgorithm != null) {
-                algChoiceBox.getSelectionModel().select(BaseController.algorithms.indexOf(BaseController.chosenAlgorithm));
-            } else
-                algChoiceBox.getSelectionModel().select(0);
-        }
         if (probChoiceBox != null) {
             probChoiceBox.getItems().setAll(BaseController.problems);
             if (BaseController.chosenProblem != null) {
@@ -122,6 +96,7 @@ public class MainPageController extends MenuController {
                 @SneakyThrows
                 @Override
                 public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                    BaseController.isProblemGenerated = false;
                     Problem selectedProblem = probChoiceBox.getItems().get(newValue.intValue());
                     loadSpecificFxmlPart(selectedProblem.nameOfFxmlFiles());
                     BaseController.chosenProblem = selectedProblem;
@@ -228,7 +203,7 @@ public class MainPageController extends MenuController {
     }
 
     public void proceed() throws IOException {
-        if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
+        if (BaseController.chosenProblem != null) {
             if (averageDemand != null && vehicleCapacity != null && Integer.parseInt(averageDemand.getText()) > Integer.parseInt(vehicleCapacity.getText())) {
                 warning.setText("Average demand should not be higher than vehicle capacity!");
                 return;
@@ -245,12 +220,15 @@ public class MainPageController extends MenuController {
             if (numberOfWeapons != null) map.put(numberOfWeapons.getId(), numberOfWeapons.getText());
             if (maxAssignedTargets != null) map.put(maxAssignedTargets.getId(), maxAssignedTargets.getText());
 
-            BaseController.randomGenerator = new Random(BaseController.randomSeed);
             BaseController.chosenProblem.init(map);
+            BaseController.chosenProblem.regenerate();
+
 
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/algorithmPage.fxml")));
             BaseController.mainStage.setScene(new Scene(root));
             BaseController.mainStage.show();
+        } else {
+            warning.setText("Please select a problem!");
         }
     }
 
