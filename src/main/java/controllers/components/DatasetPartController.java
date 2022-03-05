@@ -9,6 +9,9 @@ import model.utils.SimulationResults;
 
 import java.io.IOException;
 
+/**
+ * Controller that controls one item from list view in visualization page.
+ */
 public class DatasetPartController extends ListCell<SimulationResults> {
     public AnchorPane pane;
     public Label lblNumber;
@@ -19,6 +22,11 @@ public class DatasetPartController extends ListCell<SimulationResults> {
     public Tooltip tooltip;
     private FXMLLoader mLLoader;
 
+    /**
+     * Overrides method for item visualization.
+     * @param emp simulation results.
+     * @param empty flag if content is empty.
+     */
     @Override
     protected void updateItem(SimulationResults emp, boolean empty) {
         super.updateItem(emp, empty);

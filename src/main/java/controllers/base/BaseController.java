@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Controllers that share dat between other controllers. Also provides some basic tools for frontend.
+ */
 public class BaseController {
     public static Algorithm chosenAlgorithm;
     public static Problem chosenProblem;
@@ -40,6 +43,9 @@ public class BaseController {
     public static ArrayList<SimulationResults> savedDatasets;
     public static boolean isFirstLoad = true;
 
+    /**
+     * Generates all problems and algorithms.
+     */
     public static void init() {
         if (BaseController.algorithms == null) {
             BaseController.algorithms = new ArrayList<>();
@@ -55,12 +61,23 @@ public class BaseController {
         }
     }
 
+    /**
+     * Generates tooltip.
+     * @param component Node component that tooltip is assigned to.
+     * @param message Text available in tooltip.
+     */
     public static void makeTooltip(Node component, String message) {
         var t = new Tooltip(message);
         t.setShowDelay(Duration.seconds(0.5));
         Tooltip.install(component, t);
     }
 
+    /**
+     * Shows info box.
+     * @param pane Pane that contains info label.
+     * @param label Label which text will be populated.
+     * @param message Text that will be used.
+     */
     public static void showInfo(Pane pane, Label label, String message) {
         pane.setOpacity(1.0);
         label.setText(message);

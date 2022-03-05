@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
@@ -25,12 +26,17 @@ import model.problems.Problem;
 import model.problems.TargetAssignmentProblem;
 import model.problems.VehicleRoutingProblem;
 import model.utils.TextFormattersFactory;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Controller that controls main page and problem generation.
+ */
 public class MainPageController extends MenuController {
     @FXML public Label warning;
     @FXML public ImageView animationPic;
@@ -62,6 +68,9 @@ public class MainPageController extends MenuController {
 
     private Boolean controllerLoaded = false;
 
+    /**
+     * Initialize main page view. Initialize menu and all input fields if necessary. Provides animation for startup of application. Populates problem choice box.
+     */
     public void initialize() {
         if (controllerLoaded)
             return;
@@ -127,6 +136,9 @@ public class MainPageController extends MenuController {
         });
     }
 
+    /**
+     * Makes animation for startup.
+     */
     private void makeAnimation() {
         if (BaseController.isFirstLoad) {
             BaseController.isFirstLoad = false;
@@ -143,6 +155,10 @@ public class MainPageController extends MenuController {
 
     }
 
+    /**
+     * Loads specific fxml file into page a treats it as component view. Generates constraints on input fields and add tooltips.
+     * @param part Path to fxml component file.
+     */
     private void loadSpecificFxmlPart(String part) {
         Parent newPane = null;
         try {
@@ -181,6 +197,9 @@ public class MainPageController extends MenuController {
         actualizeTextEdits();
     }
 
+    /**
+     * Populates input fields if problem was already chosen.
+     */
     private void actualizeTextEdits() {
         if (averageWeight != null) {
             if (BaseController.chosenProblem instanceof KnapsackProblem) {
@@ -205,8 +224,37 @@ public class MainPageController extends MenuController {
         }
     }
 
+    /**
+     * Puts property into map
+     * @param map parameters map
+     * @param field input field with value
+     */
+    private void putIntoMap(Map<String, String> map, TextField field) {
+        if (field != null && !field.getText().equals("")) map.put(field.getId(), field.getText());
+    }
+
+    /**
+     * Check if constrains on problem parameters are met, initializes problem and loads algorithm page.
+     * @throws IOException
+     */
     public void proceed() throws IOException {
         if (BaseController.chosenProblem != null) {
+            var map = new HashMap<String, String>();
+            putIntoMap(map, numberOfItems);
+            putIntoMap(map, averageWeight);
+            putIntoMap(map, backpackCapacity);
+            putIntoMap(map, sizeOfProblem);
+            putIntoMap(map, vehicleCapacity);
+            putIntoMap(map, averageDemand);
+            putIntoMap(map, numberOfTargets);
+            putIntoMap(map, numberOfWeapons);
+            putIntoMap(map, maxAssignedTargets);
+
+            if (map.keySet().size() != 3) {
+                warning.setText("No input field should be empty!");
+                return;
+            }
+
             if (averageDemand != null && vehicleCapacity != null && Integer.parseInt(averageDemand.getText()) > Integer.parseInt(vehicleCapacity.getText())) {
                 warning.setText("Average demand should not be higher than vehicle capacity!");
                 return;
@@ -222,18 +270,12 @@ public class MainPageController extends MenuController {
                 return;
             }
 
+            if (sizeOfProblem != null && Integer.parseInt(sizeOfProblem.getText()) <= 1) {
+                warning.setText("Size of the problem should be more than 1!");
+                return;
+            }
 
 
-            var map = new HashMap<String, String>();
-            if (numberOfItems != null) map.put(numberOfItems.getId(), numberOfItems.getText());
-            if (averageWeight != null) map.put(averageWeight.getId(), averageWeight.getText());
-            if (backpackCapacity != null) map.put(backpackCapacity.getId(), backpackCapacity.getText());
-            if (sizeOfProblem != null) map.put(sizeOfProblem.getId(), sizeOfProblem.getText());
-            if (vehicleCapacity != null) map.put(vehicleCapacity.getId(), vehicleCapacity.getText());
-            if (averageDemand != null) map.put(averageDemand.getId(), averageDemand.getText());
-            if (numberOfTargets != null) map.put(numberOfTargets.getId(), numberOfTargets.getText());
-            if (numberOfWeapons != null) map.put(numberOfWeapons.getId(), numberOfWeapons.getText());
-            if (maxAssignedTargets != null) map.put(maxAssignedTargets.getId(), maxAssignedTargets.getText());
 
             BaseController.chosenProblem.init(map);
             BaseController.chosenProblem.regenerate();
@@ -247,10 +289,17 @@ public class MainPageController extends MenuController {
         }
     }
 
+    /**
+     * Clears warning.
+     */
     public void removeWarning() {
         warning.setText("");
     }
 
+    /**
+     * Loads visualization page for datasets.
+     * @throws IOException
+     */
     public void visualizeData() throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/visualizationPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));

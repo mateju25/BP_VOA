@@ -1,6 +1,8 @@
 package model.utils;
 
-// code inspired by https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
+/**
+ * Class that holds a multiple values of distinct colors. This code inspired by https://stackoverflow.com/questions/309149/generate-distinctly-different-rgb-colors-in-graphs
+ */
 public class DistinctColors {
     public static final String[] colors = new String[]{
             "#000000", "#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",

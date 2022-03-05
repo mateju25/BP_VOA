@@ -16,9 +16,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Implementation of vehicle routing problem
+ */
 @Getter
 @Setter
 public class VehicleRoutingProblem implements Problem {
+    /**
+     * Private class that represents city.
+     */
     private static class Point {
         private final Integer xCor;
         private final Integer yCor;
@@ -42,7 +48,10 @@ public class VehicleRoutingProblem implements Problem {
     @JsonIgnore
     private List<Color> colorsOfItems;
 
-
+    /**
+     * Initializes problem with parameters.
+     * @param parameters parameters from input fields.
+     */
     @Override
     public void init(Map<String, String> parameters) {
         this.sizeOfTheProblem = Integer.parseInt(parameters.get("sizeOfProblem"));
@@ -50,6 +59,9 @@ public class VehicleRoutingProblem implements Problem {
         this.averageDemand = Integer.parseInt(parameters.get("averageDemand"));
     }
 
+    /**
+     * Regenerates problem. Creates cities and distance matrix.
+     */
     @Override
     public void regenerate() {
         points = new ArrayList<>();
@@ -89,6 +101,10 @@ public class VehicleRoutingProblem implements Problem {
         fitnessCoefficient *= 10;
     }
 
+    /**
+     * Initializes matrix of pheromones with dimension of the problem, used in ACS
+     * @return matrix of pheromones
+     */
     @Override
     public List<List<Double>> initPheromoneMatrix() {
         ArrayList<List<Double>> matrix = new ArrayList<>();
@@ -98,6 +114,11 @@ public class VehicleRoutingProblem implements Problem {
         return matrix;
     }
 
+    /**
+     * Check if all constraints are met in VRP.
+     * @param individual one solution of the problem
+     * @return sanitized solution
+     */
     private List<Integer> checkAnAddBaseTownToIndividual(List<Integer> individual) {
         var currDemand = 0;
         int i = 0;
@@ -122,6 +143,10 @@ public class VehicleRoutingProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Make one solution of the problem, used in GA, ABC
+     * @return individual
+     */
     @Override
     public List<Integer> makeOneIndividual() {
         var newIndividual = new ArrayList<Integer>();
@@ -138,6 +163,11 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(shuffledIndividual);
     }
 
+    /**
+     * Make one solution of the problem, used in ACS
+     * @param acs ACS algorithm instance
+     * @return individual
+     */
     @Override
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         var newIndividual = new ArrayList<Integer>();
@@ -176,6 +206,11 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
+    /**
+     * Generates edges that will have increased pheromone level
+     * @param individual best individual in iteration
+     * @return matrix of pheromones
+     */
     @Override
     public List<List<Double>> generateEdges(List<Integer> individual) {
         var edges = initPheromoneMatrix();
@@ -186,11 +221,20 @@ public class VehicleRoutingProblem implements Problem {
         return edges;
     }
 
+    /**
+     * @param from start node
+     * @param to to node
+     * @return heuristic value of one line in graph
+     */
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
         return 1 / (matrixOfDistances.get(from).get(to) + 0.001);
     }
 
+    /**
+     * @param individual solution of the problem
+     * @return fitness value of solution
+     */
     @Override
     public Double fitness(List<Integer> individual) {
         var currentFitness = 0.0;
@@ -201,6 +245,11 @@ public class VehicleRoutingProblem implements Problem {
         return (currentFitness) * fitnessCoefficient;
     }
 
+    /**
+     * Changes individual, used in GA
+     * @param individual solution of the problem
+     * @return mutated individual
+     */
     @Override
     public List<Integer> mutate(List<Integer> individual) {
         var newIndividual = individual.stream().filter(e -> e != 0).collect(Collectors.toList());
@@ -211,6 +260,12 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
+    /**
+     * Changes individual, used in ABC
+     * @param individual one solution of the problem
+     * @param probChange strength of the mutation
+     * @return changed individual
+     */
     @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         List<Integer> newIndividual = new ArrayList<>();
@@ -225,6 +280,12 @@ public class VehicleRoutingProblem implements Problem {
         return checkAnAddBaseTownToIndividual(newIndividual);
     }
 
+    /**
+     * Creates two children by single point cross-overing parents, used in GA
+     * @param parent1 one solution of the problem
+     * @param parent2 second solution of the problem
+     * @return pair of children
+     */
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var newParent1 = parent1.stream().filter(e -> e != 0).collect(Collectors.toList());
@@ -243,6 +304,12 @@ public class VehicleRoutingProblem implements Problem {
         return new Pair<>(checkAnAddBaseTownToIndividual(child1), null);
     }
 
+    /**
+     * Creates two children by double point cross-overing parents, used in GA
+     * @param parent1 one solution of the problem
+     * @param parent2 second solution of the problem
+     * @return pair of children
+     */
     @Override
     public Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var newParent1 = parent1.stream().filter(e -> e != 0).collect(Collectors.toList());
@@ -260,16 +327,27 @@ public class VehicleRoutingProblem implements Problem {
         return new Pair<>(checkAnAddBaseTownToIndividual(child1), null);
     }
 
+    /**
+     * @return message that will be displayed in simulation.
+     */
     @Override
     public String nameForFaces() {
         return "Vehicle Routing Problem";
     }
 
+    /**
+     * @return component that will controller need.
+     */
     @Override
     public String nameOfFxmlFiles() {
         return "VRPPage.fxml";
     }
 
+    /**
+     * Visualize best solution to the provided canvas.
+     * @param canvas visualization place
+     * @param data algorithm results
+     */
     @Override
     public void visualize(Canvas canvas, AlgorithmResults data) {
         if (data != null) {
@@ -350,6 +428,10 @@ public class VehicleRoutingProblem implements Problem {
         }
     }
 
+    /**
+     * Sets parameters.
+     * @param number index of preset problem
+     */
     @Override
     public void setPreset(Integer number) {
         var params = new HashMap<String, String>();

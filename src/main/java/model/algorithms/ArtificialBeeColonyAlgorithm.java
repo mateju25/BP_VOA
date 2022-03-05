@@ -9,6 +9,9 @@ import model.utils.AlgorithmResults;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of artificial bee colony algorithm
+ */
 @Setter
 @Getter
 public class ArtificialBeeColonyAlgorithm implements Algorithm {
@@ -29,7 +32,10 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
     private Double mutationUpper;
     private Double mutationLower;
 
-
+    /**
+     * Initiliazes algorithm with parameters.
+     * @param parameters parameters from input fields.
+     */
     @Override
     public void init(Map<String, String> parameters) {
         this.sizeBeeHive = Integer.parseInt(parameters.get("sizeBeeHive"));
@@ -41,6 +47,9 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
         resetAlgorithm();
     }
 
+    /**
+     * Creates first generation.
+     */
     @Override
     public void initFirstGeneration() {
         for (int i = 0; i < this.sizeBeeHive * percentageEmployed; i++) {
@@ -48,10 +57,16 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
         }
     }
 
+    /**
+     * Returns result of roulette selection.
+     */
     public Integer rouletteSelection() {
         return Algorithm.getCumulativeFitnessesIndex(generation.stream().mapToDouble(e -> problem.fitness(e)).boxed().collect(Collectors.toList()));
     }
 
+    /**
+     * Set better source or update forget count.
+     */
     private void takeBetterIndividual(Integer index, Integer oldCountIndex) {
         var individual = problem.localSearch(generation.get(index), mutationLower + (actualGeneration / numberOfIterations) * (mutationUpper - mutationLower));
         if (problem.fitness(individual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
@@ -64,6 +79,10 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
             oldCount.set(index, oldCount.get(index) + 1);
     }
 
+    /**
+     * Runs one iteration of ABC algorithm.
+     * @return results after one run.
+     */
     @Override
     public AlgorithmResults nextGeneration() {
         if (actualGeneration < numberOfIterations) {
@@ -100,6 +119,9 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
             return null;
     }
 
+    /**
+     * Resets algorithm to the first generation.
+     */
     @Override
     public void resetAlgorithm() {
         this.actualGeneration = 0;
@@ -108,11 +130,17 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
         this.oldCount = new ArrayList<>(Collections.nCopies((int) Math.round(sizeBeeHive * percentageEmployed), 0));
     }
 
+    /**
+     * @return message that will be displayed in simulation.
+     */
     @Override
     public String nameForFaces() {
         return "Artificial Bee Colony Algorithm";
     }
 
+    /**
+     * @return all components that will controller need.
+     */
     @Override
     public String[] nameOfFxmlFiles() {
         var arr = new String[1];

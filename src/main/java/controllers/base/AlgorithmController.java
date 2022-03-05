@@ -23,9 +23,13 @@ import model.utils.TextFormattersFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Controller that controls the flow of page where user chooses which algorithm should be used. In views it uses algorithmPage.fxml and component views.
+ */
 public class AlgorithmController extends MenuController {
     @FXML public Label warning;
     @FXML public Pane infoBox;
@@ -81,6 +85,9 @@ public class AlgorithmController extends MenuController {
     public ImageView toolParamB;
     private Boolean controllerLoaded = false;
 
+    /**
+     * Initialize algorithm page view. Initialize menu and all input fields if necessary. Populates algorithm choice box.
+     */
     public void initialize() {
         if (controllerLoaded)
             return;
@@ -123,6 +130,10 @@ public class AlgorithmController extends MenuController {
         }
     }
 
+    /**
+     * Loads specific fxml file into page a treats it as component view. Generates constraints on input fields and add tooltips.
+     * @param part Path to fxml component file.
+     */
     private void loadSpecificFxmlPart(String part) {
          Parent newPane = null;
         try {
@@ -188,7 +199,9 @@ public class AlgorithmController extends MenuController {
         actualizeTextEdits();
     }
 
-
+    /**
+     * Populates input fields if algorithm was already chosen.
+     */
     private void actualizeTextEdits() {
         if (percentageRoulette != null) {
             if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm) {
@@ -227,8 +240,57 @@ public class AlgorithmController extends MenuController {
         }
     }
 
+    /**
+     * Puts property into map
+     * @param map parameters map
+     * @param field input field with value
+     */
+    private void putIntoMap(Map<String, String> map, TextField field) {
+        if (field != null && !field.getText().equals("")) map.put(field.getId(), field.getText());
+    }
+
+
+    /**
+     * Check if constrains on algorithm parameters are met, initializes algorithm and loads simulation page.
+     * @throws IOException
+     */
     public void proceed() throws IOException {
         if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
+            var map = new HashMap<String, String>();
+            putIntoMap(map, numberIndividuals);
+            putIntoMap(map, numberGenerations);
+            putIntoMap(map, percentageRoulette);
+            putIntoMap(map, percentageTournament);
+            putIntoMap(map, sizeTournament);
+            putIntoMap(map, percentageElitism);
+            putIntoMap(map, percentageMutation);
+            putIntoMap(map, sizeBeeHive);
+            putIntoMap(map, numberOfIterations);
+            putIntoMap(map, forgetCount);
+            putIntoMap(map, employedBees);
+            putIntoMap(map, numberOfAnts);
+            putIntoMap(map, pheromone);
+            putIntoMap(map, parameterB);
+            putIntoMap(map, parameterA);
+            putIntoMap(map, parameterQ);
+            putIntoMap(map, mutationLower);
+            putIntoMap(map, mutationUpper);
+            if (typeCrossover != null)
+                map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex() + "");
+
+            if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm && map.keySet().size() != 8) {
+                warning.setText("No input field should be empty!");
+                return;
+            }
+            if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm && map.keySet().size() != 6) {
+                warning.setText("No input field should be empty!");
+                return;
+            }
+            if (BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm && map.keySet().size() != 6) {
+                warning.setText("No input field should be empty!");
+                return;
+            }
+
             if (sizeTournament != null && numberIndividuals != null && Integer.parseInt(sizeTournament.getText()) > Integer.parseInt(numberIndividuals.getText())) {
                 warning.setText("Tournament size should not exceed number of individuals!");
                 return;
@@ -246,28 +308,6 @@ public class AlgorithmController extends MenuController {
                 return;
             }
 
-            var map = new HashMap<String, String>();
-            if (numberIndividuals != null) map.put(numberIndividuals.getId(), numberIndividuals.getText());
-            if (numberGenerations != null) map.put(numberGenerations.getId(), numberGenerations.getText());
-            if (percentageRoulette != null) map.put(percentageRoulette.getId(), percentageRoulette.getText());
-            if (percentageTournament != null) map.put(percentageTournament.getId(), percentageTournament.getText());
-            if (sizeTournament != null) map.put(sizeTournament.getId(), sizeTournament.getText());
-            if (percentageElitism != null) map.put(percentageElitism.getId(), percentageElitism.getText());
-            if (percentageMutation != null) map.put(percentageMutation.getId(), percentageMutation.getText());
-            if (sizeBeeHive != null) map.put(sizeBeeHive.getId(), sizeBeeHive.getText());
-            if (numberOfIterations != null) map.put(numberOfIterations.getId(), numberOfIterations.getText());
-            if (forgetCount != null) map.put(forgetCount.getId(), forgetCount.getText());
-            if (employedBees != null) map.put(employedBees.getId(), employedBees.getText());
-            if (numberOfAnts != null) map.put(numberOfAnts.getId(), numberOfAnts.getText());
-            if (pheromone != null) map.put(pheromone.getId(), pheromone.getText());
-            if (parameterB != null) map.put(parameterB.getId(), parameterB.getText());
-            if (parameterA != null) map.put(parameterA.getId(), parameterA.getText());
-            if (parameterQ != null) map.put(parameterQ.getId(), parameterQ.getText());
-            if (mutationLower != null) map.put(mutationLower.getId(), mutationLower.getText());
-            if (mutationUpper != null) map.put(mutationUpper.getId(), mutationUpper.getText());
-            if (typeCrossover != null)
-                map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex() + "");
-
             BaseController.randomGenerator = new Random(BaseController.randomSeed);
             BaseController.chosenAlgorithm.init(map);
 
@@ -280,13 +320,19 @@ public class AlgorithmController extends MenuController {
 
     }
 
+    /**
+     * Loads main page.
+     * @throws IOException
+     */
     public void goBack() throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/mainPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
     }
 
-
+    /**
+     * Clears warning.
+     */
     public void removeWarning() {
         warning.setText("");
     }

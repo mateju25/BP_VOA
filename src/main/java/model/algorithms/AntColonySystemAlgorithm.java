@@ -10,6 +10,9 @@ import model.utils.AlgorithmResults;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of ant colony system algorithm
+ */
 @Getter
 @Setter
 public class AntColonySystemAlgorithm implements Algorithm {
@@ -30,6 +33,10 @@ public class AntColonySystemAlgorithm implements Algorithm {
     private Double parameterBeta;
     private Double parameterQ;
 
+    /**
+     * Initiliazes algorithm with parameters.
+     * @param parameters parameters from input fields.
+     */
     @Override
     public void init(Map<String, String> parameters) {
         this.numberOfAnts = Integer.parseInt(parameters.get("numberOfAnts"));
@@ -41,6 +48,12 @@ public class AntColonySystemAlgorithm implements Algorithm {
         resetAlgorithm();
     }
 
+    /**
+     * Returns probality for each edge on graph
+     * @param from start node
+     * @param notVisited all unvisited nodes
+     * @return map with node and value
+     */
     public Map<Integer, Double> getProbabilityOfEdges(Integer from, List<Integer> notVisited) {
         var map = new HashMap<Integer, Double>();
         var sum = 0.0;
@@ -60,11 +73,19 @@ public class AntColonySystemAlgorithm implements Algorithm {
         return map;
     }
 
+    /**
+     * Update pheromone level on th edge
+     * @param fromCity start node
+     * @param newIndex end node
+     */
     public void localUpdateEdge(Integer fromCity, Integer newIndex) {
         var newVal = matrixOfPheromone.get(fromCity).get(newIndex) * (1 - pheromoneVapor) + pheromoneVapor * 0;
         matrixOfPheromone.get(fromCity).set(newIndex, newVal);
     }
 
+    /**
+     * Creates first generation and initializes pheromone matrix.
+     */
     @Override
     public void initFirstGeneration() {
         matrixOfPheromone = problem.initPheromoneMatrix();
@@ -73,6 +94,10 @@ public class AntColonySystemAlgorithm implements Algorithm {
         }
     }
 
+    /**
+     * Runs one iteration of ACS algorithm.
+     * @return results after one run.
+     */
     @Override
     public AlgorithmResults nextGeneration() {
         if (actualGeneration < numberOfIterations) {
@@ -112,6 +137,9 @@ public class AntColonySystemAlgorithm implements Algorithm {
             return null;
     }
 
+    /**
+     * Resets algorithm to the first generation.
+     */
     @Override
     public void resetAlgorithm() {
         this.actualGeneration = 0;
@@ -119,11 +147,17 @@ public class AntColonySystemAlgorithm implements Algorithm {
         this.bestIndividual = new ArrayList<>();
     }
 
+    /**
+     * @return message that will be displayed in simulation.
+     */
     @Override
     public String nameForFaces() {
         return "Ant Colony System Algorithm";
     }
 
+    /**
+     * @return all components that will controller need.
+     */
     @Override
     public String[] nameOfFxmlFiles() {
         var arr = new String[1];

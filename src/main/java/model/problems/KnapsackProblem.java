@@ -17,6 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Implementation of 0-1 knapsack problem
+ */
 @Getter
 @Setter
 public class KnapsackProblem implements Problem {
@@ -30,6 +33,10 @@ public class KnapsackProblem implements Problem {
     private Integer averageWeightOfItem;
     private Integer numberOfItems;
 
+    /**
+     * Initializes problem with parameters.
+     * @param parameters parameters from input fields.
+     */
     @Override
     public void init(Map<String, String> parameters) {
         this.numberOfItems = Integer.parseInt(parameters.get("numberOfItems"));
@@ -37,6 +44,9 @@ public class KnapsackProblem implements Problem {
         this.weightOfBackpack = Integer.parseInt(parameters.get("backpackCapacity"));
     }
 
+    /**
+     * Regenerates problem. Creates weight and values of all items.
+     */
     @Override
     public void regenerate() {
         this.itemWeight = new ArrayList<>();
@@ -54,6 +64,10 @@ public class KnapsackProblem implements Problem {
         }
     }
 
+    /**
+     * Initializes matrix of pheromones with dimension of the problem, used in ACS
+     * @return matrix of pheromones
+     */
     @Override
     public List<List<Double>> initPheromoneMatrix() {
         ArrayList<List<Double>> matrix = new ArrayList<>();
@@ -64,6 +78,10 @@ public class KnapsackProblem implements Problem {
         return matrix;
     }
 
+    /**
+     * @param items solution of the problem
+     * @return return sum of item weights
+     */
     private Integer sumOfItems(List<Integer> items) {
         var sum = 0;
         for (int i = 0; i < items.size(); i++) {
@@ -73,6 +91,10 @@ public class KnapsackProblem implements Problem {
         return sum;
     }
 
+    /**
+     * @param items solution of the problem
+     * @return return sum of item values
+     */
     private Integer sumOfValues(List<Integer> items) {
         var sum = 0;
         for (int i = 0; i < items.size(); i++) {
@@ -82,6 +104,10 @@ public class KnapsackProblem implements Problem {
         return sum;
     }
 
+    /**
+     * Make one solution of the problem, used in GA, ABC
+     * @return individual
+     */
     @Override
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
@@ -101,6 +127,11 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Make one solution of the problem, used in ACS
+     * @param acs ACS algorithm instance
+     * @return individual
+     */
     @Override
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         var freeItems = IntStream.range(0, numberOfItems).boxed().collect(Collectors.toList());
@@ -142,6 +173,11 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Generates edges that will have increased pheromone level
+     * @param individual best individual in iteration
+     * @return matrix of pheromones
+     */
     @Override
     public List<List<Double>> generateEdges(List<Integer> individual) {
         var edges = initPheromoneMatrix();
@@ -157,16 +193,30 @@ public class KnapsackProblem implements Problem {
         return edges;
     }
 
+    /**
+     * @param from start node
+     * @param to to node
+     * @return heuristic value of one line in graph
+     */
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
         return itemValue.get(to) * 0.01;
     }
 
+    /**
+     * @param individual solution of the problem
+     * @return fitness value of solution
+     */
     @Override
     public Double fitness(List<Integer> individual) {
         return 1.0 / (sumOfValues(individual) + 1.0) * numberOfItems;
     }
 
+    /**
+     * Changes individual, used in GA
+     * @param individual solution of the problem
+     * @return mutated individual
+     */
     @Override
     public List<Integer> mutate(List<Integer> individual) {
         var tmpIndividual = new ArrayList<>(individual);
@@ -183,6 +233,12 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Changes individual, used in ABC
+     * @param individual one solution of the problem
+     * @param probChange strength of the mutation
+     * @return changed individual
+     */
     @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         var tmpIndividual = new ArrayList<>(individual);
@@ -205,6 +261,12 @@ public class KnapsackProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Creates two children by single point cross-overing parents, used in GA
+     * @param parent1 one solution of the problem
+     * @param parent2 second solution of the problem
+     * @return pair of children
+     */
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
@@ -226,6 +288,12 @@ public class KnapsackProblem implements Problem {
         return new Pair<>(child1, child2);
     }
 
+    /**
+     * Creates two children by double point cross-overing parents, used in GA
+     * @param parent1 one solution of the problem
+     * @param parent2 second solution of the problem
+     * @return pair of children
+     */
     @Override
     public Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
@@ -253,16 +321,27 @@ public class KnapsackProblem implements Problem {
         return new Pair<>(child1, child2);
     }
 
+    /**
+     * @return message that will be displayed in simulation.
+     */
     @Override
     public String nameForFaces() {
         return "Knapsack Problem";
     }
 
+    /**
+     * @return component that will controller need.
+     */
     @Override
     public String nameOfFxmlFiles() {
         return "KPPage.fxml";
     }
 
+    /**
+     * Visualize best solution to the provided canvas.
+     * @param canvas visualization place
+     * @param data algorithm results
+     */
     @Override
     public void visualize(Canvas canvas, AlgorithmResults data) {
         if (data != null) {
@@ -295,6 +374,10 @@ public class KnapsackProblem implements Problem {
         }
     }
 
+    /**
+     * Sets parameters.
+     * @param number index of preset problem
+     */
     @Override
     public void setPreset(Integer number) {
         var params = new HashMap<String, String>();

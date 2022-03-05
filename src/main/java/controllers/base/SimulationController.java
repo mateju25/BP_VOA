@@ -34,6 +34,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 
+/**
+ * Controllers that controls flow of simulation of algorithm.
+ */
 public class SimulationController extends MenuController {
     @FXML
     public Label heading;
@@ -82,7 +85,9 @@ public class SimulationController extends MenuController {
     private long elapsedTime = 0;
     private SimulationResults results;
 
-
+    /**
+     * Initialize simulation page view. Prepares chart and canvas component. Creates animator for chart and main thread for algorithm run.
+     */
     public void initialize() {
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
         speedChanger.adjustValue(simulationSpeed);
@@ -160,7 +165,7 @@ public class SimulationController extends MenuController {
                 seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getBestFitness()));
                 seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getAverageFitnessInGen()));
                 setBoundaries(data);
-                BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
+                BaseController.chosenProblem.visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
                     btnSave.setDisable(false);
@@ -209,6 +214,10 @@ public class SimulationController extends MenuController {
         });
     }
 
+    /**
+     * Changes boundaries that chart shows.
+     * @param data Algorithm results from which best and average fitness is used.
+     */
     private void setBoundaries(AlgorithmResults data) {
         var highBound = yAxis.getUpperBound();
         if (highBound < data.getAverageFitnessInGen() + 0.5) {
@@ -221,6 +230,9 @@ public class SimulationController extends MenuController {
         yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
     }
 
+    /**
+     * Prepares control buttons for simulation page.
+     */
     private void prepareControlButtons() {
         btnRestart.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/restart.png")))));
         btnPause.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pause.png")))));
@@ -235,6 +247,10 @@ public class SimulationController extends MenuController {
         BaseController.makeTooltip(btnRandomize, "Generate new problem");
     }
 
+    /**
+     * Stops simulation and go back to algorithm page.
+     * @throws IOException
+     */
     public void goBack() throws IOException {
         simulationRestart = true;
         animationTimer.stop();
@@ -243,19 +259,30 @@ public class SimulationController extends MenuController {
         BaseController.mainStage.show();
     }
 
+    /**
+     * Unpauses simulation.
+     */
     public void continueSim() {
         simulationRunning = true;
         btnContinue.setDisable(true);
         btnPause.setDisable(false);
     }
 
+    /**
+     * Pauses simulation.
+     */
     public void pauseSim() {
         simulationRunning = false;
         btnContinue.setDisable(false);
         btnPause.setDisable(true);
     }
 
+    /**
+     * Restarts simulation.
+     * @throws IOException
+     */
     public void restartSim() throws IOException {
+        int oldSimSpeed = simulationSpeed;
         executorService.shutdownNow();
         elapsedTime = 0;
         simulationRestart = true;
@@ -264,14 +291,21 @@ public class SimulationController extends MenuController {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
+        speedChanger.adjustValue(oldSimSpeed);
     }
 
+    /**
+     * Switches between chart view and canvas view.
+     */
     public void switchVisualization() {
         BaseController.simulationChart = !BaseController.simulationChart;
         canvas.setVisible(!BaseController.simulationChart);
         chart.setVisible(BaseController.simulationChart);
     }
 
+    /**
+     * Saves a simulation run that will be available in visualization page.
+     */
     public void addToVisualization() {
         btnSaveD.setDisable(true);
         if (BaseController.savedDatasets == null)
@@ -283,11 +317,17 @@ public class SimulationController extends MenuController {
         BaseController.showInfo(infoBox, infoBoxLabel, "Simulation results added to visualization page!");
     }
 
+    /**
+     * Regenerates problem.
+     */
     public void randomizeProblem() {
         BaseController.chosenProblem.regenerate();
         BaseController.showInfo(infoBox, infoBoxLabel, "Problem was regenerated!");
     }
 
+    /**
+     * Run 100 simulations.
+     */
     public void runSims() {
         moreSimsPane.setVisible(true);
 
@@ -393,7 +433,7 @@ public class SimulationController extends MenuController {
                     chart.getData().add(series.remove());
 
                     var bestbest = bestRes.remove();
-                    BaseController.chosenAlgorithm.getProblem().visualize(canvas, bestbest);
+                    BaseController.chosenProblem.visualize(canvas, bestbest);
 
                     lblAverage.setText(String.format("%,.4f", bestbest.getAverageFitnessInGen()));
                     lblBest.setText(String.format("%,.4f", bestbest.getBestFitness()));
@@ -414,6 +454,9 @@ public class SimulationController extends MenuController {
         animationTimer.start();
     }
 
+    /**
+     * Disables all buttons during 100 simulation run.
+     */
     public void cancelSimulations() {
         moreSimulationRunning = false;
         moreSimsPane.setVisible(false);

@@ -16,6 +16,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Implementation of target assignment problem
+ */
 @Getter
 @Setter
 public class TargetAssignmentProblem implements Problem {
@@ -29,6 +32,10 @@ public class TargetAssignmentProblem implements Problem {
     @JsonIgnore
     private List<Color> colorsOfItems;
 
+    /**
+     * Initializes problem with parameters.
+     * @param parameters parameters from input fields.
+     */
     @Override
     public void init(Map<String, String> parameters) {
         this.numOfTargets = Integer.parseInt(parameters.get("numberOfTargets"));
@@ -36,6 +43,9 @@ public class TargetAssignmentProblem implements Problem {
         this.maximumAssignedTargets = Integer.parseInt(parameters.get("maxAssignedTargets"));
     }
 
+    /**
+     * Regenerates problem. Creates weight and values of all items.
+     */
     @Override
     public void regenerate() {
         matrixOfProbabilities = new ArrayList<>(numOfWeapons);
@@ -57,6 +67,10 @@ public class TargetAssignmentProblem implements Problem {
         }
     }
 
+    /**
+     * Initializes matrix of pheromones with dimension of the problem, used in ACS
+     * @return matrix of pheromones
+     */
     @Override
     public List<List<Double>> initPheromoneMatrix() {
         ArrayList<List<Double>> matrix = new ArrayList<>();
@@ -67,6 +81,10 @@ public class TargetAssignmentProblem implements Problem {
         return matrix;
     }
 
+    /**
+     * Make one solution of the problem, used in GA, ABC
+     * @return individual
+     */
     @Override
     public List<Integer> makeOneIndividual() {
         var individual = new ArrayList<Integer>();
@@ -84,6 +102,11 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Make one solution of the problem, used in ACS
+     * @param acs ACS algorithm instance
+     * @return individual
+     */
     @Override
     public List<Integer> makeOneIndividual(AntColonySystemAlgorithm acs) {
         var individual = new ArrayList<Integer>();
@@ -113,6 +136,11 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Generates edges that will have increased pheromone level
+     * @param individual best individual in iteration
+     * @return matrix of pheromones
+     */
     @Override
     public List<List<Double>> generateEdges(List<Integer> individual) {
         var edges = initPheromoneMatrix();
@@ -123,11 +151,20 @@ public class TargetAssignmentProblem implements Problem {
         return edges;
     }
 
+    /**
+     * @param from start node
+     * @param to to node
+     * @return heuristic value of one line in graph
+     */
     @Override
     public Double getHeuristicValue(Integer from, Integer to) {
         return matrixOfProbabilities.get(from).get(to);
     }
 
+    /**
+     * @param individual solution of the problem
+     * @return fitness value of solution
+     */
     @Override
     public Double fitness(List<Integer> individual) {
         var actualDes = new ArrayList<>(targetValues);
@@ -138,6 +175,11 @@ public class TargetAssignmentProblem implements Problem {
         return (actualDes.stream().reduce(0.0, Double::sum));
     }
 
+    /**
+     * Changes individual, used in GA
+     * @param individual solution of the problem
+     * @return mutated individual
+     */
     @Override
     public List<Integer> mutate(List<Integer> individual) {
         var index = BaseController.randomGenerator.nextInt((individual.size() - 1) / 2) * 2 + 1;
@@ -146,6 +188,12 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Changes individual, used in ABC
+     * @param individual one solution of the problem
+     * @param probChange strength of the mutation
+     * @return changed individual
+     */
     @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         for (int i = 0; i < individual.size() * probChange; i++) {
@@ -155,6 +203,12 @@ public class TargetAssignmentProblem implements Problem {
         return individual;
     }
 
+    /**
+     * Creates two children by single point cross-overing parents, used in GA
+     * @param parent1 one solution of the problem
+     * @param parent2 second solution of the problem
+     * @return pair of children
+     */
     @Override
     public Pair<List<Integer>, List<Integer>> simpleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
@@ -176,6 +230,12 @@ public class TargetAssignmentProblem implements Problem {
         return new Pair<>(child1, null);
     }
 
+    /**
+     * Creates two children by double point cross-overing parents, used in GA
+     * @param parent1 one solution of the problem
+     * @param parent2 second solution of the problem
+     * @return pair of children
+     */
     @Override
     public Pair<List<Integer>, List<Integer>> doubleCrossover(List<Integer> parent1, List<Integer> parent2) {
         var child1 = new ArrayList<Integer>();
@@ -198,16 +258,27 @@ public class TargetAssignmentProblem implements Problem {
         return new Pair<>(child1, null);
     }
 
+    /**
+     * @return message that will be displayed in simulation.
+     */
     @Override
     public String nameForFaces() {
         return "Target Assignment Problem";
     }
 
+    /**
+     * @return component that will controller need.
+     */
     @Override
     public String nameOfFxmlFiles() {
         return "TAPPage.fxml";
     }
 
+    /**
+     * Visualize best solution to the provided canvas.
+     * @param canvas visualization place
+     * @param data algorithm results
+     */
     @Override
     public void visualize(Canvas canvas, AlgorithmResults data) {
         if (data != null) {
@@ -254,6 +325,10 @@ public class TargetAssignmentProblem implements Problem {
         }
     }
 
+    /**
+     * Sets parameters.
+     * @param number index of preset problem
+     */
     @Override
     public void setPreset(Integer number) {
         var params = new HashMap<String, String>();

@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of genetic algorithm
+ */
 @Setter
 @Getter
 public class GeneticAlgorithm implements Algorithm {
@@ -34,7 +37,10 @@ public class GeneticAlgorithm implements Algorithm {
     private Double percentageMutation;
     private Integer typeOfCrossover;
 
-
+    /**
+     * Initiliazes algorithm with parameters.
+     * @param parameters parameters from input fields.
+     */
     @Override
     public void init(Map<String, String> parameters) {
         this.numOfIndividuals = Integer.parseInt(parameters.get("numberIndividuals"));
@@ -48,6 +54,9 @@ public class GeneticAlgorithm implements Algorithm {
         resetAlgorithm();
     }
 
+    /**
+     * Resets algorithm to the first generation.
+     */
     @Override
     public void resetAlgorithm() {
         this.actualGeneration = 0;
@@ -55,6 +64,9 @@ public class GeneticAlgorithm implements Algorithm {
         this.bestIndividual = new ArrayList<>();
     }
 
+    /**
+     * Creates first generation.
+     */
     @Override
     public void initFirstGeneration() {
         for (int i = 0; i < this.numOfIndividuals; i++) {
@@ -62,6 +74,10 @@ public class GeneticAlgorithm implements Algorithm {
         }
     }
 
+    /**
+     * @param parents parents that will be used in crossover
+     * @return list of children after crossover
+     */
     private List<List<Integer>> makeChildrenWithCrossover(List<List<Integer>> parents) {
         var children = new ArrayList<List<Integer>>(2);
         Pair<List<Integer>, List<Integer>> resCrossover;
@@ -75,6 +91,9 @@ public class GeneticAlgorithm implements Algorithm {
         return children;
     }
 
+    /**
+     * @return result of tournament selection.
+     */
     private List<List<Integer>> tournamentSelection() {
         var tournamentMembers = new ArrayList<List<Integer>>();
         BaseController.randomGenerator.ints(0, generation.size()).limit(sizeTournament).forEach(index -> tournamentMembers.add(generation.get(index)));
@@ -84,6 +103,9 @@ public class GeneticAlgorithm implements Algorithm {
         return makeChildrenWithCrossover(parents);
     }
 
+    /**
+     *  @return result of roulette selection.
+     */
     private List<List<Integer>> rouletteSelection() {
         var parents = new ArrayList<List<Integer>>(2);
         for (int i = 0; i < 2; i++) {
@@ -93,6 +115,10 @@ public class GeneticAlgorithm implements Algorithm {
         return makeChildrenWithCrossover(parents);
     }
 
+    /**
+     * Runs one iteration of GA algorithm.
+     * @return results after one run.
+     */
     @Override
     public AlgorithmResults nextGeneration() {
         if (actualGeneration < numOfGenerations) {
@@ -125,11 +151,17 @@ public class GeneticAlgorithm implements Algorithm {
             return null;
     }
 
+    /**
+     * @return message that will be displayed in simulation.
+     */
     @Override
     public String nameForFaces() {
         return "Genetic Algorithm";
     }
 
+    /**
+     * @return all components that will controller need.
+     */
     @Override
     public String[] nameOfFxmlFiles() {
         var arr = new String[1];

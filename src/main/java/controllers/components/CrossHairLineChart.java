@@ -9,7 +9,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.shape.Line;
 
-//this code is inspired by https://stackoverflow.com/questions/56222474/how-to-fix-the-location-of-my-linecharts-crosshair
+/**
+ * Creates custom line chart with ruler. This code is inspired by https://stackoverflow.com/questions/56222474/how-to-fix-the-location-of-my-linecharts-crosshair
+ * @param <X>
+ * @param <Y>
+ */
 public class CrossHairLineChart<X, Y> extends LineChart<Integer, Double> {
 
     private final Line vLine;

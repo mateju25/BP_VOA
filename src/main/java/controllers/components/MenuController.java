@@ -24,11 +24,17 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 
+/**
+ * Controller that provies utility for menu. All controller extends this controller.
+ */
 public class MenuController {
     @FXML public Slider speedChangerMenu;
     @FXML public TextField randomSeed;
     @FXML public MenuItem customMenu;
 
+    /**
+     * Initializes menu.
+     */
     public void initMenu() {
         if (speedChangerMenu != null) {
             speedChangerMenu.valueProperty().addListener(new ChangeListener<>() {
@@ -50,11 +56,17 @@ public class MenuController {
         }
     }
 
+    /**
+     * Closes app.
+     */
     public void closeApp() {
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * Opens doc with instructions.
+     */
     public void openDoc() {
         if (Desktop.isDesktopSupported()) {
             try {
@@ -66,6 +78,10 @@ public class MenuController {
         }
     }
 
+    /**
+     * Shows a window with iformation about application.
+     * @throws IOException
+     */
     public void about() throws IOException {
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/components/aboutProgram.fxml")));
@@ -75,6 +91,9 @@ public class MenuController {
         stage.show();
     }
 
+    /**
+     * Randomizes seed for generator.
+     */
     public void randomSeed() {
         randomSeed.setText(BaseController.randomGenerator.nextInt(100000)+"");
     }

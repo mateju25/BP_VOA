@@ -27,7 +27,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import model.utils.SimulationResults;
-
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +37,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Controller that provides functionality for visualization page.
+ */
 public class VisualizationController extends MenuController {
     @FXML
     public Label heading;
@@ -62,6 +64,10 @@ public class VisualizationController extends MenuController {
     public Double upperBound;
     public Double lowerBound;
 
+    /**
+     * Initializes visualization page view. Loads all saved datasets.
+     * @throws JsonProcessingException
+     */
     public void initialize() throws JsonProcessingException {
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
         initMenu();
@@ -107,6 +113,9 @@ public class VisualizationController extends MenuController {
         listView.setCellFactory(param -> new DatasetPartController());
     }
 
+    /**
+     * Add tooltip for all points in chart.
+     */
     private void addTooltipForNodesInChart() {
         for (XYChart.Series<Integer, Double> s : chart.getData()) {
             for (XYChart.Data<Integer, Double> d : s.getData()) {
@@ -127,6 +136,9 @@ public class VisualizationController extends MenuController {
         }
     }
 
+    /**
+     * Setup initial parameters for axis.
+     */
     private void setupAxises() {
         yAxis.setAutoRanging(false);
         yAxis.setUpperBound(100);
@@ -139,6 +151,10 @@ public class VisualizationController extends MenuController {
         xAxis.setLabel("Generations");
     }
 
+    /**
+     * Creates custom chart.
+     * @param toggleButton Button that property of selection is used to display ruler.
+     */
     private void createChart(ToggleButton toggleButton) {
         chart = new CrossHairLineChart<Integer, Double>((Axis) xAxis, (Axis) yAxis, toggleButton);
         chart.setLayoutY(11);
@@ -148,6 +164,10 @@ public class VisualizationController extends MenuController {
         algoPane.getChildren().add(chart);
     }
 
+    /**
+     * Creates ruler button.
+     * @return toggleable button.
+     */
     private ToggleButton createToggleButton() {
         ToggleButton toggleButton = new ToggleButton();
         toggleButton.setLayoutX(347.0);
@@ -161,12 +181,19 @@ public class VisualizationController extends MenuController {
         return toggleButton;
     }
 
+    /**
+     * Go back to main page.
+     * @throws IOException
+     */
     public void goBack() throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/mainPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
     }
 
+    /**
+     * Loads dataset into list of simulation runs.
+     */
     public void addDataset() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load");
@@ -201,6 +228,10 @@ public class VisualizationController extends MenuController {
         addTooltipForNodesInChart();
     }
 
+    /**
+     * Setup boundaries for scaling.
+     * @param results all simulation results.
+     */
     private void setUpBounds(List<SimulationResults> results) {
         for (SimulationResults simulationResults : results) {
             if (simulationResults.getLowerBound() < lowerBound)
@@ -210,6 +241,12 @@ public class VisualizationController extends MenuController {
         }
     }
 
+    /**
+     * Scales every point in chart to scal 0 - 100.
+     * @param simulationResults one item from simulation results.
+     * @param useBest flag if best curve is showed.
+     * @param useAverage flag if average curve is showed.
+     */
     private void scaleEverythingAndAdd(SimulationResults simulationResults, Boolean useBest, Boolean useAverage) {
         XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
         seriesBest.setName("Best " + simulationResults.getNumberOfDataset());
@@ -233,6 +270,9 @@ public class VisualizationController extends MenuController {
             chart.getData().add(seriesAverage);
     }
 
+    /**
+     * Event listener for change in list view
+     */
     public void somethingChanged() {
         chart.getData().clear();
         var list = new ArrayList<SimulationResults>();
@@ -253,6 +293,10 @@ public class VisualizationController extends MenuController {
         listView.getItems().setAll(list);
     }
 
+    /**
+     * Exports picture of chart
+     * @throws IOException
+     */
     public void exportPicture() throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
