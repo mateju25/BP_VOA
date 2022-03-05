@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<Pane prefHeight="495.0" prefWidth="886.0" styleClass="main" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
     <Pane layoutX="56.0" layoutY="25.0" prefHeight="133.0" prefWidth="790.0" styleClass="pane-around">
         <Label layoutX="14.0" layoutY="14.0" styleClass="label-small-text" text="Parameters of algorithm" />
         <Label layoutX="197.0" layoutY="54.0" styleClass="label-small-text" text="Number of ants:" />

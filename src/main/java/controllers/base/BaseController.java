@@ -38,6 +38,7 @@ public class BaseController {
     public static Boolean simulationChart;
 
     public static ArrayList<SimulationResults> savedDatasets;
+    public static boolean isFirstLoad = true;
 
     public static void init() {
         if (BaseController.algorithms == null) {

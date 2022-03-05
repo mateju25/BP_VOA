@@ -85,7 +85,7 @@ public class SimulationController extends MenuController {
 
     public void initialize() {
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
-        speedChanger.adjustValue(BaseController.simulationSpeed);
+        speedChanger.adjustValue(simulationSpeed);
         initMenu();
 
         simulationRestart = false;
@@ -159,15 +159,7 @@ public class SimulationController extends MenuController {
                 var data = dataQ.remove();
                 seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getBestFitness()));
                 seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getAverageFitnessInGen()));
-                var highBound = yAxis.getUpperBound();
-                if (highBound < data.getAverageFitnessInGen() + 0.5) {
-                    yAxis.setUpperBound(data.getAverageFitnessInGen() + 0.5);
-                }
-                var lowBound = yAxis.getLowerBound();
-                if (lowBound > data.getBestFitness() - 0.5) {
-                    yAxis.setLowerBound(data.getBestFitness() - 0.5);
-                }
-                yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
+                setBoundaries(data);
                 BaseController.chosenAlgorithm.getProblem().visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
@@ -215,6 +207,18 @@ public class SimulationController extends MenuController {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void setBoundaries(AlgorithmResults data) {
+        var highBound = yAxis.getUpperBound();
+        if (highBound < data.getAverageFitnessInGen() + 0.5) {
+            yAxis.setUpperBound(data.getAverageFitnessInGen() + 0.5);
+        }
+        var lowBound = yAxis.getLowerBound();
+        if (lowBound > data.getBestFitness() - 0.5) {
+            yAxis.setLowerBound(data.getBestFitness() - 0.5);
+        }
+        yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
     }
 
     private void prepareControlButtons() {
@@ -348,6 +352,9 @@ public class SimulationController extends MenuController {
                         long delta = System.currentTimeMillis();
                         res = BaseController.chosenAlgorithm.nextGeneration();
                         elapsedTime += System.currentTimeMillis() - delta;
+
+                        if (res != null)
+                            setBoundaries(res);
                     }
                 }
                 moreSimsPane.setVisible(false);

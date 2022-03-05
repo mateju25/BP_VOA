@@ -96,7 +96,8 @@ public class KnapsackProblem implements Problem {
                 else
                     individual.add(0);
             }
-        } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
+            threshold /= 2;
+        } while (sumOfItems(individual) > weightOfBackpack);
         return individual;
     }
 
@@ -163,23 +164,29 @@ public class KnapsackProblem implements Problem {
 
     @Override
     public Double fitness(List<Integer> individual) {
-        return 1.0 / (sumOfValues(individual) * 1.0) * numberOfItems;
+        return 1.0 / (sumOfValues(individual) + 1.0) * numberOfItems;
     }
 
     @Override
     public List<Integer> mutate(List<Integer> individual) {
         var tmpIndividual = new ArrayList<>(individual);
+        var threshold = 0.5;
         do {
             individual = new ArrayList<>(tmpIndividual);
             var index = BaseController.randomGenerator.nextInt(this.itemWeight.size());
-            individual.set(index, ((individual.get(index)) + 1) % 2);
-        } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
+            if (BaseController.randomGenerator.nextDouble() < threshold)
+                individual.set(index, ((individual.get(index)) + 1) % 2);
+            else
+                individual.set(index, 0);
+            threshold /= 2;
+        } while (sumOfItems(individual) > weightOfBackpack);
         return individual;
     }
 
     @Override
     public List<Integer> localSearch(List<Integer> individual, Double probChange) {
         var tmpIndividual = new ArrayList<>(individual);
+        var threshold = 0.5;
         do {
             individual = new ArrayList<>(tmpIndividual);
             for (int i = 0; i < numberOfItems * probChange; i++) {
@@ -188,9 +195,13 @@ public class KnapsackProblem implements Problem {
                     if (sumOfItems(individual) + itemWeight.get(index) > weightOfBackpack)
                         continue;
                 }
-                individual.set(index, ((individual.get(index)) + 1) % 2);
+                if (BaseController.randomGenerator.nextDouble() < threshold)
+                    individual.set(index, ((individual.get(index)) + 1) % 2);
+                else
+                    individual.set(index, 0);
             }
-        } while (sumOfItems(individual) > weightOfBackpack || sumOfItems(individual) == 0);
+            threshold /= 2;
+        } while (sumOfItems(individual) > weightOfBackpack);
         return individual;
     }
 
@@ -211,7 +222,7 @@ public class KnapsackProblem implements Problem {
                     child1.add(parent2.get(i));
                 }
             }
-        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack || sumOfItems(child1) == 0 || sumOfItems(child2) == 0));
+        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack));
         return new Pair<>(child1, child2);
     }
 
@@ -238,7 +249,7 @@ public class KnapsackProblem implements Problem {
                     }
                 }
             }
-        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack || sumOfItems(child1) == 0 || sumOfItems(child2) == 0));
+        } while ((sumOfItems(child1) > weightOfBackpack) || (sumOfItems(child2) > weightOfBackpack));
         return new Pair<>(child1, child2);
     }
 

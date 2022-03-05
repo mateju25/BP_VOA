@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="160.0" prefWidth="414.0" styleClass="pane-around" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1">
     <TextField fx:id="sizeOfProblem" layoutX="186.0" layoutY="14.0" prefHeight="28.0" prefWidth="189.0" text="10" />
     <TextField fx:id="averageDemand" layoutX="186.0" layoutY="66.0" prefHeight="28.0" prefWidth="189.0" text="2" />
     <TextField fx:id="vehicleCapacity" layoutX="186.0" layoutY="113.0" prefHeight="28.0" prefWidth="189.0" text="10" />

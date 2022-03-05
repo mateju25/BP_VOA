@@ -312,6 +312,12 @@ public class VehicleRoutingProblem implements Problem {
 
             var offsetX = 0;
             for (int i = 0; i < usedColors.size(); i++) {
+                if (i == 79) {
+                    gc.setStroke(Color.BLACK);
+                    gc.setLineWidth(1);
+                    gc.strokeText("and more...", LEFT_OFFSET + 560 + offsetX * 80, 110 + (i % 20) * 20);
+                    break;
+                }
                 offsetX = i / 20;
                 gc.setStroke(Color.BLACK);
                 gc.setLineWidth(1);

@@ -1,6 +1,7 @@
 package controllers.base;
 
 import controllers.components.MenuController;
+import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -12,8 +13,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import lombok.SneakyThrows;
 import model.algorithms.Algorithm;
@@ -117,7 +120,7 @@ public class MainPageController extends MenuController {
         }
 
         presetProblems.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            if (BaseController.chosenProblem != null) {
+            if (BaseController.chosenProblem != null && !newValue.equals(-1)) {
                 BaseController.chosenProblem.setPreset((Integer) newValue);
                 actualizeTextEdits();
             }
@@ -125,17 +128,17 @@ public class MainPageController extends MenuController {
     }
 
     private void makeAnimation() {
-        //        if (BaseController.isFirstLoad) {
-//            BaseController.isFirstLoad = false;
-//            animationPic.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_animation.png"))));
-//            FadeTransition ft = new FadeTransition(Duration.millis(2000), animationPic);
-//            ft.setDelay(Duration.millis(2500));
-//            ft.setFromValue(1.0);
-//            ft.setToValue(0.0);
-//            ft.play();
-//            ft.setOnFinished(event -> animationPic.setMouseTransparent(true));
-//
-//        }
+        if (BaseController.isFirstLoad) {
+            BaseController.isFirstLoad = false;
+            animationPic.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon_animation.png"))));
+            FadeTransition ft = new FadeTransition(Duration.millis(1500), animationPic);
+            ft.setDelay(Duration.millis(2500));
+            ft.setFromValue(1.0);
+            ft.setToValue(0.0);
+            ft.play();
+            ft.setOnFinished(event -> animationPic.setMouseTransparent(true));
+
+        }
         animationPic.setMouseTransparent(true);
 
     }
@@ -156,7 +159,7 @@ public class MainPageController extends MenuController {
             backpackCapacity.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(800));
             numberOfItems.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             BaseController.makeTooltip(toolNumberOfItems, "Number of items that can be put into backpack (each will have a random generated size)");
-            BaseController.makeTooltip(toolCapacity, "Maximum load that can be put into backpack");
+            BaseController.makeTooltip(toolCapacity, "Maximum load that can be put into backpack (max number allowed - 800)");
             BaseController.makeTooltip(toolAverage, "Average size of item that will be put into backpack");
         }
         if (sizeOfProblem != null) {
@@ -171,9 +174,9 @@ public class MainPageController extends MenuController {
             numberOfWeapons.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             numberOfTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
             maxAssignedTargets.setTextFormatter(TextFormattersFactory.makeIntegerFormatter(40));
-            BaseController.makeTooltip(toolNumberOfWeapons, "Number of weapons that will be generated (each will have a random probability to destroy each target)");
-            BaseController.makeTooltip(toolMaximum, "Maximum number of assigned targets to one weapon");
-            BaseController.makeTooltip(toolNumberOfTargets, "Number of targets that will be generated (each will have a destruction level 1 - 5)");
+            BaseController.makeTooltip(toolNumberOfWeapons, "Number of weapons that will be generated (each will have a random probability to destroy each target) (max number allowed - 40)");
+            BaseController.makeTooltip(toolMaximum, "Maximum number of assigned targets to one weapon (max number allowed - 40)");
+            BaseController.makeTooltip(toolNumberOfTargets, "Number of targets that will be generated (each will have a destruction level 1 - 5) (max number allowed - 40)");
         }
         actualizeTextEdits();
     }
@@ -208,6 +211,18 @@ public class MainPageController extends MenuController {
                 warning.setText("Average demand should not be higher than vehicle capacity!");
                 return;
             }
+
+            if (averageWeight != null && Integer.parseInt(averageWeight.getText()) == 0) {
+                warning.setText("Average weight should not be zero!");
+                return;
+            }
+
+            if (averageDemand != null && Integer.parseInt(averageDemand.getText()) == 0) {
+                warning.setText("Average demand should not be zero!");
+                return;
+            }
+
+
 
             var map = new HashMap<String, String>();
             if (numberOfItems != null) map.put(numberOfItems.getId(), numberOfItems.getText());

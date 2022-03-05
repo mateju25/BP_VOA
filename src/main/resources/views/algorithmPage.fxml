@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.AlgorithmController">
+<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.AlgorithmController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
             <MenuItem mnemonicParsing="false" text="Random seed">

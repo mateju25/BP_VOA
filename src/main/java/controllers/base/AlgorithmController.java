@@ -90,14 +90,6 @@ public class AlgorithmController extends MenuController {
 
         actualizeTextEdits();
 
-//        if (!controllerLoaded) {
-//            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + BaseController.chosenAlgorithm.nameOfFxmlFiles()[0])));
-//            loader.setController(this);
-//            controllerLoaded = true;
-//            Parent root = loader.load();
-//            algoPane.getChildren().add(root);
-//        }
-
         algChoiceBox.getSelectionModel().clearSelection();
         if (algChoiceBox != null) {
             algChoiceBox.getItems().setAll(BaseController.algorithms);
