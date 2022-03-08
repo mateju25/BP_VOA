@@ -7,14 +7,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="pane" prefHeight="37.0" prefWidth="897.0" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.components.DatasetPartController">
-    <Label fx:id="lblNumber" layoutX="14.0" layoutY="11.0" prefHeight="17.0" prefWidth="25.0" styleClass="label-small-text" stylesheets="@../../css/main.css" text="s" />
+<AnchorPane fx:id="pane" prefHeight="37.0" prefWidth="897.0" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.components.DatasetPartController">
+    <Label fx:id="lblNumber" layoutX="14.0" layoutY="11.0" prefHeight="17.0" prefWidth="25.0" styleClass="label-small-text" stylesheets="@../../css/main.css" text="s">
+      <tooltip>
+         <Tooltip text="Number of simulation result" />
+      </tooltip></Label>
     <Line endX="39.0" endY="8.0" layoutY="24.0" startX="39.0" startY="-20.0" />
     <Label fx:id="lblName" layoutX="46.0" layoutY="11.0" prefHeight="17.0" prefWidth="611.0" styleClass="label-small-text" stylesheets="@../../css/main.css" text="s">
       <tooltip>
          <Tooltip fx:id="tooltip" text="Empty Tooltip" />
       </tooltip></Label>
-    <CheckBox fx:id="checkBest" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Best" />
-    <CheckBox fx:id="checkAverage" layoutX="754.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Average" />
-    <Button fx:id="btnDelete" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="31.0" styleClass="button-black" text="X" />
+    <CheckBox fx:id="checkBest" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Best">
+      <tooltip>
+         <Tooltip text="Show best curve" />
+      </tooltip></CheckBox>
+    <CheckBox fx:id="checkAverage" layoutX="754.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Average">
+      <tooltip>
+         <Tooltip text="Show average curve" />
+      </tooltip></CheckBox>
+    <Button fx:id="btnDelete" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="31.0" styleClass="button-black" text="X">
+      <tooltip>
+         <Tooltip text="Delete simulation result" />
+      </tooltip></Button>
 </AnchorPane>

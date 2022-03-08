@@ -8,13 +8,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
+<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
          <MenuItem mnemonicParsing="false" text="Random seed">
@@ -45,10 +46,19 @@
     </MenuBar>
     <AnchorPane prefHeight="470.0" prefWidth="724.0" styleClass="main" VBox.vgrow="ALWAYS">
       <Button layoutX="310.0" layoutY="247.0" mnemonicParsing="false" text="Button" />
-        <ChoiceBox fx:id="probChoiceBox" focusTraversable="false" layoutX="426.0" layoutY="124.0" prefHeight="30.0" prefWidth="288.0" />
+        <ChoiceBox fx:id="probChoiceBox" focusTraversable="false" layoutX="426.0" layoutY="124.0" prefHeight="30.0" prefWidth="288.0">
+         <tooltip>
+            <Tooltip text="Choose from listed problems" />
+         </tooltip></ChoiceBox>
         <Label layoutX="455.0" layoutY="75.0" styleClass="label-underline" text="Choose optimization problem" />
-        <Button layoutX="611.0" layoutY="542.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="164.0" styleClass="button-black" text="Generate problem and proceed" textAlignment="CENTER" wrapText="true" />
-        <Button layoutX="370.0" layoutY="542.0" mnemonicParsing="false" onAction="#visualizeData" prefHeight="52.0" prefWidth="164.0" styleClass="button-black" text="Data visualization" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+        <Button layoutX="611.0" layoutY="542.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="164.0" styleClass="button-black" text="Generate problem and proceed" textAlignment="CENTER" wrapText="true">
+         <tooltip>
+            <Tooltip text="Generate problem from parameters and proceed to algorithm selection" />
+         </tooltip></Button>
+        <Button layoutX="370.0" layoutY="542.0" mnemonicParsing="false" onAction="#visualizeData" prefHeight="52.0" prefWidth="164.0" styleClass="button-black" text="Data visualization" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+         <tooltip>
+            <Tooltip text="Visualize and compare algorithm runs" />
+         </tooltip></Button>
         <Pane layoutX="120.0" layoutY="222.0" onMouseEntered="#removeWarning" prefHeight="200.0" prefWidth="414.0" styleClass="pane-around">
             <Label layoutX="14.0" layoutY="14.0" text="Parameters" />
             <Pane fx:id="probPane" layoutY="38.0" prefHeight="160.0" prefWidth="414.0" />
@@ -56,7 +66,10 @@
         <Pane layoutX="611.0" layoutY="222.0" prefHeight="200.0" prefWidth="414.0" styleClass="pane-around">
             <Label layoutX="14.0" layoutY="14.0" text="Preset problems" />
             <Label layoutX="73.0" layoutY="73.0" styleClass="label-small-text" text="Available problems:" />
-            <ChoiceBox fx:id="presetProblems" focusTraversable="false" layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0" />
+            <ChoiceBox fx:id="presetProblems" focusTraversable="false" layoutX="67.0" layoutY="94.0" prefHeight="30.0" prefWidth="288.0">
+            <tooltip>
+               <Tooltip text="Choose from listed preset problems" />
+            </tooltip></ChoiceBox>
         </Pane>
         <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="789.0" layoutY="547.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
       <ImageView fx:id="animationPic" fitHeight="701.0" fitWidth="1145.0" layoutX="-3.0" pickOnBounds="true" preserveRatio="true" />

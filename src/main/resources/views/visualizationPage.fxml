@@ -8,13 +8,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<VBox prefHeight="881.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.VisualizationController">
+<VBox prefHeight="881.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.VisualizationController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
             <MenuItem mnemonicParsing="false" text="Random seed">
@@ -50,9 +51,15 @@
         <Pane fx:id="algoPane" layoutX="51.0" layoutY="80.0" prefHeight="527.0" prefWidth="1031.0">
         </Pane>
         <Button layoutX="1051.0" layoutY="20.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="65.0" styleClass="button-black" text="Back" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
-        <Button fx:id="btnAdd" layoutX="26.0" layoutY="20.0" mnemonicParsing="false" onAction="#addDataset" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Add datasets" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+        <Button fx:id="btnAdd" layoutX="26.0" layoutY="20.0" mnemonicParsing="false" onAction="#addDataset" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Add datasets" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+         <tooltip>
+            <Tooltip text="Loads json files that were saved as simulation results and adds them to the list" />
+         </tooltip></Button>
         <ListView fx:id="listView" focusTraversable="false" layoutX="52.0" layoutY="628.0" prefHeight="200.0" prefWidth="1031.0" />
-        <Button fx:id="btnExportPic" layoutX="187.0" layoutY="20.0" mnemonicParsing="false" onAction="#exportPicture" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Export picture" textAlignment="CENTER" textFill="WHITE" wrapText="true" />
+        <Button fx:id="btnExportPic" layoutX="187.0" layoutY="20.0" mnemonicParsing="false" onAction="#exportPicture" prefHeight="34.0" prefWidth="146.0" styleClass="button-black" text="Export picture" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+         <tooltip>
+            <Tooltip text="Exports a picture from chart" />
+         </tooltip></Button>
         <Pane fx:id="infoBox" layoutX="878.0" layoutY="139.0" opacity="0.0" prefHeight="71.0" prefWidth="219.0" styleClass="info-pane">
             <Label fx:id="infoBoxLabel" alignment="CENTER" layoutX="9.0" layoutY="7.0" prefHeight="57.0" prefWidth="200.0" textAlignment="CENTER" wrapText="true" />
         </Pane>
