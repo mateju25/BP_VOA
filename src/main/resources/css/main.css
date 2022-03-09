@@ -103,3 +103,7 @@
 .onHover {
     -fx-background-color: -fx-black;
 }
+
+.menu-item .label{
+    -fx-text-fill: -fx-black;
+}

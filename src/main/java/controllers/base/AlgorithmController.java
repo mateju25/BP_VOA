@@ -31,11 +31,16 @@ import java.util.Random;
  * Controller that controls the flow of page where user chooses which algorithm should be used. In views it uses algorithmPage.fxml and component views.
  */
 public class AlgorithmController extends MenuController {
-    @FXML public Label warning;
-    @FXML public Pane infoBox;
-    @FXML public Label infoBoxLabel;
-    @FXML public Pane algoPane;
-    @FXML public ChoiceBox<Algorithm> algChoiceBox;
+    @FXML
+    public Label warning;
+    @FXML
+    public Pane infoBox;
+    @FXML
+    public Label infoBoxLabel;
+    @FXML
+    public Pane algoPane;
+    @FXML
+    public ChoiceBox<Algorithm> algChoiceBox;
 
 
     //GA
@@ -132,10 +137,11 @@ public class AlgorithmController extends MenuController {
 
     /**
      * Loads specific fxml file into page a treats it as component view. Generates constraints on input fields and add tooltips.
+     *
      * @param part Path to fxml component file.
      */
     private void loadSpecificFxmlPart(String part) {
-         Parent newPane = null;
+        Parent newPane = null;
         try {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + part)));
             loader.setController(this);
@@ -242,39 +248,48 @@ public class AlgorithmController extends MenuController {
 
     /**
      * Puts property into map
-     * @param map parameters map
+     *
+     * @param map   parameters map
      * @param field input field with value
+     * @return if input is okay
      */
-    private void putIntoMap(Map<String, String> map, TextField field) {
+    private Boolean putIntoMap(Map<String, String> map, TextField field) {
+        if (field != null && field.getText().length() > 4) {
+            warning.setText("No input field should be higher than 9999!");
+            return false;
+        }
+
         if (field != null && !field.getText().equals("")) map.put(field.getId(), field.getText());
+        return true;
     }
 
 
     /**
      * Check if constrains on algorithm parameters are met, initializes algorithm and loads simulation page.
+     *
      * @throws IOException
      */
     public void proceed() throws IOException {
         if (BaseController.chosenProblem != null && BaseController.chosenAlgorithm != null) {
             var map = new HashMap<String, String>();
-            putIntoMap(map, numberIndividuals);
-            putIntoMap(map, numberGenerations);
-            putIntoMap(map, percentageRoulette);
-            putIntoMap(map, percentageTournament);
-            putIntoMap(map, sizeTournament);
-            putIntoMap(map, percentageElitism);
-            putIntoMap(map, percentageMutation);
-            putIntoMap(map, sizeBeeHive);
-            putIntoMap(map, numberOfIterations);
-            putIntoMap(map, forgetCount);
-            putIntoMap(map, employedBees);
-            putIntoMap(map, numberOfAnts);
-            putIntoMap(map, pheromone);
-            putIntoMap(map, parameterB);
-            putIntoMap(map, parameterA);
-            putIntoMap(map, parameterQ);
-            putIntoMap(map, mutationLower);
-            putIntoMap(map, mutationUpper);
+            if (!putIntoMap(map, numberIndividuals)) return;
+            if (!putIntoMap(map, numberGenerations)) return;
+            if (!putIntoMap(map, percentageRoulette)) return;
+            if (!putIntoMap(map, percentageTournament)) return;
+            if (!putIntoMap(map, sizeTournament)) return;
+            if (!putIntoMap(map, percentageElitism)) return;
+            if (!putIntoMap(map, percentageMutation)) return;
+            if (!putIntoMap(map, sizeBeeHive)) return;
+            if (!putIntoMap(map, numberOfIterations)) return;
+            if (!putIntoMap(map, forgetCount)) return;
+            if (!putIntoMap(map, employedBees)) return;
+            if (!putIntoMap(map, numberOfAnts)) return;
+            if (!putIntoMap(map, pheromone)) return;
+            if (!putIntoMap(map, parameterB)) return;
+            if (!putIntoMap(map, parameterA)) return;
+            if (!putIntoMap(map, parameterQ)) return;
+            if (!putIntoMap(map, mutationLower)) return;
+            if (!putIntoMap(map, mutationUpper)) return;
             if (typeCrossover != null)
                 map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex() + "");
 
@@ -322,6 +337,7 @@ public class AlgorithmController extends MenuController {
 
     /**
      * Loads main page.
+     *
      * @throws IOException
      */
     public void goBack() throws IOException {

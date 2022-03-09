@@ -50,9 +50,15 @@ public class MenuController {
             });
             randomSeed.setTextFormatter(TextFormattersFactory.makeIntegerFormatter());
             randomSeed.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue.equals(""))
+                if (!newValue.equals("")) {
+                    if (newValue.length() > 5) {
+                        newValue = newValue.substring(0, 5);
+                        randomSeed.setText(newValue+"");
+                    }
                     BaseController.randomSeed = Integer.valueOf(newValue);
+                }
             });
+            randomSeed.setText(BaseController.randomSeed+"");
         }
     }
 
@@ -95,6 +101,7 @@ public class MenuController {
      * Randomizes seed for generator.
      */
     public void randomSeed() {
-        randomSeed.setText(BaseController.randomGenerator.nextInt(100000)+"");
+        BaseController.randomSeed = BaseController.randomGenerator.nextInt(100000);
+        randomSeed.setText(BaseController.randomSeed+"");
     }
 }

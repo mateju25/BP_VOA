@@ -160,6 +160,15 @@ public class MainPageController extends MenuController {
      * @param part Path to fxml component file.
      */
     private void loadSpecificFxmlPart(String part) {
+        numberOfWeapons = null;
+        numberOfTargets = null;
+        maxAssignedTargets = null;
+        sizeOfProblem = null;
+        vehicleCapacity = null;
+        averageDemand = null;
+        numberOfItems = null;
+        backpackCapacity = null;
+        averageWeight = null;
         Parent newPane = null;
         try {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + part)));
@@ -228,9 +237,15 @@ public class MainPageController extends MenuController {
      * Puts property into map
      * @param map parameters map
      * @param field input field with value
+     * @return if input is okay
      */
-    private void putIntoMap(Map<String, String> map, TextField field) {
+    private Boolean putIntoMap(Map<String, String> map, TextField field) {
+        if (field != null && field.getText().length() > 4) {
+            warning.setText("No input field should be higher than 9999!");
+            return false;
+        }
         if (field != null && !field.getText().equals("")) map.put(field.getId(), field.getText());
+        return true;
     }
 
     /**
@@ -240,15 +255,15 @@ public class MainPageController extends MenuController {
     public void proceed() throws IOException {
         if (BaseController.chosenProblem != null) {
             var map = new HashMap<String, String>();
-            putIntoMap(map, numberOfItems);
-            putIntoMap(map, averageWeight);
-            putIntoMap(map, backpackCapacity);
-            putIntoMap(map, sizeOfProblem);
-            putIntoMap(map, vehicleCapacity);
-            putIntoMap(map, averageDemand);
-            putIntoMap(map, numberOfTargets);
-            putIntoMap(map, numberOfWeapons);
-            putIntoMap(map, maxAssignedTargets);
+            if (!putIntoMap(map, numberOfItems)) return;
+            if (!putIntoMap(map, averageWeight)) return;
+            if (!putIntoMap(map, backpackCapacity)) return;
+            if (!putIntoMap(map, sizeOfProblem)) return;
+            if (!putIntoMap(map, vehicleCapacity)) return;
+            if (!putIntoMap(map, averageDemand)) return;
+            if (!putIntoMap(map, numberOfTargets)) return;
+            if (!putIntoMap(map, numberOfWeapons)) return;
+            if (!putIntoMap(map, maxAssignedTargets)) return;
 
             if (map.keySet().size() != 3) {
                 warning.setText("No input field should be empty!");
@@ -270,10 +285,16 @@ public class MainPageController extends MenuController {
                 return;
             }
 
-            if (sizeOfProblem != null && Integer.parseInt(sizeOfProblem.getText()) <= 1) {
-                warning.setText("Size of the problem should be more than 1!");
+            if (sizeOfProblem != null && (Integer.parseInt(sizeOfProblem.getText()) > 400 || Integer.parseInt(sizeOfProblem.getText()) <= 2)) {
+                warning.setText("Size of the problem should be between 3 than 400!");
                 return;
             }
+
+            if (numberOfItems != null && (Integer.parseInt(numberOfItems.getText()) > 1500 || Integer.parseInt(numberOfItems.getText()) <= 0)) {
+                warning.setText("Size of the problem should be between 1 than 1500!");
+                return;
+            }
+
 
 
 

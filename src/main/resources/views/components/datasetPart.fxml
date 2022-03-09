@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane fx:id="pane" prefHeight="37.0" prefWidth="897.0" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.components.DatasetPartController">
+<AnchorPane fx:id="pane" prefHeight="37.0" prefWidth="1007.0" stylesheets="@../../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.components.DatasetPartController">
     <Label fx:id="lblNumber" layoutX="14.0" layoutY="11.0" prefHeight="17.0" prefWidth="25.0" styleClass="label-small-text" stylesheets="@../../css/main.css" text="s">
       <tooltip>
          <Tooltip text="Number of simulation result" />
@@ -17,15 +17,15 @@
       <tooltip>
          <Tooltip fx:id="tooltip" text="Empty Tooltip" />
       </tooltip></Label>
-    <CheckBox fx:id="checkBest" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Best">
+    <CheckBox fx:id="checkBest" layoutX="775.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Best">
       <tooltip>
          <Tooltip text="Show best curve" />
       </tooltip></CheckBox>
-    <CheckBox fx:id="checkAverage" layoutX="754.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Average">
+    <CheckBox fx:id="checkAverage" layoutX="863.0" layoutY="10.0" mnemonicParsing="false" selected="true" styleClass="label-small-text" text="Average">
       <tooltip>
          <Tooltip text="Show average curve" />
       </tooltip></CheckBox>
-    <Button fx:id="btnDelete" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="31.0" styleClass="button-black" text="X">
+    <Button fx:id="btnDelete" layoutX="967.0" layoutY="5.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="31.0" styleClass="button-black" text="X">
       <tooltip>
          <Tooltip text="Delete simulation result" />
       </tooltip></Button>

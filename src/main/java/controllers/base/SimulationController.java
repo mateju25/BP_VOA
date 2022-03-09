@@ -91,6 +91,11 @@ public class SimulationController extends MenuController {
     public void initialize() {
         speedChangerMenu.adjustValue(BaseController.simulationSpeed);
         speedChanger.adjustValue(simulationSpeed);
+        if (BaseController.oldSimSpeed != null) {
+            simulationSpeed = BaseController.oldSimSpeed;
+            speedChanger.adjustValue(BaseController.oldSimSpeed);
+            BaseController.oldSimSpeed = null;
+        }
         initMenu();
 
         simulationRestart = false;
@@ -282,7 +287,7 @@ public class SimulationController extends MenuController {
      * @throws IOException
      */
     public void restartSim() throws IOException {
-        int oldSimSpeed = simulationSpeed;
+        BaseController.oldSimSpeed = simulationSpeed;
         executorService.shutdownNow();
         elapsedTime = 0;
         simulationRestart = true;
@@ -291,7 +296,6 @@ public class SimulationController extends MenuController {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/simulationPage.fxml")));
         BaseController.mainStage.setScene(new Scene(root));
         BaseController.mainStage.show();
-        speedChanger.adjustValue(oldSimSpeed);
     }
 
     /**

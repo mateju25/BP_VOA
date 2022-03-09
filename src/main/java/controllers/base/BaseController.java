@@ -33,6 +33,7 @@ public class BaseController {
     public static List<Algorithm> algorithms;
 
     public static Integer simulationSpeed = 0;
+    public static Integer oldSimSpeed = null;
     public static Integer randomSeed = 1;
     public static Random randomGenerator = new Random(BaseController.randomSeed);
 

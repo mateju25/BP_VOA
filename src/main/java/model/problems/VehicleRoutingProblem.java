@@ -254,7 +254,7 @@ public class VehicleRoutingProblem implements Problem {
     public List<Integer> mutate(List<Integer> individual) {
         var newIndividual = individual.stream().filter(e -> e != 0).collect(Collectors.toList());
 
-        var index = BaseController.randomGenerator.nextInt(newIndividual.size() - 2) + 1;
+        var index = BaseController.randomGenerator.nextInt(newIndividual.size() - 1);
         Collections.swap(newIndividual, index, index + 1);
 
         return checkAnAddBaseTownToIndividual(newIndividual);

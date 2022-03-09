@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -10,34 +11,34 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
+<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
-         <MenuItem mnemonicParsing="false" text="Random seed">
-            <graphic>
-               <Pane prefHeight="30.0" prefWidth="150.0">
+         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Random seed">
+            <content>
+               <Pane prefHeight="30.0" prefWidth="320.0">
                   <children>
-                     <TextField fx:id="randomSeed" prefHeight="10.0" prefWidth="110.0" text="1" />
-                     <Button layoutX="110.0" mnemonicParsing="false" onAction="#randomSeed" text="R" />
+                     <Label layoutX="8.0" layoutY="7.0" text="Random seed" />
+                     <TextField fx:id="randomSeed" layoutX="178.0" layoutY="1.0" prefHeight="10.0" prefWidth="110.0" text="1" />
+                     <Button layoutX="289.0" layoutY="1.0" mnemonicParsing="false" onAction="#randomSeed" text="R" />
                   </children>
                </Pane>
-            </graphic>
-         </MenuItem>
-         <MenuItem mnemonicParsing="false" text="Default sim. speed">
-            <graphic>
-               <Slider fx:id="speedChangerMenu" blockIncrement="100.0" max="1000.0" value="0.0" />
-            </graphic>
-         </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#closeApp" text="Close">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-            </MenuItem>
+            </content>
+         </CustomMenuItem>
+         <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Default sim. speed">
+            <content>
+               <Pane prefHeight="30.0" prefWidth="320.0">
+                  <children>
+                     <Label layoutX="8.0" layoutY="7.0" text="Default sim. speed" />
+                     <Slider fx:id="speedChangerMenu" blockIncrement="100.0" layoutX="177.0" layoutY="6.0" max="1000.0" value="0.0" />
+                  </children>
+               </Pane>
+            </content>
+         </CustomMenuItem>
         </Menu>
         <Menu id="menu2" mnemonicParsing="false" text="About">
             <MenuItem mnemonicParsing="false" onAction="#openDoc" text="Documentation" />
