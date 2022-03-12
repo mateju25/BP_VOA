@@ -141,6 +141,24 @@ public class AlgorithmController extends MenuController {
      * @param part Path to fxml component file.
      */
     private void loadSpecificFxmlPart(String part) {
+        percentageRoulette = null;
+        percentageTournament = null;
+        percentageElitism = null;
+        percentageMutation = null;
+        numberIndividuals = null;
+        numberGenerations = null;
+        sizeTournament = null;
+        sizeBeeHive = null;
+        numberOfIterations = null;
+        forgetCount = null;
+        employedBees = null;
+        mutationLower = null;
+        mutationUpper = null;
+        numberOfAnts = null;
+        parameterB = null;
+        parameterA = null;
+        parameterQ = null;
+        pheromone = null;
         Parent newPane = null;
         try {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/parts/" + part)));
@@ -178,7 +196,7 @@ public class AlgorithmController extends MenuController {
             employedBees.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             mutationLower.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
             mutationUpper.setTextFormatter(TextFormattersFactory.makeDoubleFormatterWithRange());
-            employedBees.textProperty().addListener((observable, oldValue, newValue) -> onlookerBees.setText((1 - Double.parseDouble(newValue)) + ""));
+            employedBees.textProperty().addListener((observable, oldValue, newValue) -> onlookerBees.setText((Math.round((1 - Double.parseDouble(newValue))*100))/100.0 + ""));
             BaseController.makeTooltip(toolSize, "Size of bee hive (number of exploited solutions to the problem)");
             BaseController.makeTooltip(toolIterations, "Number of iterations of the algorithm");
             BaseController.makeTooltip(toolEmployed, "Percentage of total bees in hive that are employed and assigned to source");
@@ -231,7 +249,7 @@ public class AlgorithmController extends MenuController {
                 mutationLower.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationLower() + "");
                 mutationUpper.setText(((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getMutationUpper() + "");
                 if (((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() != null)
-                    onlookerBees.setText(1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed() + "");
+                    onlookerBees.setText(Math.round((1 - ((ArtificialBeeColonyAlgorithm) BaseController.chosenAlgorithm).getPercentageEmployed())*100)/100.0 + "");
             }
         }
         if (numberOfAnts != null) {
@@ -293,15 +311,15 @@ public class AlgorithmController extends MenuController {
             if (typeCrossover != null)
                 map.put(typeCrossover.getId(), typeCrossover.getSelectionModel().getSelectedIndex() + "");
 
-            if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm && map.keySet().size() != 8) {
+            if (BaseController.chosenAlgorithm instanceof GeneticAlgorithm && map.keySet().size() < 8) {
                 warning.setText("No input field should be empty!");
                 return;
             }
-            if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm && map.keySet().size() != 6) {
+            if (BaseController.chosenAlgorithm instanceof ArtificialBeeColonyAlgorithm && map.keySet().size() < 6) {
                 warning.setText("No input field should be empty!");
                 return;
             }
-            if (BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm && map.keySet().size() != 6) {
+            if (BaseController.chosenAlgorithm instanceof AntColonySystemAlgorithm && map.keySet().size() < 6) {
                 warning.setText("No input field should be empty!");
                 return;
             }
@@ -320,6 +338,26 @@ public class AlgorithmController extends MenuController {
             }
             if (typeCrossover != null && typeCrossover.getSelectionModel().getSelectedItem() == null) {
                 warning.setText("You need to choose type of crossover!");
+                return;
+            }
+            if (numberIndividuals != null && Integer.parseInt(numberIndividuals.getText()) <= 1) {
+                warning.setText("Number of individuals cant be less than or equal 1!");
+                return;
+            }
+            if (sizeTournament != null && Integer.parseInt(sizeTournament.getText()) <= 1) {
+                warning.setText("Size of tournament cant be less than or equal 1!");
+                return;
+            }
+            if (sizeBeeHive != null && Integer.parseInt(sizeBeeHive.getText()) == 0) {
+                warning.setText("Size of bee hive cant be 0!");
+                return;
+            }
+            if (numberOfAnts != null && Integer.parseInt(numberOfAnts.getText()) == 0) {
+                warning.setText("Number of ants cant be 0!");
+                return;
+            }
+            if (employedBees != null && Double.parseDouble(employedBees.getText()) == 0.0) {
+                warning.setText("Percentage of employed bees cant 0!");
                 return;
             }
 

@@ -106,6 +106,7 @@ public class ArtificialBeeColonyAlgorithm implements Algorithm {
                 if (oldCount.get(i) > forgetCount) {
                     var newIndividual = problem.makeOneIndividual();
                     generation.set(i, newIndividual);
+                    oldCount.set(i, 0);
 
                     if (problem.fitness(newIndividual) < problem.fitness(bestIndividual) || bestIndividual.size() == 0)
                         bestIndividual = new ArrayList<>(newIndividual);

@@ -153,8 +153,8 @@ public class SimulationResults {
         for (Object decimal: obj.getJSONArray("bestFitness").toList()) {
             bestFitness.add(((BigDecimal) decimal).doubleValue());
         }
-        this.usedAlgorithmInJson = obj.getJSONObject("usedAlgorithmInJson").toString();
-        this.usedProblemInJson = obj.getJSONObject("usedProblemInJson").toString();
+        this.usedAlgorithmInJson = obj.getJSONObject("usedAlgorithm").toString();
+        this.usedProblemInJson = obj.getJSONObject("usedProblem").toString();
 
         showBest = true;
         showAverage = true;

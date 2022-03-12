@@ -46,7 +46,9 @@ public class TextFormattersFactory {
      * @return formatter
      */
     public static TextFormatter makeDoubleFormatterWithRange() {
-        Pattern patternDouble = Pattern.compile("^([0][,.]([0-9]{1,2}))|(1.0)|(0)|(0.)$");
-        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> patternDouble.matcher(change.getControlNewText()).matches() ? change : null);
+        Pattern patternDouble = Pattern.compile("^([0][.]([0-9]{1,2}))|(1\\.0)|(0)|(0\\.)|()|(1)|(1.)$");
+        return new TextFormatter((UnaryOperator<TextFormatter.Change>) change -> {
+            return patternDouble.matcher(change.getControlNewText()).matches() ? change : null;
+        });
     }
 }
