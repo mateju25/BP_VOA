@@ -10,12 +10,13 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
+<VBox prefHeight="735.0" prefWidth="1139.0" styleClass="body" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.base.MainPageController">
     <MenuBar styleClass="top-bar" VBox.vgrow="NEVER">
         <Menu id="menu1" mnemonicParsing="false" text="Settings">
          <CustomMenuItem hideOnClick="false" mnemonicParsing="false" text="Random seed">
@@ -52,11 +53,11 @@
             <Tooltip text="Choose from listed problems" />
          </tooltip></ChoiceBox>
         <Label layoutX="455.0" layoutY="75.0" styleClass="label-underline" text="Choose optimization problem" />
-        <Button layoutX="611.0" layoutY="542.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="164.0" styleClass="button-black" text="Generate problem and proceed" textAlignment="CENTER" wrapText="true">
+        <Button layoutX="614.0" layoutY="542.0" mnemonicParsing="false" onAction="#proceed" prefHeight="52.0" prefWidth="205.0" styleClass="button-black" text="Generate problem      and proceed" wrapText="true">
          <tooltip>
             <Tooltip text="Generate problem from parameters and proceed to algorithm selection" />
          </tooltip></Button>
-        <Button layoutX="370.0" layoutY="542.0" mnemonicParsing="false" onAction="#visualizeData" prefHeight="52.0" prefWidth="164.0" styleClass="button-black" text="Data visualization" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+        <Button layoutX="329.0" layoutY="542.0" mnemonicParsing="false" onAction="#visualizeData" prefHeight="52.0" prefWidth="205.0" styleClass="button-black" text="        Data visualization" textAlignment="RIGHT" textFill="WHITE" wrapText="true">
          <tooltip>
             <Tooltip text="Visualize and compare algorithm runs" />
          </tooltip></Button>
@@ -72,7 +73,17 @@
                <Tooltip text="Choose from listed preset problems" />
             </tooltip></ChoiceBox>
         </Pane>
-        <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="789.0" layoutY="547.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
+        <Label fx:id="warning" alignment="CENTER" contentDisplay="CENTER" layoutX="611.0" layoutY="492.0" prefHeight="43.0" prefWidth="282.0" textAlignment="CENTER" textFill="RED" wrapText="true" />
+      <ImageView fitHeight="28.0" fitWidth="28.0" layoutX="340.0" layoutY="556.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/arrow-right.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="28.0" fitWidth="27.0" layoutX="780.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/arrow-right.png" />
+         </image>
+      </ImageView>
       <ImageView fx:id="animationPic" fitHeight="701.0" fitWidth="1145.0" layoutX="-3.0" pickOnBounds="true" preserveRatio="true" />
     </AnchorPane>
 </VBox>

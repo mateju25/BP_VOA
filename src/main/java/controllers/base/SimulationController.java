@@ -169,7 +169,7 @@ public class SimulationController extends MenuController {
                 var data = dataQ.remove();
                 seriesBest.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getBestFitness()));
                 seriesAverage.getData().add(new XYChart.Data<>(data.getActualGeneration() - 1, data.getAverageFitnessInGen()));
-                setBoundaries(data);
+                setBoundaries(data.getAverageFitnessInGen(), data.getBestFitness());
                 BaseController.chosenProblem.visualize(canvas, data);
 
                 if (data.getActualGeneration().equals(data.getMaxGeneration())) {
@@ -177,7 +177,7 @@ public class SimulationController extends MenuController {
                     btnSaveD.setDisable(false);
                     btnRandomize.setDisable(false);
                     btnMoreSims.setDisable(false);
-                    lblTime.setText(elapsedTime/1000.0+" s");
+                    lblTime.setText(elapsedTime / 1000.0 + " s");
                 }
                 lblAverage.setText(String.format("%,.4f", data.getAverageFitnessInGen()));
                 lblBest.setText(String.format("%,.4f", data.getBestFitness()));
@@ -210,7 +210,7 @@ public class SimulationController extends MenuController {
                 var file = fileChooser.showSaveDialog(BaseController.mainStage);
                 if (file != null) {
 //                    results.writeToCsv(file, yAxis.getUpperBound(), yAxis.getLowerBound());
-                    results.writeToJson(file, yAxis.getUpperBound(), yAxis.getLowerBound(), BaseController.chosenProblem, BaseController.chosenAlgorithm);
+                    results.writeToJson(file, yAxis.getUpperBound() - 0.5, yAxis.getLowerBound() + 0.5, BaseController.chosenProblem, BaseController.chosenAlgorithm);
                     BaseController.showInfo(infoBox, infoBoxLabel, "Simulation saved!");
                 }
             } catch (IOException e) {
@@ -221,16 +221,22 @@ public class SimulationController extends MenuController {
 
     /**
      * Changes boundaries that chart shows.
-     * @param data Algorithm results from which best and average fitness is used.
+     *
+     * @param average Algorithm results from which average fitness is used.
+     * @param best    Algorithm results from which best fitness is used.
      */
-    private void setBoundaries(AlgorithmResults data) {
+    private void setBoundaries(Double average, Double best) {
         var highBound = yAxis.getUpperBound();
-        if (highBound < data.getAverageFitnessInGen() + 0.5) {
-            yAxis.setUpperBound(data.getAverageFitnessInGen() + 0.5);
+        if (average != null) {
+            if (highBound < average + 0.5) {
+                yAxis.setUpperBound(average + 0.5);
+            }
         }
         var lowBound = yAxis.getLowerBound();
-        if (lowBound > data.getBestFitness() - 0.5) {
-            yAxis.setLowerBound(data.getBestFitness() - 0.5);
+        if (best != null) {
+            if (lowBound > best - 0.5) {
+                yAxis.setLowerBound(best - 0.5);
+            }
         }
         yAxis.setTickUnit(Math.abs(highBound - lowBound) / 15);
     }
@@ -254,6 +260,7 @@ public class SimulationController extends MenuController {
 
     /**
      * Stops simulation and go back to algorithm page.
+     *
      * @throws IOException
      */
     public void goBack() throws IOException {
@@ -284,6 +291,7 @@ public class SimulationController extends MenuController {
 
     /**
      * Restarts simulation.
+     *
      * @throws IOException
      */
     public void restartSim() throws IOException {
@@ -373,7 +381,6 @@ public class SimulationController extends MenuController {
                     BaseController.chosenAlgorithm.initFirstGeneration();
 
 
-
                     AlgorithmResults res = BaseController.chosenAlgorithm.nextGeneration();
                     while (res != null) {
                         if (!moreSimulationRunning)
@@ -396,12 +403,12 @@ public class SimulationController extends MenuController {
                         long delta = System.currentTimeMillis();
                         res = BaseController.chosenAlgorithm.nextGeneration();
                         elapsedTime += System.currentTimeMillis() - delta;
-
-                        if (res != null)
-                            setBoundaries(res);
                     }
                 }
                 moreSimsPane.setVisible(false);
+
+                results = new SimulationResults(BaseController.chosenAlgorithm.nameForFaces() + " solves " + BaseController.chosenProblem.nameForFaces());
+
 
                 XYChart.Series<Integer, Double> seriesBest = new XYChart.Series<>();
                 seriesBest.setName("Best");
@@ -409,10 +416,15 @@ public class SimulationController extends MenuController {
                 seriesAverage.setName("Average");
 
                 for (Integer key : mapBest.keySet()) {
-                    seriesBest.getData().add(new XYChart.Data<>(key, mapBest.get(key).stream().mapToDouble(e -> e).average().getAsDouble()));
-                }
-                for (Integer key : mapAverage.keySet()) {
-                    seriesAverage.getData().add(new XYChart.Data<>(key, mapAverage.get(key).stream().mapToDouble(e -> e).average().getAsDouble()));
+                    var best = mapBest.get(key).stream().mapToDouble(e -> e).average().getAsDouble();
+                    setBoundaries(null, best);
+                    seriesBest.getData().add(new XYChart.Data<>(key, best));
+
+                    var average = mapAverage.get(key).stream().mapToDouble(e -> e).average().getAsDouble();
+                    setBoundaries(average, null);
+                    seriesAverage.getData().add(new XYChart.Data<>(key, average));
+
+                    results.addData(average, best);
                 }
 
                 series.add(seriesBest);
@@ -441,7 +453,7 @@ public class SimulationController extends MenuController {
 
                     lblAverage.setText(String.format("%,.4f", bestbest.getAverageFitnessInGen()));
                     lblBest.setText(String.format("%,.4f", bestbest.getBestFitness()));
-                    lblTime.setText(elapsedTime/1000.0+" s");
+                    lblTime.setText(elapsedTime / 1000.0 + " s");
 
                     btnMoreSims.setDisable(false);
                     btnSwitch.setDisable(false);

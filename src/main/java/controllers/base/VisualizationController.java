@@ -214,14 +214,20 @@ public class VisualizationController extends MenuController {
                 BaseController.showInfo(infoBox, infoBoxLabel, "There was an error loading file!");
                 return;
             }
+            results.setNumberOfDataset(listView.getItems().stream().mapToInt(SimulationResults::getNumberOfDataset).max().orElse(0) + 1);
             listView.getItems().add(results);
             if (BaseController.savedDatasets == null)
                 BaseController.savedDatasets = new ArrayList<>();
             BaseController.savedDatasets.add(results);
-            setUpBounds(Collections.singletonList(results));
-            results.setNumberOfDataset(listView.getItems().size());
 
-            scaleEverythingAndAdd(results, true, true);
+            upperBound = 0.0;
+            lowerBound = 1000000.0;
+            setUpBounds(BaseController.savedDatasets);
+
+            chart.getData().clear();
+            for (SimulationResults simulationResults : BaseController.savedDatasets) {
+                scaleEverythingAndAdd(simulationResults, true, true);
+            }
 
             yAxis.setTickUnit(Math.abs(yAxis.getUpperBound() - yAxis.getLowerBound()) / 15);
         }
@@ -276,11 +282,14 @@ public class VisualizationController extends MenuController {
     public void somethingChanged() {
         chart.getData().clear();
         var list = new ArrayList<SimulationResults>();
+        upperBound = 0.0;
+        lowerBound = 1000000.0;
         setUpBounds(listView.getItems());
         for (SimulationResults simRes : listView.getItems()) {
             if (simRes.getDeleted()) {
                 continue;
             }
+
             if (simRes.getShowAverage()) {
                 scaleEverythingAndAdd(simRes, false, true);
             }
@@ -289,6 +298,8 @@ public class VisualizationController extends MenuController {
             }
             list.add(simRes);
         }
+        addTooltipForNodesInChart();
+
         BaseController.savedDatasets = list;
         listView.getItems().setAll(list);
     }
