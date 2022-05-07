@@ -76,7 +76,7 @@ public class MenuController {
     public void openDoc() {
         if (Desktop.isDesktopSupported()) {
             try {
-                URL url = getClass().getResource("/pdfs/blank.pdf");
+                URL url = getClass().getResource("/pdfs/tutorial.pdf");
                 File myFile = new File(url.toURI());
                 Desktop.getDesktop().open(myFile);
             } catch (IOException | URISyntaxException ignored) {
