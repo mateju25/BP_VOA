@@ -4,7 +4,6 @@ import controllers.base.BaseController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,11 +15,11 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.utils.TextFormattersFactory;
+import org.apache.commons.io.FileUtils;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 
@@ -76,10 +75,11 @@ public class MenuController {
     public void openDoc() {
         if (Desktop.isDesktopSupported()) {
             try {
-                URL url = getClass().getResource("/pdfs/tutorial.pdf");
-                File myFile = new File(url.toURI());
-                Desktop.getDesktop().open(myFile);
-            } catch (IOException | URISyntaxException ignored) {
+                URL inputUrl = getClass().getResource("/pdfs/tutorial.pdf");
+                File dest = new File("tutorial.pdf");
+                FileUtils.copyURLToFile(inputUrl, dest);
+                Desktop.getDesktop().open(dest);
+            } catch (IOException ignored) {
             }
         }
     }
